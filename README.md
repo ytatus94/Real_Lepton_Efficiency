@@ -1,6 +1,10 @@
 # Real_Lepton_Efficiency
 This is the new real lepton efficiency framework.
 
+v02. Move share/* to misc/
+1. Move AnaNtup_Data, AnaNtup_MC, Skimmed_Data, and Skimmed_MC from share/ to misc/, then delete share/
+
+
 v01. The initial commit.
 1. The ytRealLeptonsEfficiency_MC still have some bugs about the MC normalization.
    The current version get Zee MC 20% more than data and Zmumu MC 10% more than data.
