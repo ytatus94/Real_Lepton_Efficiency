@@ -40,10 +40,11 @@ yt_cutflows::yt_cutflows()
 {
 	// GRL
 	// Using the information from  http://atlasdqm.web.cern.ch/atlasdqm/grlgen/All_Good/
+	string GRL_path = string(getenv("ROOTCOREBIN"))  + "/data/ytRealLeptonsEfficiency/GRL/";
 	m_GRL = new GoodRunsListSelectionTool("GoodRunsListSelectionTool");
 	std::vector<std::string> vecStringGRL;
-	vecStringGRL.push_back("/UserDisk2/yushen/Ximo_ntuples/v44/Cutflow/ytCutflows/GRL/data15_13TeV.periodAllYear_DetStatus-v79-repro20-02_DQDefects-00-02-02_PHYS_StandardGRL_All_Good_25ns.xml");
-	vecStringGRL.push_back("/UserDisk2/yushen/Ximo_ntuples/v44/Cutflow/ytCutflows/GRL/data16_13TeV.periodAllYear_DetStatus-v80-pro20-08_DQDefects-00-02-02_PHYS_StandardGRL_All_Good_25ns.xml");
+	vecStringGRL.push_back(GRL_path + "data15_13TeV.periodAllYear_DetStatus-v79-repro20-02_DQDefects-00-02-02_PHYS_StandardGRL_All_Good_25ns.xml");
+	vecStringGRL.push_back(GRL_path + "data16_13TeV.periodAllYear_DetStatus-v80-pro20-08_DQDefects-00-02-02_PHYS_StandardGRL_All_Good_25ns.xml");
 	m_GRL->setProperty("GoodRunsListVec", vecStringGRL);
 	m_GRL->setProperty("PassThrough", false);
 	if ( !m_GRL->initialize().isSuccess() ) {
@@ -51,11 +52,12 @@ yt_cutflows::yt_cutflows()
 	}
 
 	// PRW files for mc15c
+	string PRW_path = string(getenv("ROOTCOREBIN"))  + "/data/ytRealLeptonsEfficiency/PRW/";
 	m_Pileup  = new CP::PileupReweightingTool("Pileup");
 	confFiles.push_back("/cvmfs/atlas.cern.ch/repo/sw/database/GroupData/dev/SUSYTools/merged_prw_mc15c.root");
 	// iLumiCalc file can be obtained with the lates GRL in https://atlas-lumicalc.cern.ch/
-	lcalcFiles.push_back("/UserDisk2/yushen/Ximo_ntuples/v44/Cutflow/ytCutflows/PRW/ilumicalc_histograms_None_276262-284484.root");
-	lcalcFiles.push_back("/UserDisk2/yushen/Ximo_ntuples/v44/Cutflow/ytCutflows/PRW/ilumicalc_histograms_None_297730-303560_OflLumi-13TeV-001.root");
+	lcalcFiles.push_back(PRW_path + "ilumicalc_histograms_None_276262-284484.root");
+	lcalcFiles.push_back(PRW_path + "ilumicalc_histograms_None_297730-303560_OflLumi-13TeV-001.root");
 	m_Pileup->setProperty("ConfigFiles", confFiles);
 	m_Pileup->setProperty("DefaultChannel", 410000);
 	m_Pileup->setProperty("LumiCalcFiles", lcalcFiles);
@@ -74,10 +76,10 @@ yt_cutflows::yt_cutflows()
 	eventInfo = eInfos->at(0);
 
 	// initialize events_pass_cutflow to zero
-	events_pass_cutflow = vector<int>(Ncuts, 0); // initialize Ncuts elements to zero.
+	events_pass_cutflow = vector<double>(Ncuts, 0); // initialize Ncuts elements to zero.
 
 	// initialize pileup_weight to zero
-	pileupwgh = 0.;
+	//pileupwgh = 0.;
 }
 
 yt_cutflows::~yt_cutflows()

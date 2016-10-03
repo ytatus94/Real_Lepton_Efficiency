@@ -935,6 +935,8 @@ EL::StatusCode ytRealLeptonsEfficiency_MC :: initialize ()
     fChain->SetBranchAddress("Mu_tag_trigger_SF", &Mu_tag_trigger_SF, &b_Mu_tag_trigger_SF);
     fChain->SetBranchAddress("Jet_Jet_isSignal", &Jet_Jet_isSignal, &b_Jet_Jet_isSignal);
     fChain->SetBranchAddress("Jet_bJet_isSignal", &Jet_bJet_isSignal, &b_Jet_bJet_isSignal);
+    fChain->SetBranchAddress("baseline_weight", &baseline_weight, &b_baseline_weight);
+    fChain->SetBranchAddress("signal_weight", &signal_weight, &b_signal_weight);
     fChain->SetBranchAddress("isSS2l_trigger", &isSS2l_trigger, &b_isSS2l_trigger);
     fChain->SetBranchAddress("normalization", &normalization, &b_normalization);
     fChain->SetBranchAddress("pileup_weight", &pileup_weight, &b_pileup_weight);
@@ -1024,7 +1026,7 @@ EL::StatusCode ytRealLeptonsEfficiency_MC :: execute ()
         // single lepton triggers:
         if (trigger == "single_lepton_trigger") {
             // Muon: mu20_iloose_L1MU15 (2015)
-            //       mu24_ivarloose (2016)
+            //       mu24_ivarmedium (2016)
             if (RunNb < 290000) { // 2015 data
                 if (!HLT_mu20_iloose_L1MU15)
                     return EL::StatusCode::SUCCESS; // Go to next event
@@ -1233,11 +1235,19 @@ void ytRealLeptonsEfficiency_MC :: loop_over_electrons()
         }
 
         // mll window
+/*
         h_baseline_mll->Fill(El_ZTandP_mll->at(n_el) / 1000., normalization * El_SFwLooseAndBLayerLH->at(n_el));
         h_baseline_pt_eta_mll->Fill(El_pT->at(n_el) / 1000., El_eta->at(n_el), El_ZTandP_mll->at(n_el) / 1000., normalization * El_SFwLooseAndBLayerLH->at(n_el));
         if (El_isSignal->at(n_el)) {
             h_signal_mll->Fill(El_ZTandP_mll->at(n_el) / 1000., normalization * El_SFwMediumLH->at(n_el) * El_IsoSFwMediumLH->at(n_el));
             h_signal_pt_eta_mll->Fill(El_pT->at(n_el) / 1000., El_eta->at(n_el), El_ZTandP_mll->at(n_el) / 1000., normalization * El_SFwMediumLH->at(n_el) * El_IsoSFwMediumLH->at(n_el));
+        }
+*/
+        h_baseline_mll->Fill(El_ZTandP_mll->at(n_el) / 1000., normalization * baseline_weight);
+        h_baseline_pt_eta_mll->Fill(El_pT->at(n_el) / 1000., El_eta->at(n_el), El_ZTandP_mll->at(n_el) / 1000., normalization * baseline_weight);
+        if (El_isSignal->at(n_el)) {
+            h_signal_mll->Fill(El_ZTandP_mll->at(n_el) / 1000., normalization * signal_weight);
+            h_signal_pt_eta_mll->Fill(El_pT->at(n_el) / 1000., El_eta->at(n_el), El_ZTandP_mll->at(n_el) / 1000., normalization * signal_weight);
         }
 
         if (process == "Zee") {
@@ -1258,11 +1268,11 @@ void ytRealLeptonsEfficiency_MC :: loop_over_electrons()
             if (!truth_match)
                 continue;
         }
-
+/*
         // Define weight
         double baseline_weight = 1.0;
         double signal_weight = 1.0;
-
+*/
         baseline_weight = normalization * El_tag_trigger_SF->at(n_el) * El_SFwLooseAndBLayerLH->at(n_el);
         signal_weight = normalization * El_tag_trigger_SF->at(n_el) * El_SFwMediumLH->at(n_el) * El_IsoSFwMediumLH->at(n_el);
 

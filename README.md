@@ -1,6 +1,12 @@
 # Real_Lepton_Efficiency
 This is the new real lepton efficiency framework.
 
+v03. Add GRL and PRW
+1. Add baseline_weight and signal_weight in ytRealLeptonsEfficiency_MC.
+2. Add data/GRL and data/PRW and put the GRL and PRW files into thest two folders.
+3. Modify the GRL and PRW path in the yt_cutflows.
+4. Change the type of events_pass_cutflow from int to double in order to keep derivationStat_weight.
+
 v02. Move share/* to misc/
 1. Move AnaNtup_Data, AnaNtup_MC, Skimmed_Data, and Skimmed_MC from share/ to misc/, then delete share/
 

@@ -61,9 +61,9 @@ public:
 	vector<string> confFiles;
  	vector<string> lcalcFiles;
 
-	vector<int> events_pass_cutflow;
+	vector<double> events_pass_cutflow;
 
-	float pileupwgh;
+	//float pileupwgh;
 
 public:
 	yt_cutflows();
