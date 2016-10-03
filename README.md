@@ -1,11 +1,20 @@
 # Real_Lepton_Efficiency
 This is the new real lepton efficiency framework.
 
+v04. Add Condor, PROOF driver
+1. Add EventLoopGrid package in Makefile.RootCore.
+2. Change to rcSetup Base, 2.4.19 and add python path in setupRealEfficiency.sh.
+3. Add a toy MC compare_error_propagation.C to check the error propagation.
+4. Split cutflow.cxx to cutflow.cxx and skim.cxx.
+5. Add Condor and PROOF drivers in cutflow.cxx and Run.cxx
+
+
 v03. Add GRL and PRW
 1. Add baseline_weight and signal_weight in ytRealLeptonsEfficiency_MC.
 2. Add data/GRL and data/PRW and put the GRL and PRW files into thest two folders.
 3. Modify the GRL and PRW path in the yt_cutflows.
 4. Change the type of events_pass_cutflow from int to double in order to keep derivationStat_weight.
+
 
 v02. Move share/* to misc/
 1. Move AnaNtup_Data, AnaNtup_MC, Skimmed_Data, and Skimmed_MC from share/ to misc/, then delete share/
