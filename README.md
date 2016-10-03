@@ -1,6 +1,13 @@
 # Real_Lepton_Efficiency
 This is the new real lepton efficiency framework.
 
+v06. Add skim
+1. Add yt_skim in LinkDef.h
+2. Add new skim class: yt_skim.
+3. Overload fill_electrons, fill_muons, and fill_jets for data and MC in ytEventSelection.
+4. Add weight calculation methods in ytEventSelection.
+
+
 v05. Add retrieve.py
 1. Add retrieve.py to retrieve files from condor or grid.
 
