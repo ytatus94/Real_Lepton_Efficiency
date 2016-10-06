@@ -67,21 +67,24 @@ void ytBackground_subtraction(TString template_type = "baseline", // baseline, t
                               int eta_bin_up = -1,
                               bool truth_match = false)
 {
-    bool debug = true;
+    // pt range: 10, 15, 20, 25, 30, 35, 40, 50, 60, 70, 80, 120, 150, 200
+    // eta range: 0., 0.1, 0.6, 0.8, 1.15, 1.37, 1.52, 1.81, 2.01, 2.37, 2.47
+    // So eta bins use (1, 3), (4,5), and (7, 8)
+
+    bool debug = false;
     //bool norm = true;
 
     cout << "Current template = " << template_type << endl;
 
-    TString path = "/Users/ytshen/Desktop/skim/Results/all_no_cut4/";
-    //TFile *data_file = TFile::Open(path + "submitDir_Data_electron/hist-all_no_cut4.root");
-    TFile *data_file = TFile::Open("/Users/ytshen/Desktop/skim/Results/all_no_cut4_0906/submitDir_Data_electron/hist-all_no_cut4.root");
+    TString path = "/Users/ytshen/Desktop/skim/Results/1005/";
+    TFile *data_file = TFile::Open(path + "submitDir_Data_electron/hist-0929_80mll100.root");
     TFile *mc_file;
     if (!truth_match)  // T&P
-        mc_file = TFile::Open(path + "submitDir_MC_Zee/hist-all_no_cut4.root");
+        mc_file = TFile::Open(path + "submitDir_MC_Zee/hist-0929_80mll100.root");
     else // truth_match
-        //mc_file = TFile::Open(path + "submitDir_MC_Zee_truth_match/hist-all_no_cut4.root");
+        mc_file = TFile::Open(path + "submitDir_MC_Zee_truth_match/hist-0929_80mll100.root");
         // TandP + truth_match
-        mc_file = TFile::Open(path + "submitDir_MC_Zee_TandP_truth_match/hist-all_no_cut4.root");
+        //mc_file = TFile::Open(path + "submitDir_MC_Zee_TandP_truth_match/hist-0929_80mll100.root");
 
     // Declare 1-dim histograms
     TH1F *data_baseline_mll;
@@ -128,6 +131,9 @@ void ytBackground_subtraction(TString template_type = "baseline", // baseline, t
         data_baseline_mll = (TH1F *)data_baseline_mll_3dim->ProjectionZ("data_baseline", pt_bin_low, pt_bin_up, eta_bin_low, eta_bin_up);
         data_signal_mll = (TH1F *)data_signal_mll_3dim->ProjectionZ("data_signal", pt_bin_low, pt_bin_up, eta_bin_low, eta_bin_up);
         data_bkg_template = (TH1F *)data_bkg_template_3dim->ProjectionZ("data_template", pt_bin_low, pt_bin_up, eta_bin_low, eta_bin_up);
+
+        cout << "pT range:" << data_signal_mll_3dim->GetXaxis()->GetBinLowEdge(pt_bin_low) << " to " << data_signal_mll_3dim->GetXaxis()->GetBinUpEdge(pt_bin_up) << endl;
+        cout << "eta range: " << data_signal_mll_3dim->GetYaxis()->GetBinLowEdge(eta_bin_low) << " to " << data_signal_mll_3dim->GetYaxis()->GetBinUpEdge(eta_bin_up) << endl;
 
         // Get 3-dim MC histograms
         TH3F *mc_baseline_mll_3dim = (TH3F *)mc_file->Get("h_baseline_pt_eta_mll");
@@ -286,6 +292,7 @@ void ytBackground_subtraction(TString template_type = "baseline", // baseline, t
         fit_function = new TF1("fit_range1", fit_exp_var1, fitting_range_low, fitting_range_up, 2);
     else if (fitting_range == "range2")
         fit_function = new TF1("fit_range2", fit_exp_var2, fitting_range_low, fitting_range_up, 2);
+	fit_function->SetParLimits(0, 0, 100000); // force the par[0] to be positive ranging from 0 to 10^5.
     // func_Z_peak is used to make plot and calculate Z peak region.
     // Because fit_function excludes the Z peak region, we need build a new function include Z peak region.
     TF1 *func_Z_peak = new TF1("func_Z_peak", fit_exp, fitting_range_low, tail_up, 2);
@@ -370,32 +377,71 @@ void ytBackground_subtraction(TString template_type = "baseline", // baseline, t
     //
     // Estimate the signal contamination
     //
-    double mc_baseline_Nevents_in_mll_window = mc_baseline_mll->Integral(mll_window_low_bin, mll_window_up_bin);
-    double mc_signal_Nevents_in_mll_window = mc_signal_mll->Integral(mll_window_low_bin, mll_window_up_bin);
-    double mc_real_eff = mc_signal_Nevents_in_mll_window / mc_baseline_Nevents_in_mll_window;
-    double mc_real_eff_err = sqrt(mc_real_eff * (1 - mc_real_eff) / mc_baseline_Nevents_in_mll_window);
+    // This part is exactly the same as line 235 to 238
+    //double mc_baseline_Nevents_in_mll_window = mc_baseline_mll->Integral(mll_window_low_bin, mll_window_up_bin);
+    //double mc_signal_Nevents_in_mll_window = mc_signal_mll->Integral(mll_window_low_bin, mll_window_up_bin);
+    //double mc_real_eff_in_mll_window = mc_signal_Nevents_in_mll_window / mc_baseline_Nevents_in_mll_window;
+    //double mc_real_eff_in_mll_window_err = sqrt(mc_real_eff_in_mll_window * (1 - mc_real_eff_in_mll_window) / mc_baseline_Nevents_in_mll_window);
 
-    cout << "mc_baseline_Nevents_in_mll_window = " << mc_baseline_Nevents_in_mll_window << endl;
-    cout << "mc_signal_Nevents_in_mll_window = " << mc_signal_Nevents_in_mll_window << endl;
-    cout << "mc_real_eff = " << mc_real_eff << " +- " << mc_real_eff_err << endl;
+    //double mc_baseline_Nevents_in_the_tail;
+    //if (mc_signal_mll_events_in_the_tail != 0) {
+    //    mc_baseline_Nevents_in_the_tail = mc_signal_mll_events_in_the_tail / mc_real_eff_in_mll_window;
+    //    //mc_baseline_Nevents_in_the_tail = mc_signal_mll_events_in_the_tail / mc_signal_to_baseline_ratio_in_the_tail;
+    //}
+    //else {
+        //mc_baseline_Nevents_in_the_tail = mc_baseline_mll_events_in_the_tail;
+    //}
+    //double data_estimated_background_Nevents_in_the_tail = data_baseline_mll_events_in_the_tail - mc_baseline_Nevents_in_the_tail;
+    double data_estimated_background_Nevents_in_the_tail = data_baseline_mll_events_in_the_tail - mc_baseline_mll_events_in_the_tail;
+    double data_estimated_background_Nevents_in_the_tail_err = sqrt(data_baseline_mll_events_in_the_tail + mc_baseline_mll_events_in_the_tail);
+    //double signal_contimation_in_the_tail = mc_baseline_Nevents_in_the_tail / data_baseline_mll_events_in_the_tail;
+    double signal_contimation_in_the_tail = mc_baseline_mll_events_in_the_tail / data_baseline_mll_events_in_the_tail;
+    double signal_contimation_in_the_tail_err = signal_contimation_in_the_tail * sqrt(1. / mc_baseline_mll_events_in_the_tail + 1. / data_baseline_mll_events_in_the_tail);
 
-    double mc_baseline_Nevents_in_the_tail = mc_signal_mll_events_in_the_tail / mc_real_eff;
-    double data_estimated_background_Nevents_in_the_tail = data_baseline_mll_events_in_the_tail - mc_baseline_Nevents_in_the_tail;
-    double data_estimated_background_Nevents_in_the_tail_err = 0; ///!!!!!!
-    double signal_contimation_in_the_tail = mc_baseline_Nevents_in_the_tail / data_baseline_mll_events_in_the_tail;
+    if (debug) {
+        //cout << "mc_baseline_Nevents_in_mll_window = " << mc_baseline_Nevents_in_mll_window << endl;
+        //cout << "mc_signal_Nevents_in_mll_window = " << mc_signal_Nevents_in_mll_window << endl;
+        //cout << "mc_real_eff_in_mll_window = " << mc_real_eff_in_mll_window << " +- " << mc_real_eff_in_mll_window_err << endl;
 
-    cout << "mc_baseline_Nevents_in_the_tail = " << mc_baseline_Nevents_in_the_tail << endl;
-    cout << "data_estimated_background_Nevents_in_the_tail = " << data_estimated_background_Nevents_in_the_tail << endl;
-    cout << "data_estimated_background_Nevents_in_the_tail_err = " << data_estimated_background_Nevents_in_the_tail_err << endl;
-    cout << "signal_contimation_in_the_tail = " << signal_contimation_in_the_tail << endl;
+        //cout << "mc_baseline_Nevents_in_the_tail = " << mc_baseline_Nevents_in_the_tail << endl;
+        cout << "data_estimated_background_Nevents_in_the_tail = " << data_estimated_background_Nevents_in_the_tail << endl;
+        cout << "data_estimated_background_Nevents_in_the_tail_err = " << data_estimated_background_Nevents_in_the_tail_err << endl;
+        cout << "signal_contimation_in_the_tail = " << signal_contimation_in_the_tail << " +- " << signal_contimation_in_the_tail_err << endl;
+    }
 
     //
     // Normalize the background template in the tail to data in the tail
     //
     double norm = data_estimated_background_Nevents_in_the_tail / fit_data_bkg_template_in_the_tail;
-    double norm_err = data_estimated_background_Nevents_in_the_tail_err / fit_data_bkg_template_in_the_tail;
-    cout << "norm = " << norm << endl;
-    cout << "norm_err = " << norm_err << endl;
+    double norm_err = norm * sqrt(pow(data_estimated_background_Nevents_in_the_tail_err / data_estimated_background_Nevents_in_the_tail, 2) + 1. / fit_data_bkg_template_in_the_tail);
+
+    // When 10 GeV < pT < 15 GeV and 0 < eta < 0.8, I get a negative norm value because MC baseline in the tail
+    // has more events than data estimated bkg in the tail. So I have to use 100 < mll < 120 tail region to
+    // calculate the norm
+	if (norm < 0) {
+        int special_tail_low_bin = data_baseline_mll->FindBin(60. + 0.01);
+        int special_tail_up_bin = data_baseline_mll->FindBin(70. - 0.01);
+		double a = data_baseline_mll->Integral(special_tail_low_bin, special_tail_up_bin);
+		double b = mc_baseline_mll->Integral(special_tail_low_bin, special_tail_up_bin);
+		double c = fit_function->Integral(60., 70.);
+        
+		norm = (a - b) / c;
+        // uncertainty of a - b: da = sqrt(a), db = sqrt(b)
+        double a_minus_b = a - b;
+        double d_a_minus_b = sqrt(a + b);
+        norm_err = norm * sqrt(pow(d_a_minus_b / a_minus_b, 2)+ 1. / c);
+
+        if (debug) {
+            cout << "data_baseline_mll_events_in_the_60_mll_70_region=" << a << endl;
+            cout << "mc_baseline_mll_events_in_the_60_mll_70_region=" << b << endl;
+            cout << "fit_data_bkg_template_in_the_60_mll_70_region=" << c << endl;
+        }
+	}
+
+    if (debug) {
+        cout << "norm = " << norm << endl;
+        cout << "norm_err = " << norm_err << endl;
+    }
     data_bkg_template->Scale(norm);
     h_fit_data_bkg_template->Scale(norm);
 
@@ -405,18 +451,41 @@ void ytBackground_subtraction(TString template_type = "baseline", // baseline, t
     h_fit_data_bkg_template->Fit(fit_function, "0"); // Since we normalized the histogram, we need to do fit again.
     func_Z_peak->SetParameters(fit_function->GetParameter(0), fit_function->GetParameter(1)); // We also need to set the new parameters to func_Z_peak
     fit_data_bkg_template_in_the_Z_peak = func_Z_peak->Integral(mll_window_low, mll_window_up); // This is the bkg under Z peak estimated by the template
-    double fit_data_bkg_template_in_the_Z_peak_err = 0;//!!!!!!!
-
-    cout << "fit_data_bkg_template_in_the_Z_peak = " << fit_data_bkg_template_in_the_Z_peak << endl;
-    cout << "fit_data_bkg_template_in_the_Z_peak_err = " << fit_data_bkg_template_in_the_Z_peak_err << endl;
+    double fit_data_bkg_template_in_the_Z_peak_err = sqrt(fit_data_bkg_template_in_the_Z_peak);
 
     double N_baseline = data_baseline_mll_events_in_the_Z_peak - fit_data_bkg_template_in_the_Z_peak;
     double N_signal = data_signal_mll_events_in_the_Z_peak;
     double real_eff = N_signal / N_baseline;
 
-    cout << "N_baseline=" << N_baseline << endl;
-    cout << "N_signal=" << N_signal << endl;
-    cout << "real_eff=" << real_eff << endl;
+    double N_baseline_err = sqrt(data_baseline_mll_events_in_the_Z_peak + fit_data_bkg_template_in_the_Z_peak);
+    double N_signal_err = sqrt(data_signal_mll_events_in_the_Z_peak);
+    double real_eff_err = real_eff * sqrt(pow(N_baseline_err / N_baseline, 2) + pow(N_signal_err / N_signal, 2));
+
+    if (debug) {
+        cout << "fit_data_bkg_template_in_the_Z_peak = " << fit_data_bkg_template_in_the_Z_peak << endl;
+        cout << "fit_data_bkg_template_in_the_Z_peak_err = " << fit_data_bkg_template_in_the_Z_peak_err << endl;
+
+        cout << "N_baseline=" << N_baseline << endl;
+        cout << "N_baseline_err=" << N_baseline_err << endl;
+        cout << "N_signal=" << N_signal << endl;
+        cout << "N_signal_err=" << N_signal_err << endl;
+        cout << "real_eff=" << real_eff << endl;
+        cout << "real_eff_err=" << real_eff_err << endl;
+    }
+
+    cout << "Background:" << endl;
+    cout << "Background in the tail (estimated) = " << data_estimated_background_Nevents_in_the_tail << " +- " << data_estimated_background_Nevents_in_the_tail_err << endl;
+    cout << "Signal contimation in the tail = " << signal_contimation_in_the_tail << " +- " << signal_contimation_in_the_tail_err << endl;
+    cout << "Background in the Z peak = " << fit_data_bkg_template_in_the_Z_peak << " +- " << fit_data_bkg_template_in_the_Z_peak_err << endl;
+    cout << "********************" << endl;
+    cout << "Final results:" << endl;
+    cout << "N(baseline) before background subtraction = " << data_baseline_mll_events_in_the_Z_peak << " +- " << sqrt(data_baseline_mll_events_in_the_Z_peak)
+         << "(" << 100 * sqrt(data_baseline_mll_events_in_the_Z_peak) / data_baseline_mll_events_in_the_Z_peak << "%)" << endl;
+    cout << "N(baseline) after background subtraction = " << N_baseline << " +- " << N_baseline_err << "(" << 100 * N_baseline_err / N_baseline << "%)"<< endl;
+    cout << "N(signal) = " << N_signal << " +- " << N_signal_err << "(" << 100 * N_signal_err / N_signal << "%)" << endl;
+    cout << "real lepton efficiency (before background subtraction) = " << data_signal_to_baseline_ratio_in_the_Z_peak << " +- " << sqrt(data_signal_to_baseline_ratio_in_the_Z_peak * (1 - data_signal_to_baseline_ratio_in_the_Z_peak) / data_baseline_mll_events_in_the_Z_peak) << endl;
+    cout << "real lepton efficiency (after background subtraction) = " << real_eff << " +- " << real_eff_err << endl;
+    cout << "********************" << endl;
 
     //
     // Making ratio plots
@@ -452,7 +521,7 @@ void ytBackground_subtraction(TString template_type = "baseline", // baseline, t
     data_baseline_mll->SetMarkerSize(0.5);
     data_baseline_mll->SetLineColor(kBlack);
     data_baseline_mll->SetMaximum(data_baseline_mll->GetMaximum() * 10);
-    data_baseline_mll->SetMinimum(10.1);
+    data_baseline_mll->SetMinimum(0.11);
     data_baseline_mll->SetStats(kFALSE);
     data_baseline_mll->Draw("E0");
 
@@ -586,5 +655,6 @@ void ytBackground_subtraction(TString template_type = "baseline", // baseline, t
         else
             pdf_filename = pdf_filename + "_pt" + bin_low_pt + "_" + bin_up_pt + "_eta" + bin_low_eta + "_" + bin_up_eta + ".pdf";
     }
+
     c1->SaveAs(pdf_filename);
 }

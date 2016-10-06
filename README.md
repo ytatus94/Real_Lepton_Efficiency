@@ -1,6 +1,15 @@
 # Real_Lepton_Efficiency
 This is the new real lepton efficiency framework.
 
+v07. Correct background subtraction.
+1. In the ytBackground_subtraction.C:
+1a. Fix the bug when N_sig = 0.
+1b. Add the error propagation.
+1c. Finalize the background subtraction.
+1d. Fix the norm < 0 bug which happens on 10 < pT < 15 and 0 < eta < 0.8. Add a patch to fix it.
+2. Add function to save plots in ytPlots.C..
+3. Add variations in run_bkg_subtraction.sh.
+
 v06. Add skim
 1. Add yt_skim in LinkDef.h
 2. Add new skim class: yt_skim.

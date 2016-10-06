@@ -13,819 +13,24 @@
 
 #include <iostream>
 #include <algorithm>
+#include <string>
+#include <sstream>
 using namespace std;
 
 //
 // Mll plots
 //
 
-// Make baseline mll plots for pt_bin_low < pt < pt_bin_up.
+// Make baseline level and signal level mll plots or ratio plots for pt_bin_low < pt < pt_bin_up.
 // Using pt_bin_low = 0 and pt_bin_up = -1 means the full pt range.
 // Default overlap data, Tag and Probe, and truth match results.
 // Set truth_match = true to turn on truth match on the plot.
-void yt_baseline_mll_plots(int pt_bin_low = 0, int pt_bin_up = -1, bool truth_match = false)
-{
-    // default pt bins are:
-    // 10, 15, 20, 25, 30, 35, 40, 50, 60, 70, 80, 120, 150, 200
-
-    bool debug = false;
-
-	TString path = "/Users/ytshen/Desktop/skim/Results/all_no_cut4/";
-
-    TFile *data_elec = TFile::Open(path + "submitDir_Data_electron/hist-all_no_cut4.root");
-    TFile *data_muon = TFile::Open(path + "submitDir_Data_muon/hist-all_no_cut4.root");
-    TFile *Zee_TandP = TFile::Open(path + "submitDir_MC_Zee/hist-all_no_cut4.root");
-    TFile *Zmumu_TandP = TFile::Open(path + "submitDir_MC_Zmumu/hist-all_no_cut4.root");
-
-    TFile *Zee_truth;
-    TFile *Zmumu_truth;
-    if (truth_match) {
-        Zee_truth = TFile::Open(path + "submitDir_MC_Zee_truth_match/hist-all_no_cut4.root");
-        Zmumu_truth = TFile::Open(path + "submitDir_MC_Zmumu_truth_match/hist-all_no_cut4.root");
-    }
-
-    if (debug) {
-        cout << data_elec << endl;
-        cout << data_muon << endl;
-        cout << Zee_TandP << endl;
-        cout << Zmumu_TandP << endl;
-        if (truth_match) {
-            cout << Zee_truth << endl;
-            cout << Zmumu_truth << endl;
-        }
-    }
-
-    TH3F *data_elec_baseline_pt_eta_mll = (TH3F *)data_elec->Get("h_baseline_pt_eta_mll");
-    TH3F *data_muon_baseline_pt_eta_mll = (TH3F *)data_muon->Get("h_baseline_pt_eta_mll");
-    TH3F *Zee_TandP_baseline_pt_eta_mll = (TH3F *)Zee_TandP->Get("h_baseline_pt_eta_mll");
-    TH3F *Zmumu_TandP_baseline_pt_eta_mll = (TH3F *)Zmumu_TandP->Get("h_baseline_pt_eta_mll");
-
-    TH3F *Zee_truth_baseline_pt_eta_mll;
-    TH3F *Zmumu_truth_baseline_pt_eta_mll;
-    if (truth_match) {
-        Zee_truth_baseline_pt_eta_mll = (TH3F *)Zee_truth->Get("h_baseline_pt_eta_mll");
-        Zmumu_truth_baseline_pt_eta_mll = (TH3F *)Zmumu_truth->Get("h_baseline_pt_eta_mll");
-    }
-    if (debug) {
-        cout << data_elec_baseline_pt_eta_mll << endl;
-        cout << data_muon_baseline_pt_eta_mll << endl;
-        cout << Zee_TandP_baseline_pt_eta_mll << endl;
-        cout << Zmumu_TandP_baseline_pt_eta_mll << endl;
-        if (truth_match) {
-            cout << Zee_truth_baseline_pt_eta_mll << endl;
-            cout << Zmumu_truth_baseline_pt_eta_mll << endl;
-        }
-    }
-
-    TH1D *data_elec_mll = (TH1D *)data_elec_baseline_pt_eta_mll->ProjectionZ("data_elec_mll", pt_bin_low, pt_bin_up);
-    TH1D *data_muon_mll = (TH1D *)data_muon_baseline_pt_eta_mll->ProjectionZ("data_muon_mll", pt_bin_low, pt_bin_up);
-    TH1D *Zee_TandP_mll = (TH1D *)Zee_TandP_baseline_pt_eta_mll->ProjectionZ("Zee_TandP_mll", pt_bin_low, pt_bin_up);
-    TH1D *Zmumu_TandP_mll = (TH1D *)Zmumu_TandP_baseline_pt_eta_mll->ProjectionZ("Zmumu_TandP_mll", pt_bin_low, pt_bin_up);
-
-    TH1D *Zee_truth_mll;
-    TH1D *Zmumu_truth_mll;
-    if (truth_match) {
-        Zee_truth_mll = (TH1D *)Zee_truth_baseline_pt_eta_mll->ProjectionZ("Zee_truth_mll", pt_bin_low, pt_bin_up);
-        Zmumu_truth_mll = (TH1D *)Zmumu_truth_baseline_pt_eta_mll->ProjectionZ("Zmumu_truth_mll", pt_bin_low, pt_bin_up);
-    }
-    if (debug) {
-        cout << data_elec_mll << endl;
-        cout << data_muon_mll << endl;
-        cout << Zee_TandP_mll << endl;
-        cout << Zmumu_TandP_mll << endl;
-        if (truth_match) {
-            cout << Zee_truth_mll << endl;
-            cout << Zmumu_truth_mll << endl;
-        }
-    }
-
-    TCanvas *Mee_plot = new TCanvas("Mee_plot", "Baseline M_{ee}", 500, 500);
-
-    double data_elec_value = data_elec_mll->GetMaximum();
-    double Zee_TandP_max_value = Zee_TandP_mll->GetMaximum();
-
-    data_elec_mll->SetMarkerColor(kBlack);
-    data_elec_mll->SetMarkerStyle(kFullCircle);
-    data_elec_mll->SetLineColor(kBlack);
-    data_elec_mll->SetTitle("");
-    data_elec_mll->SetYTitle("Events");
-	data_elec_mll->SetMaximum(max(data_elec_value, Zee_TandP_max_value) * 1.05);
-	data_elec_mll->SetMinimum(0.);
-    data_elec_mll->SetStats(kFALSE);
-    data_elec_mll->Draw();
-    //Zee_TandP_mll->SetMarkerColor(kRed);
-    //Zee_TandP_mll->SetMarkerStyle(kFullSquare);
-    Zee_TandP_mll->SetLineColor(kRed);
-	Zee_TandP_mll->SetFillColor(kRed);
-	Zee_TandP_mll->SetFillStyle(3004);
-    Zee_TandP_mll->Draw("hist,same");
-
-    if (truth_match) {
-        //Zee_truth_mll->SetMarkerColor(kBlue);
-        //Zee_truth_mll->SetMarkerStyle(kFullTriangleUp);
-        Zee_truth_mll->SetLineColor(kBlue);
-		Zee_truth_mll->SetFillColor(kBlue);
-		Zee_truth_mll->SetFillStyle(3005);
-        Zee_truth_mll->Draw("hist,same");
-    }
-
-    TLegend *leg1 = new TLegend(0.6, 0.7, 0.9, 0.9);
-    leg1->AddEntry(data_elec_mll, "Data");
-    leg1->AddEntry(Zee_TandP_mll, "Zee Tag and Probe", "f");
-
-    if (truth_match) {
-        leg1->AddEntry(Zee_truth_mll, "Zee truth match", "f");
-    }
-
-    leg1->Draw("same");
-
-    TCanvas *Mmumu_plot = new TCanvas("Mmumu_plot", "Baseline M_{#mu#mu}", 500, 500);
-
-    double data_muon_value = data_muon_mll->GetMaximum();
-    double Zmumu_TandP_max_value = Zmumu_TandP_mll->GetMaximum();
-
-    data_muon_mll->SetMarkerColor(kBlack);
-    data_muon_mll->SetMarkerStyle(kFullCircle);
-    data_muon_mll->SetLineColor(kBlack);
-    data_muon_mll->SetTitle("");
-	data_muon_mll->SetMaximum(max(data_muon_value, Zmumu_TandP_max_value) * 1.05);
-	data_muon_mll->SetMinimum(0.);
-    data_muon_mll->SetStats(kFALSE);
-    data_muon_mll->Draw();
-    //Zmumu_TandP_mll->SetMarkerColor(kRed);
-    //Zmumu_TandP_mll->SetMarkerStyle(kFullSquare);
-    Zmumu_TandP_mll->SetLineColor(kRed);
-	Zmumu_TandP_mll->SetFillColor(kRed);
-	Zmumu_TandP_mll->SetFillStyle(3004);
-    Zmumu_TandP_mll->Draw("hist,same");
-
-    if (truth_match) {
-        //Zmumu_truth_mll->SetMarkerColor(kBlue);
-        //Zmumu_truth_mll->SetMarkerStyle(kFullTriangleUp);
-        Zmumu_truth_mll->SetLineColor(kBlue);
-		Zmumu_truth_mll->SetFillColor(kBlue);
-		Zmumu_truth_mll->SetFillStyle(3005);
-        Zmumu_truth_mll->Draw("hist,same");
-    }
-
-    TLegend *leg2 = new TLegend(0.6, 0.7, 0.9, 0.9);
-    leg2->AddEntry(data_muon_mll, "Data");
-    leg2->AddEntry(Zmumu_TandP_mll, "Z#mu#mu Tag and Probe", "f");
-
-    if (truth_match) {
-        leg2->AddEntry(Zmumu_truth_mll, "Z#mu#mu truth match", "f");
-    }
-
-    leg2->Draw("same");
-}
-
-void yt_baseline_mll_ratio_plots(int pt_bin_low = 0, int pt_bin_up = -1, bool truth_match = false, bool norm = false)
-{
-    // default pt bins are:
-    // 10, 15, 20, 25, 30, 35, 40, 50, 60, 70, 80, 120, 150, 200
-
-    bool debug = false;
-
-    TString path = "/Users/ytshen/Desktop/skim/Results/all_no_cut4_0906/";
-
-    TFile *data_elec = TFile::Open(path + "submitDir_Data_electron/hist-all_no_cut4.root");
-    TFile *data_muon = TFile::Open(path + "submitDir_Data_muon/hist-all_no_cut4.root");
-    //TFile *Zee_TandP = TFile::Open(path + "submitDir_MC_Zee/hist-all_no_cut4.root");
-    TFile *Zee_TandP = TFile::Open(path + "submitDir_MC_Zee/hist-all_with_cut4.root");
-    TFile *Zmumu_TandP = TFile::Open(path + "submitDir_MC_Zmumu/hist-all_no_cut4.root");
-
-    TFile *Zee_truth;
-    TFile *Zmumu_truth;
-    if (truth_match) {
-        Zee_truth = TFile::Open(path + "submitDir_MC_Zee_truth_match/hist-all_no_cut4.root");
-        Zmumu_truth = TFile::Open(path + "submitDir_MC_Zmumu_truth_match/hist-all_no_cut4.root");
-    }
-
-    if (debug) {
-        cout << data_elec << endl;
-        cout << data_muon << endl;
-        cout << Zee_TandP << endl;
-        cout << Zmumu_TandP << endl;
-        if (truth_match) {
-            cout << Zee_truth << endl;
-            cout << Zmumu_truth << endl;
-        }
-    }
-
-    TH3F *data_elec_baseline_pt_eta_mll = (TH3F *)data_elec->Get("h_baseline_pt_eta_mll");
-    TH3F *data_muon_baseline_pt_eta_mll = (TH3F *)data_muon->Get("h_baseline_pt_eta_mll");
-    TH3F *Zee_TandP_baseline_pt_eta_mll = (TH3F *)Zee_TandP->Get("h_baseline_pt_eta_mll");
-    TH3F *Zmumu_TandP_baseline_pt_eta_mll = (TH3F *)Zmumu_TandP->Get("h_baseline_pt_eta_mll");
-
-    TH3F *Zee_truth_baseline_pt_eta_mll;
-    TH3F *Zmumu_truth_baseline_pt_eta_mll;
-    if (truth_match) {
-        Zee_truth_baseline_pt_eta_mll = (TH3F *)Zee_truth->Get("h_baseline_pt_eta_mll");
-        Zmumu_truth_baseline_pt_eta_mll = (TH3F *)Zmumu_truth->Get("h_baseline_pt_eta_mll");
-    }
-    if (debug) {
-        cout << data_elec_baseline_pt_eta_mll << endl;
-        cout << data_muon_baseline_pt_eta_mll << endl;
-        cout << Zee_TandP_baseline_pt_eta_mll << endl;
-        cout << Zmumu_TandP_baseline_pt_eta_mll << endl;
-        if (truth_match) {
-            cout << Zee_truth_baseline_pt_eta_mll << endl;
-            cout << Zmumu_truth_baseline_pt_eta_mll << endl;
-        }
-    }
-
-    TH1D *data_elec_mll = (TH1D *)data_elec_baseline_pt_eta_mll->ProjectionZ("data_elec_mll", pt_bin_low, pt_bin_up);
-    TH1D *data_muon_mll = (TH1D *)data_muon_baseline_pt_eta_mll->ProjectionZ("data_muon_mll", pt_bin_low, pt_bin_up);
-    TH1D *Zee_TandP_mll = (TH1D *)Zee_TandP_baseline_pt_eta_mll->ProjectionZ("Zee_TandP_mll", pt_bin_low, pt_bin_up);
-    TH1D *Zmumu_TandP_mll = (TH1D *)Zmumu_TandP_baseline_pt_eta_mll->ProjectionZ("Zmumu_TandP_mll", pt_bin_low, pt_bin_up);
-
-    TH1D *Zee_truth_mll;
-    TH1D *Zmumu_truth_mll;
-    if (truth_match) {
-        Zee_truth_mll = (TH1D *)Zee_truth_baseline_pt_eta_mll->ProjectionZ("Zee_truth_mll", pt_bin_low, pt_bin_up);
-        Zmumu_truth_mll = (TH1D *)Zmumu_truth_baseline_pt_eta_mll->ProjectionZ("Zmumu_truth_mll", pt_bin_low, pt_bin_up);
-    }
-    if (debug) {
-        cout << data_elec_mll << endl;
-        cout << data_muon_mll << endl;
-        cout << Zee_TandP_mll << endl;
-        cout << Zmumu_TandP_mll << endl;
-        if (truth_match) {
-            cout << Zee_truth_mll << endl;
-            cout << Zmumu_truth_mll << endl;
-        }
-    }
-
-    //
-    // Normalize MC to data using a Gaussian fit of the Z peak (85 < mll < 95)
-    //
-    data_elec_mll->Fit("gaus", "0", "", 85, 95);
-    TF1 *func_ee = data_elec_mll->GetFunction("gaus");
-    //cout << func_ee->Integral(85., 95.) << endl;  // function integral uses values as arguments.
-    //cout << data_elec_mll->Integral(data_elec_mll->GetXaxis()->FindBin(85. + 0.01), data_elec_mll->GetXaxis()->FindBin(95. - 0.01)) << endl; // histogram integral uses bins as argument.
-    double data_elec_mll_peak_area = func_ee->Integral(85., 95.);
-
-    data_muon_mll->Fit("gaus", "0", "", 85, 95);
-    TF1 *func_mumu = data_muon_mll->GetFunction("gaus");
-    //cout << func_mumu->Integral(85., 95.) << endl;  // function integral uses values as arguments.
-    //cout << data_muon_mll->Integral(data_muon_mll->GetXaxis()->FindBin(85. + 0.01), data_muon_mll->GetXaxis()->FindBin(95. - 0.01)) << endl; // histogram integral uses bins as argument.
-    double data_muon_mll_peak_area = func_mumu->Integral(85., 95.);
-
-    if (norm) {
-        double Zee_TandP_mll_peak_area = Zee_TandP_mll->Integral(Zee_TandP_mll->GetXaxis()->FindBin(85. + 0.01), Zee_TandP_mll->GetXaxis()->FindBin(95. - 0.01));
-        double Zmumu_TandP_mll_peak_area = Zmumu_TandP_mll->Integral(Zmumu_TandP_mll->GetXaxis()->FindBin(85. + 0.01), Zmumu_TandP_mll->GetXaxis()->FindBin(95. - 0.01));
-        Zee_TandP_mll->Scale(data_elec_mll_peak_area / Zee_TandP_mll_peak_area);
-        Zmumu_TandP_mll->Scale(data_muon_mll_peak_area / Zmumu_TandP_mll_peak_area);
-        if (truth_match) {
-            double Zee_truth_mll_peak_area = Zee_truth_mll->Integral(Zee_truth_mll->GetXaxis()->FindBin(85. + 0.01), Zee_truth_mll->GetXaxis()->FindBin(95. - 0.01));
-            double Zmumu_truth_mll_peak_area = Zmumu_truth_mll->Integral(Zmumu_truth_mll->GetXaxis()->FindBin(85. + 0.01), Zmumu_truth_mll->GetXaxis()->FindBin(95. - 0.01));
-            Zee_truth_mll->Scale(data_elec_mll_peak_area / Zee_truth_mll_peak_area);
-            Zmumu_truth_mll->Scale(data_muon_mll_peak_area / Zmumu_truth_mll_peak_area);
-        }
-    }
-
-    //
-    // For Mee
-    //
-    TCanvas *Mee_plot = new TCanvas("Mee_plot", "Baseline M_{ee}", 600, 600);
-
-    //Upper plot will be in pad1
-    TPad *pad1_Mee = new TPad("pad1_Mee", "pad1_Mee", 0, 0.35, 1, 1.0);
-    pad1_Mee->SetBottomMargin(0); // Upper and lower plot are joined
-    pad1_Mee->SetRightMargin(0.08);
-    //pad1_Mee->SetGridy(); // grid lines
-    //pad1_Mee->SetLogx();
-    pad1_Mee->Draw();
-
-    // lower plot will be in pad
-    TPad *pad2_Mee = new TPad("pad2_Mee", "pad2_Mee", 0, 0.05, 1, 0.35);
-    pad2_Mee->SetTopMargin(0);
-    pad2_Mee->SetBottomMargin(0.3);
-    pad2_Mee->SetRightMargin(0.08);
-    pad2_Mee->SetGridy(); // grid lines
-    //pad2_Mee->SetLogx();
-    pad2_Mee->Draw();
-
-    pad1_Mee->cd(); // pad1 becomes the current pad
-    //pad1_Mee->SetFrameLineWidth(2);
-
-    // Draw curve here
-
-    double data_elec_value = data_elec_mll->GetMaximum();
-    double Zee_TandP_max_value = Zee_TandP_mll->GetMaximum();
-
-    data_elec_mll->SetMarkerColor(kBlack);
-    data_elec_mll->SetMarkerStyle(kFullCircle);
-    data_elec_mll->SetLineColor(kBlack);
-    data_elec_mll->SetTitle("");
-    data_elec_mll->SetYTitle("Events");
-    data_elec_mll->SetMaximum(max(data_elec_value, Zee_TandP_max_value) * 1.05);
-    data_elec_mll->SetMinimum(0.1);
-    data_elec_mll->SetStats(kFALSE);
-    data_elec_mll->Draw();
-    //Zee_TandP_mll->SetMarkerColor(kRed);
-    //Zee_TandP_mll->SetMarkerStyle(kFullSquare);
-    Zee_TandP_mll->SetLineColor(kRed);
-    Zee_TandP_mll->SetFillColor(kRed);
-    Zee_TandP_mll->SetFillStyle(3004);
-    Zee_TandP_mll->Draw("hist,same");
-
-    if (truth_match) {
-        //Zee_truth_mll->SetMarkerColor(kBlue);
-        //Zee_truth_mll->SetMarkerStyle(kFullTriangleUp);
-        Zee_truth_mll->SetLineColor(kBlue);
-        Zee_truth_mll->SetFillColor(kBlue);
-        Zee_truth_mll->SetFillStyle(3005);
-        Zee_truth_mll->Draw("hist,same");
-    }
-
-    TLegend *leg1 = new TLegend(0.6, 0.7, 0.9, 0.9);
-    leg1->AddEntry(data_elec_mll, "Data");
-    leg1->AddEntry(Zee_TandP_mll, "Zee Tag and Probe", "f");
-
-    if (truth_match) {
-        leg1->AddEntry(Zee_truth_mll, "Zee truth match", "f");
-    }
-
-    leg1->SetBorderSize(0);
-    leg1->SetTextFont(42);
-    leg1->SetTextSize(0.05);
-    leg1->SetFillColor(0);
-    leg1->SetFillStyle(0);
-    leg1->Draw("same");
-
-    pad2_Mee->cd(); // pad2 becomes the current pad
-
-    TH1F *frame_Mee = pad2_Mee->DrawFrame(60, 0.8, 150, 1.19);
-    frame_Mee->GetXaxis()->SetNdivisions(510);
-    frame_Mee->GetYaxis()->SetNdivisions(405);
-    frame_Mee->SetLineWidth(1);
-    frame_Mee->SetXTitle("M_{ll} [GeV]");
-    frame_Mee->GetXaxis()->SetTitleSize(20);
-    frame_Mee->GetXaxis()->SetTitleFont(47);
-    frame_Mee->GetXaxis()->SetTitleOffset(3.0);
-    frame_Mee->GetXaxis()->SetLabelFont(43); // Absolute font size in pixel (precision 3)
-    frame_Mee->GetXaxis()->SetLabelSize(15);
-    frame_Mee->SetYTitle("Data / MC");
-    frame_Mee->GetYaxis()->SetTitleSize(17);
-    frame_Mee->GetYaxis()->SetTitleFont(43);
-    frame_Mee->GetYaxis()->SetTitleOffset(1.5);
-    frame_Mee->GetYaxis()->SetLabelFont(43); // Absolute font size in pixel (precision 3)
-    frame_Mee->GetYaxis()->SetLabelSize(16);
-    frame_Mee->Draw();
-
-    TH1F *ratio_Mee_TandP = (TH1F *)data_elec_mll->Clone();
-    ratio_Mee_TandP->Sumw2();
-    ratio_Mee_TandP->Divide(Zee_TandP_mll);
-    ratio_Mee_TandP->SetMarkerColor(kRed);
-    ratio_Mee_TandP->SetMarkerStyle(kFullTriangleUp);
-    ratio_Mee_TandP->SetLineColor(kRed);
-    ratio_Mee_TandP->Draw("same");
-
-    if (truth_match) {
-        TH1F *ratio_Mee_truth = (TH1F *)data_elec_mll->Clone();
-        ratio_Mee_truth->Sumw2();
-        ratio_Mee_truth->Divide(Zee_truth_mll);
-        ratio_Mee_truth->SetMarkerColor(kBlue);
-        ratio_Mee_truth->SetMarkerStyle(kFullTriangleDown);
-        ratio_Mee_truth->SetLineColor(kBlue);
-        ratio_Mee_truth->Draw("same");
-    }
-
-    //
-    // For Mmumu
-    //
-    TCanvas *Mmumu_plot = new TCanvas("Mmumu_plot", "Baseline M_{#mu#mu}", 600, 600);
-
-    //Upper plot will be in pad1
-    TPad *pad1_Mmumu = new TPad("pad1_Mmumu", "pad1_Mmumu", 0, 0.35, 1, 1.0);
-    pad1_Mmumu->SetBottomMargin(0); // Upper and lower plot are joined
-    pad1_Mmumu->SetRightMargin(0.08);
-    //pad1_Mmumu->SetGridy(); // grid lines
-    //pad1_Mmumu->SetLogx();
-    pad1_Mmumu->Draw();
-
-    // lower plot will be in pad
-    TPad *pad2_Mmumu = new TPad("pad2_Mmumu", "pad2_Mmumu", 0, 0.05, 1, 0.35);
-    pad2_Mmumu->SetTopMargin(0);
-    pad2_Mmumu->SetBottomMargin(0.3);
-    pad2_Mmumu->SetRightMargin(0.08);
-    pad2_Mmumu->SetGridy(); // grid lines
-    //pad2_Mmumu->SetLogx();
-    pad2_Mmumu->Draw();
-
-    pad1_Mmumu->cd(); // pad1 becomes the current pad
-    //pad1_Mmumu->SetFrameLineWidth(2);
-
-    // Draw curve here
-
-    double data_muon_value = data_muon_mll->GetMaximum();
-    double Zmumu_TandP_max_value = Zmumu_TandP_mll->GetMaximum();
-
-    data_muon_mll->SetMarkerColor(kBlack);
-    data_muon_mll->SetMarkerStyle(kFullCircle);
-    data_muon_mll->SetLineColor(kBlack);
-    data_muon_mll->SetTitle("");
-    data_muon_mll->SetMaximum(max(data_muon_value, Zmumu_TandP_max_value) * 1.05);
-    data_muon_mll->SetMinimum(0.1);
-    data_muon_mll->SetStats(kFALSE);
-    data_muon_mll->Draw();
-    //Zmumu_TandP_mll->SetMarkerColor(kRed);
-    //Zmumu_TandP_mll->SetMarkerStyle(kFullSquare);
-    Zmumu_TandP_mll->SetLineColor(kRed);
-    Zmumu_TandP_mll->SetFillColor(kRed);
-    Zmumu_TandP_mll->SetFillStyle(3004);
-    Zmumu_TandP_mll->Draw("hist,same");
-
-    if (truth_match) {
-        //Zmumu_truth_mll->SetMarkerColor(kBlue);
-        //Zmumu_truth_mll->SetMarkerStyle(kFullTriangleUp);
-        Zmumu_truth_mll->SetLineColor(kBlue);
-        Zmumu_truth_mll->SetFillColor(kBlue);
-        Zmumu_truth_mll->SetFillStyle(3005);
-        Zmumu_truth_mll->Draw("hist,same");
-    }
-
-    TLegend *leg2 = new TLegend(0.6, 0.7, 0.9, 0.9);
-    leg2->AddEntry(data_muon_mll, "Data");
-    leg2->AddEntry(Zmumu_TandP_mll, "Z#mu#mu Tag and Probe", "f");
-
-    if (truth_match) {
-        leg2->AddEntry(Zmumu_truth_mll, "Z#mu#mu truth match", "f");
-    }
-
-    leg2->SetBorderSize(0);
-    leg2->SetTextFont(42);
-    leg2->SetTextSize(0.05);
-    leg2->SetFillColor(0);
-    leg2->SetFillStyle(0);
-    leg2->Draw("same");
-
-    pad2_Mmumu->cd(); // pad2 becomes the current pad
-
-    TH1F *frame_Mmumu = pad2_Mmumu->DrawFrame(60, 0.8, 150, 1.19);
-    frame_Mmumu->GetXaxis()->SetNdivisions(510);
-    frame_Mmumu->GetYaxis()->SetNdivisions(405);
-    frame_Mmumu->SetLineWidth(1);
-    frame_Mmumu->SetXTitle("M_{ll} [GeV]");
-    frame_Mmumu->GetXaxis()->SetTitleSize(20);
-    frame_Mmumu->GetXaxis()->SetTitleFont(47);
-    frame_Mmumu->GetXaxis()->SetTitleOffset(3.0);
-    frame_Mmumu->GetXaxis()->SetLabelFont(43); // Absolute font size in pixel (precision 3)
-    frame_Mmumu->GetXaxis()->SetLabelSize(15);
-    frame_Mmumu->SetYTitle("Data / MC");
-    frame_Mmumu->GetYaxis()->SetTitleSize(17);
-    frame_Mmumu->GetYaxis()->SetTitleFont(43);
-    frame_Mmumu->GetYaxis()->SetTitleOffset(1.5);
-    frame_Mmumu->GetYaxis()->SetLabelFont(43); // Absolute font size in pixel (precision 3)
-    frame_Mmumu->GetYaxis()->SetLabelSize(16);
-    frame_Mmumu->Draw();
-
-    TH1F *ratio_Mmumu_TandP = (TH1F *)data_muon_mll->Clone();
-    ratio_Mmumu_TandP->Sumw2();
-    ratio_Mmumu_TandP->Divide(Zmumu_TandP_mll);
-    ratio_Mmumu_TandP->SetMarkerColor(kRed);
-    ratio_Mmumu_TandP->SetMarkerStyle(kFullTriangleUp);
-    ratio_Mmumu_TandP->SetLineColor(kRed);
-    ratio_Mmumu_TandP->Draw("same");
-
-    if (truth_match) {
-        TH1F *ratio_Mmumu_truth = (TH1F *)data_muon_mll->Clone();
-        ratio_Mmumu_truth->Sumw2();
-        ratio_Mmumu_truth->Divide(Zmumu_truth_mll);
-        ratio_Mmumu_truth->SetMarkerColor(kBlue);
-        ratio_Mmumu_truth->SetMarkerStyle(kFullTriangleDown);
-        ratio_Mmumu_truth->SetLineColor(kBlue);
-        ratio_Mmumu_truth->Draw("same");
-    }
-}
-
-void yt_signal_mll_ratio_plots(int pt_bin_low = 0, int pt_bin_up = -1, bool truth_match = false, bool norm = false)
-{
-    // default pt bins are:
-    // 10, 15, 20, 25, 30, 35, 40, 50, 60, 70, 80, 120, 150, 200
-    
-    bool debug = false;
-    
-    TString path = "/Users/ytshen/Desktop/skim/Results/all_no_cut4/";
-    
-    TFile *data_elec = TFile::Open(path + "submitDir_Data_electron/hist-all_no_cut4.root");
-    TFile *data_muon = TFile::Open(path + "submitDir_Data_muon/hist-all_no_cut4.root");
-    TFile *Zee_TandP = TFile::Open(path + "submitDir_MC_Zee/hist-all_no_cut4.root");
-    TFile *Zmumu_TandP = TFile::Open(path + "submitDir_MC_Zmumu/hist-all_no_cut4.root");
-    
-    TFile *Zee_truth;
-    TFile *Zmumu_truth;
-    if (truth_match) {
-        Zee_truth = TFile::Open(path + "submitDir_MC_Zee_truth_match/hist-all_no_cut4.root");
-        Zmumu_truth = TFile::Open(path + "submitDir_MC_Zmumu_truth_match/hist-all_no_cut4.root");
-    }
-    
-    if (debug) {
-        cout << data_elec << endl;
-        cout << data_muon << endl;
-        cout << Zee_TandP << endl;
-        cout << Zmumu_TandP << endl;
-        if (truth_match) {
-            cout << Zee_truth << endl;
-            cout << Zmumu_truth << endl;
-        }
-    }
-    
-    TH3F *data_elec_signal_pt_eta_mll = (TH3F *)data_elec->Get("h_signal_pt_eta_mll");
-    TH3F *data_muon_signal_pt_eta_mll = (TH3F *)data_muon->Get("h_signal_pt_eta_mll");
-    TH3F *Zee_TandP_signal_pt_eta_mll = (TH3F *)Zee_TandP->Get("h_signal_pt_eta_mll");
-    TH3F *Zmumu_TandP_signal_pt_eta_mll = (TH3F *)Zmumu_TandP->Get("h_signal_pt_eta_mll");
-    
-    TH3F *Zee_truth_signal_pt_eta_mll;
-    TH3F *Zmumu_truth_signal_pt_eta_mll;
-    if (truth_match) {
-        Zee_truth_signal_pt_eta_mll = (TH3F *)Zee_truth->Get("h_signal_pt_eta_mll");
-        Zmumu_truth_signal_pt_eta_mll = (TH3F *)Zmumu_truth->Get("h_signal_pt_eta_mll");
-    }
-    if (debug) {
-        cout << data_elec_signal_pt_eta_mll << endl;
-        cout << data_muon_signal_pt_eta_mll << endl;
-        cout << Zee_TandP_signal_pt_eta_mll << endl;
-        cout << Zmumu_TandP_signal_pt_eta_mll << endl;
-        if (truth_match) {
-            cout << Zee_truth_signal_pt_eta_mll << endl;
-            cout << Zmumu_truth_signal_pt_eta_mll << endl;
-        }
-    }
-    
-    TH1D *data_elec_mll = (TH1D *)data_elec_signal_pt_eta_mll->ProjectionZ("data_elec_mll", pt_bin_low, pt_bin_up);
-    TH1D *data_muon_mll = (TH1D *)data_muon_signal_pt_eta_mll->ProjectionZ("data_muon_mll", pt_bin_low, pt_bin_up);
-    TH1D *Zee_TandP_mll = (TH1D *)Zee_TandP_signal_pt_eta_mll->ProjectionZ("Zee_TandP_mll", pt_bin_low, pt_bin_up);
-    TH1D *Zmumu_TandP_mll = (TH1D *)Zmumu_TandP_signal_pt_eta_mll->ProjectionZ("Zmumu_TandP_mll", pt_bin_low, pt_bin_up);
-    
-    TH1D *Zee_truth_mll;
-    TH1D *Zmumu_truth_mll;
-    if (truth_match) {
-        Zee_truth_mll = (TH1D *)Zee_truth_signal_pt_eta_mll->ProjectionZ("Zee_truth_mll", pt_bin_low, pt_bin_up);
-        Zmumu_truth_mll = (TH1D *)Zmumu_truth_signal_pt_eta_mll->ProjectionZ("Zmumu_truth_mll", pt_bin_low, pt_bin_up);
-    }
-    if (debug) {
-        cout << data_elec_mll << endl;
-        cout << data_muon_mll << endl;
-        cout << Zee_TandP_mll << endl;
-        cout << Zmumu_TandP_mll << endl;
-        if (truth_match) {
-            cout << Zee_truth_mll << endl;
-            cout << Zmumu_truth_mll << endl;
-        }
-    }
-    
-    //
-    // Normalize MC to data using a Gaussian fit of the Z peak (85 < mll < 95)
-    //
-    data_elec_mll->Fit("gaus", "0", "", 85, 95);
-    TF1 *func_ee = data_elec_mll->GetFunction("gaus");
-    //cout << func_ee->Integral(85., 95.) << endl;  // function integral uses values as arguments.
-    //cout << data_elec_mll->Integral(data_elec_mll->GetXaxis()->FindBin(85. + 0.01), data_elec_mll->GetXaxis()->FindBin(95. - 0.01)) << endl; // histogram integral uses bins as argument.
-    double data_elec_mll_peak_area = func_ee->Integral(85., 95.);
-    
-    data_muon_mll->Fit("gaus", "0", "", 85, 95);
-    TF1 *func_mumu = data_muon_mll->GetFunction("gaus");
-    //cout << func_mumu->Integral(85., 95.) << endl;  // function integral uses values as arguments.
-    //cout << data_muon_mll->Integral(data_muon_mll->GetXaxis()->FindBin(85. + 0.01), data_muon_mll->GetXaxis()->FindBin(95. - 0.01)) << endl; // histogram integral uses bins as argument.
-    double data_muon_mll_peak_area = func_mumu->Integral(85., 95.);
-    
-    if (norm) {
-        double Zee_TandP_mll_peak_area = Zee_TandP_mll->Integral(Zee_TandP_mll->GetXaxis()->FindBin(85. + 0.01), Zee_TandP_mll->GetXaxis()->FindBin(95. - 0.01));
-        double Zmumu_TandP_mll_peak_area = Zmumu_TandP_mll->Integral(Zmumu_TandP_mll->GetXaxis()->FindBin(85. + 0.01), Zmumu_TandP_mll->GetXaxis()->FindBin(95. - 0.01));
-        Zee_TandP_mll->Scale(data_elec_mll_peak_area / Zee_TandP_mll_peak_area);
-        Zmumu_TandP_mll->Scale(data_muon_mll_peak_area / Zmumu_TandP_mll_peak_area);
-        if (truth_match) {
-            double Zee_truth_mll_peak_area = Zee_truth_mll->Integral(Zee_truth_mll->GetXaxis()->FindBin(85. + 0.01), Zee_truth_mll->GetXaxis()->FindBin(95. - 0.01));
-            double Zmumu_truth_mll_peak_area = Zmumu_truth_mll->Integral(Zmumu_truth_mll->GetXaxis()->FindBin(85. + 0.01), Zmumu_truth_mll->GetXaxis()->FindBin(95. - 0.01));
-            Zee_truth_mll->Scale(data_elec_mll_peak_area / Zee_truth_mll_peak_area);
-            Zmumu_truth_mll->Scale(data_muon_mll_peak_area / Zmumu_truth_mll_peak_area);
-        }
-    }
-    
-    //
-    // For Mee
-    //
-    TCanvas *Mee_plot = new TCanvas("Mee_plot", "Baseline M_{ee}", 600, 600);
-    
-    //Upper plot will be in pad1
-    TPad *pad1_Mee = new TPad("pad1_Mee", "pad1_Mee", 0, 0.35, 1, 1.0);
-    pad1_Mee->SetBottomMargin(0); // Upper and lower plot are joined
-    pad1_Mee->SetRightMargin(0.08);
-    //pad1_Mee->SetGridy(); // grid lines
-    //pad1_Mee->SetLogx();
-    pad1_Mee->Draw();
-    
-    // lower plot will be in pad
-    TPad *pad2_Mee = new TPad("pad2_Mee", "pad2_Mee", 0, 0.05, 1, 0.35);
-    pad2_Mee->SetTopMargin(0);
-    pad2_Mee->SetBottomMargin(0.3);
-    pad2_Mee->SetRightMargin(0.08);
-    pad2_Mee->SetGridy(); // grid lines
-    //pad2_Mee->SetLogx();
-    pad2_Mee->Draw();
-    
-    pad1_Mee->cd(); // pad1 becomes the current pad
-    //pad1_Mee->SetFrameLineWidth(2);
-    
-    // Draw curve here
-    
-    double data_elec_value = data_elec_mll->GetMaximum();
-    double Zee_TandP_max_value = Zee_TandP_mll->GetMaximum();
-    
-    data_elec_mll->SetMarkerColor(kBlack);
-    data_elec_mll->SetMarkerStyle(kFullCircle);
-    data_elec_mll->SetLineColor(kBlack);
-    data_elec_mll->SetTitle("");
-    data_elec_mll->SetYTitle("Events");
-    data_elec_mll->SetMaximum(max(data_elec_value, Zee_TandP_max_value) * 1.05);
-    data_elec_mll->SetMinimum(0.1);
-    data_elec_mll->SetStats(kFALSE);
-    data_elec_mll->Draw();
-    //Zee_TandP_mll->SetMarkerColor(kRed);
-    //Zee_TandP_mll->SetMarkerStyle(kFullSquare);
-    Zee_TandP_mll->SetLineColor(kRed);
-    Zee_TandP_mll->SetFillColor(kRed);
-    Zee_TandP_mll->SetFillStyle(3004);
-    Zee_TandP_mll->Draw("hist,same");
-    
-    if (truth_match) {
-        //Zee_truth_mll->SetMarkerColor(kBlue);
-        //Zee_truth_mll->SetMarkerStyle(kFullTriangleUp);
-        Zee_truth_mll->SetLineColor(kBlue);
-        Zee_truth_mll->SetFillColor(kBlue);
-        Zee_truth_mll->SetFillStyle(3005);
-        Zee_truth_mll->Draw("hist,same");
-    }
-    
-    TLegend *leg1 = new TLegend(0.6, 0.7, 0.9, 0.9);
-    leg1->AddEntry(data_elec_mll, "Data");
-    leg1->AddEntry(Zee_TandP_mll, "Zee Tag and Probe", "f");
-    
-    if (truth_match) {
-        leg1->AddEntry(Zee_truth_mll, "Zee truth match", "f");
-    }
-    
-    leg1->SetBorderSize(0);
-    leg1->SetTextFont(42);
-    leg1->SetTextSize(0.05);
-    leg1->SetFillColor(0);
-    leg1->SetFillStyle(0);
-    leg1->Draw("same");
-    
-    pad2_Mee->cd(); // pad2 becomes the current pad
-    
-    TH1F *frame_Mee = pad2_Mee->DrawFrame(60, 0.8, 150, 1.19);
-    frame_Mee->GetXaxis()->SetNdivisions(510);
-    frame_Mee->GetYaxis()->SetNdivisions(405);
-    frame_Mee->SetLineWidth(1);
-    frame_Mee->SetXTitle("M_{ll} [GeV]");
-    frame_Mee->GetXaxis()->SetTitleSize(20);
-    frame_Mee->GetXaxis()->SetTitleFont(47);
-    frame_Mee->GetXaxis()->SetTitleOffset(3.0);
-    frame_Mee->GetXaxis()->SetLabelFont(43); // Absolute font size in pixel (precision 3)
-    frame_Mee->GetXaxis()->SetLabelSize(15);
-    frame_Mee->SetYTitle("Data / MC");
-    frame_Mee->GetYaxis()->SetTitleSize(17);
-    frame_Mee->GetYaxis()->SetTitleFont(43);
-    frame_Mee->GetYaxis()->SetTitleOffset(1.5);
-    frame_Mee->GetYaxis()->SetLabelFont(43); // Absolute font size in pixel (precision 3)
-    frame_Mee->GetYaxis()->SetLabelSize(16);
-    frame_Mee->Draw();
-    
-    TH1F *ratio_Mee_TandP = (TH1F *)data_elec_mll->Clone();
-    ratio_Mee_TandP->Sumw2();
-    ratio_Mee_TandP->Divide(Zee_TandP_mll);
-    ratio_Mee_TandP->SetMarkerColor(kRed);
-    ratio_Mee_TandP->SetMarkerStyle(kFullTriangleUp);
-    ratio_Mee_TandP->SetLineColor(kRed);
-    ratio_Mee_TandP->Draw("same");
-    
-    if (truth_match) {
-        TH1F *ratio_Mee_truth = (TH1F *)data_elec_mll->Clone();
-        ratio_Mee_truth->Sumw2();
-        ratio_Mee_truth->Divide(Zee_truth_mll);
-        ratio_Mee_truth->SetMarkerColor(kBlue);
-        ratio_Mee_truth->SetMarkerStyle(kFullTriangleDown);
-        ratio_Mee_truth->SetLineColor(kBlue);
-        ratio_Mee_truth->Draw("same");
-    }
-    
-    //
-    // For Mmumu
-    //
-    TCanvas *Mmumu_plot = new TCanvas("Mmumu_plot", "Baseline M_{#mu#mu}", 600, 600);
-    
-    //Upper plot will be in pad1
-    TPad *pad1_Mmumu = new TPad("pad1_Mmumu", "pad1_Mmumu", 0, 0.35, 1, 1.0);
-    pad1_Mmumu->SetBottomMargin(0); // Upper and lower plot are joined
-    pad1_Mmumu->SetRightMargin(0.08);
-    //pad1_Mmumu->SetGridy(); // grid lines
-    //pad1_Mmumu->SetLogx();
-    pad1_Mmumu->Draw();
-    
-    // lower plot will be in pad
-    TPad *pad2_Mmumu = new TPad("pad2_Mmumu", "pad2_Mmumu", 0, 0.05, 1, 0.35);
-    pad2_Mmumu->SetTopMargin(0);
-    pad2_Mmumu->SetBottomMargin(0.3);
-    pad2_Mmumu->SetRightMargin(0.08);
-    pad2_Mmumu->SetGridy(); // grid lines
-    //pad2_Mmumu->SetLogx();
-    pad2_Mmumu->Draw();
-    
-    pad1_Mmumu->cd(); // pad1 becomes the current pad
-    //pad1_Mmumu->SetFrameLineWidth(2);
-    
-    // Draw curve here
-    
-    double data_muon_value = data_muon_mll->GetMaximum();
-    double Zmumu_TandP_max_value = Zmumu_TandP_mll->GetMaximum();
-    
-    data_muon_mll->SetMarkerColor(kBlack);
-    data_muon_mll->SetMarkerStyle(kFullCircle);
-    data_muon_mll->SetLineColor(kBlack);
-    data_muon_mll->SetTitle("");
-    data_muon_mll->SetMaximum(max(data_muon_value, Zmumu_TandP_max_value) * 1.05);
-    data_muon_mll->SetMinimum(0.1);
-    data_muon_mll->SetStats(kFALSE);
-    data_muon_mll->Draw();
-    //Zmumu_TandP_mll->SetMarkerColor(kRed);
-    //Zmumu_TandP_mll->SetMarkerStyle(kFullSquare);
-    Zmumu_TandP_mll->SetLineColor(kRed);
-    Zmumu_TandP_mll->SetFillColor(kRed);
-    Zmumu_TandP_mll->SetFillStyle(3004);
-    Zmumu_TandP_mll->Draw("hist,same");
-    
-    if (truth_match) {
-        //Zmumu_truth_mll->SetMarkerColor(kBlue);
-        //Zmumu_truth_mll->SetMarkerStyle(kFullTriangleUp);
-        Zmumu_truth_mll->SetLineColor(kBlue);
-        Zmumu_truth_mll->SetFillColor(kBlue);
-        Zmumu_truth_mll->SetFillStyle(3005);
-        Zmumu_truth_mll->Draw("hist,same");
-    }
-    
-    TLegend *leg2 = new TLegend(0.6, 0.7, 0.9, 0.9);
-    leg2->AddEntry(data_muon_mll, "Data");
-    leg2->AddEntry(Zmumu_TandP_mll, "Z#mu#mu Tag and Probe", "f");
-    
-    if (truth_match) {
-        leg2->AddEntry(Zmumu_truth_mll, "Z#mu#mu truth match", "f");
-    }
-    
-    leg2->SetBorderSize(0);
-    leg2->SetTextFont(42);
-    leg2->SetTextSize(0.05);
-    leg2->SetFillColor(0);
-    leg2->SetFillStyle(0);
-    leg2->Draw("same");
-    
-    pad2_Mmumu->cd(); // pad2 becomes the current pad
-    
-    TH1F *frame_Mmumu = pad2_Mmumu->DrawFrame(60, 0.8, 150, 1.19);
-    frame_Mmumu->GetXaxis()->SetNdivisions(510);
-    frame_Mmumu->GetYaxis()->SetNdivisions(405);
-    frame_Mmumu->SetLineWidth(1);
-    frame_Mmumu->SetXTitle("M_{ll} [GeV]");
-    frame_Mmumu->GetXaxis()->SetTitleSize(20);
-    frame_Mmumu->GetXaxis()->SetTitleFont(47);
-    frame_Mmumu->GetXaxis()->SetTitleOffset(3.0);
-    frame_Mmumu->GetXaxis()->SetLabelFont(43); // Absolute font size in pixel (precision 3)
-    frame_Mmumu->GetXaxis()->SetLabelSize(15);
-    frame_Mmumu->SetYTitle("Data / MC");
-    frame_Mmumu->GetYaxis()->SetTitleSize(17);
-    frame_Mmumu->GetYaxis()->SetTitleFont(43);
-    frame_Mmumu->GetYaxis()->SetTitleOffset(1.5);
-    frame_Mmumu->GetYaxis()->SetLabelFont(43); // Absolute font size in pixel (precision 3)
-    frame_Mmumu->GetYaxis()->SetLabelSize(16);
-    frame_Mmumu->Draw();
-    
-    TH1F *ratio_Mmumu_TandP = (TH1F *)data_muon_mll->Clone();
-    ratio_Mmumu_TandP->Sumw2();
-    ratio_Mmumu_TandP->Divide(Zmumu_TandP_mll);
-    ratio_Mmumu_TandP->SetMarkerColor(kRed);
-    ratio_Mmumu_TandP->SetMarkerStyle(kFullTriangleUp);
-    ratio_Mmumu_TandP->SetLineColor(kRed);
-    ratio_Mmumu_TandP->Draw("same");
-    
-    if (truth_match) {
-        TH1F *ratio_Mmumu_truth = (TH1F *)data_muon_mll->Clone();
-        ratio_Mmumu_truth->Sumw2();
-        ratio_Mmumu_truth->Divide(Zmumu_truth_mll);
-        ratio_Mmumu_truth->SetMarkerColor(kBlue);
-        ratio_Mmumu_truth->SetMarkerStyle(kFullTriangleDown);
-        ratio_Mmumu_truth->SetLineColor(kBlue);
-        ratio_Mmumu_truth->Draw("same");
-    }
-}
-
 void yt_mll_plots()
 {
-    TString path = "/Users/ytshen/Desktop/skim/Results/all_no_cut4/";
+    TString path = "/Users/ytshen/Desktop/skim/Results/1005/";
 
-    TFile *data_elec = TFile::Open(path + "submitDir_Data_electron/hist-all_no_cut4.root");
-    TFile *data_muon = TFile::Open(path + "submitDir_Data_muon/hist-all_no_cut4.root");
+    TFile *data_elec = TFile::Open(path + "submitDir_Data_electron/hist-0929_80mll100.root");
+    TFile *data_muon = TFile::Open(path + "submitDir_Data_muon/hist-0929_80mll100.root");
 
     TH3F *data_elec_baseline_pt_eta_mll = (TH3F *)data_elec->Get("h_baseline_pt_eta_mll");
     TH3F *data_muon_baseline_pt_eta_mll = (TH3F *)data_muon->Get("h_baseline_pt_eta_mll");
@@ -914,6 +119,1128 @@ void yt_mll_plots()
     //leg_mumu->SetFillColor(0);
     //leg_mumu->SetFillStyle(0);
     leg_mumu->Draw("same");
+}
+
+void yt_baseline_mll_plots(int pt_bin_low = 0, int pt_bin_up = -1, bool truth_match = false)
+{
+    // default pt bins are:
+    // 10, 15, 20, 25, 30, 35, 40, 50, 60, 70, 80, 120, 150, 200
+
+    bool debug = false;
+
+    TString path = "/Users/ytshen/Desktop/skim/Results/1005/";
+
+    TFile *data_elec = TFile::Open(path + "submitDir_Data_electron/hist-0929_80mll100.root");
+    TFile *data_muon = TFile::Open(path + "submitDir_Data_muon/hist-0929_80mll100.root");
+    TFile *Zee_TandP = TFile::Open(path + "submitDir_MC_Zee/hist-0929_80mll100.root");
+    TFile *Zmumu_TandP = TFile::Open(path + "submitDir_MC_Zmumu/hist-0929_80mll100.root");
+
+    TFile *Zee_truth;
+    TFile *Zmumu_truth;
+    if (truth_match) {
+        Zee_truth = TFile::Open(path + "submitDir_MC_Zee_truth_match/hist-0929_80mll100.root");
+        Zmumu_truth = TFile::Open(path + "submitDir_MC_Zmumu_truth_match/hist-0929_80mll100.root");
+    }
+
+    if (debug) {
+        cout << data_elec << endl;
+        cout << data_muon << endl;
+        cout << Zee_TandP << endl;
+        cout << Zmumu_TandP << endl;
+        if (truth_match) {
+            cout << Zee_truth << endl;
+            cout << Zmumu_truth << endl;
+        }
+    }
+
+    TH3F *data_elec_baseline_pt_eta_mll = (TH3F *)data_elec->Get("h_baseline_pt_eta_mll");
+    TH3F *data_muon_baseline_pt_eta_mll = (TH3F *)data_muon->Get("h_baseline_pt_eta_mll");
+    TH3F *Zee_TandP_baseline_pt_eta_mll = (TH3F *)Zee_TandP->Get("h_baseline_pt_eta_mll");
+    TH3F *Zmumu_TandP_baseline_pt_eta_mll = (TH3F *)Zmumu_TandP->Get("h_baseline_pt_eta_mll");
+
+    TH3F *Zee_truth_baseline_pt_eta_mll;
+    TH3F *Zmumu_truth_baseline_pt_eta_mll;
+    if (truth_match) {
+        Zee_truth_baseline_pt_eta_mll = (TH3F *)Zee_truth->Get("h_baseline_pt_eta_mll");
+        Zmumu_truth_baseline_pt_eta_mll = (TH3F *)Zmumu_truth->Get("h_baseline_pt_eta_mll");
+    }
+    if (debug) {
+        cout << data_elec_baseline_pt_eta_mll << endl;
+        cout << data_muon_baseline_pt_eta_mll << endl;
+        cout << Zee_TandP_baseline_pt_eta_mll << endl;
+        cout << Zmumu_TandP_baseline_pt_eta_mll << endl;
+        if (truth_match) {
+            cout << Zee_truth_baseline_pt_eta_mll << endl;
+            cout << Zmumu_truth_baseline_pt_eta_mll << endl;
+        }
+    }
+
+    TH1D *data_elec_mll = (TH1D *)data_elec_baseline_pt_eta_mll->ProjectionZ("data_elec_mll", pt_bin_low, pt_bin_up);
+    TH1D *data_muon_mll = (TH1D *)data_muon_baseline_pt_eta_mll->ProjectionZ("data_muon_mll", pt_bin_low, pt_bin_up);
+    TH1D *Zee_TandP_mll = (TH1D *)Zee_TandP_baseline_pt_eta_mll->ProjectionZ("Zee_TandP_mll", pt_bin_low, pt_bin_up);
+    TH1D *Zmumu_TandP_mll = (TH1D *)Zmumu_TandP_baseline_pt_eta_mll->ProjectionZ("Zmumu_TandP_mll", pt_bin_low, pt_bin_up);
+
+    TH1D *Zee_truth_mll;
+    TH1D *Zmumu_truth_mll;
+    if (truth_match) {
+        Zee_truth_mll = (TH1D *)Zee_truth_baseline_pt_eta_mll->ProjectionZ("Zee_truth_mll", pt_bin_low, pt_bin_up);
+        Zmumu_truth_mll = (TH1D *)Zmumu_truth_baseline_pt_eta_mll->ProjectionZ("Zmumu_truth_mll", pt_bin_low, pt_bin_up);
+    }
+    if (debug) {
+        cout << data_elec_mll << endl;
+        cout << data_muon_mll << endl;
+        cout << Zee_TandP_mll << endl;
+        cout << Zmumu_TandP_mll << endl;
+        if (truth_match) {
+            cout << Zee_truth_mll << endl;
+            cout << Zmumu_truth_mll << endl;
+        }
+    }
+
+    double pt_bin_low_value;
+    double pt_bin_up_value;
+    if (pt_bin_low != 0 && pt_bin_up != -1) {
+        pt_bin_low_value = data_elec_baseline_pt_eta_mll->GetXaxis()->GetBinLowEdge(pt_bin_low);
+        pt_bin_up_value = data_elec_baseline_pt_eta_mll->GetXaxis()->GetBinUpEdge(pt_bin_up);
+    }
+    else {
+        pt_bin_low_value = data_elec_baseline_pt_eta_mll->GetXaxis()->GetBinLowEdge(1);
+        int nbins = data_elec_baseline_pt_eta_mll->GetXaxis()->GetNbins();
+        pt_bin_up_value = data_elec_baseline_pt_eta_mll->GetXaxis()->GetBinUpEdge(nbins - 1);
+    }
+    // Convert double to string using stringstream
+    stringstream sstream_pt_low, sstream_pt_up;
+    sstream_pt_low << pt_bin_low_value;
+    sstream_pt_up << pt_bin_up_value;
+
+    TCanvas *Mee_plot = new TCanvas("Mee_plot", "Baseline level M_{ee} plot", 500, 500);
+
+    double data_elec_value = data_elec_mll->GetMaximum();
+    double Zee_TandP_max_value = Zee_TandP_mll->GetMaximum();
+
+    data_elec_mll->SetMarkerColor(kBlack);
+    data_elec_mll->SetMarkerStyle(kFullCircle);
+    data_elec_mll->SetLineColor(kBlack);
+    data_elec_mll->SetTitle("");
+    data_elec_mll->SetXTitle("M_{ee} [GeV]");
+    data_elec_mll->SetYTitle("Events");
+    data_elec_mll->SetMaximum(max(data_elec_value, Zee_TandP_max_value) * 1.05);
+    data_elec_mll->SetMinimum(0.);
+    data_elec_mll->SetStats(kFALSE);
+    data_elec_mll->Draw();
+    //Zee_TandP_mll->SetMarkerColor(kRed);
+    //Zee_TandP_mll->SetMarkerStyle(kFullSquare);
+    Zee_TandP_mll->SetLineColor(kRed);
+    Zee_TandP_mll->SetFillColor(kRed);
+    Zee_TandP_mll->SetFillStyle(3004);
+    Zee_TandP_mll->Draw("hist,same");
+
+    if (truth_match) {
+        //Zee_truth_mll->SetMarkerColor(kBlue);
+        //Zee_truth_mll->SetMarkerStyle(kFullTriangleUp);
+        Zee_truth_mll->SetLineColor(kBlue);
+        Zee_truth_mll->SetFillColor(kBlue);
+        Zee_truth_mll->SetFillStyle(3005);
+        Zee_truth_mll->Draw("hist,same");
+    }
+
+    TLegend *leg1 = new TLegend(0.6, 0.7, 0.9, 0.9);
+    leg1->SetBorderSize(0);
+    leg1->SetFillStyle(0);
+    leg1->SetFillColor(0);
+    leg1->AddEntry(data_elec_mll, "Data");
+    leg1->AddEntry(Zee_TandP_mll, "Zee Tag and Probe", "f");
+
+    if (truth_match) {
+        leg1->AddEntry(Zee_truth_mll, "Zee truth match", "f");
+    }
+
+    leg1->Draw("same");
+
+    TPaveText *text1 = new TPaveText(0.6, 0.5, 0.9, 0.7, "NDC");
+    text1->SetTextSize(0.03);
+    text1->SetBorderSize(0);
+    text1->SetFillStyle(0);
+    text1->SetFillColor(0);
+    text1->AddText(string(sstream_pt_low.str() + " GeV < p_{T} <" + sstream_pt_up.str() + " GeV").c_str());
+    text1->Draw("same");
+
+    string filename1 = "baseline_level_Mee_pt" + sstream_pt_low.str() + sstream_pt_up.str() + ".pdf";
+    Mee_plot->SaveAs(filename1.c_str(), "pdf");
+
+    TCanvas *Mmumu_plot = new TCanvas("Mmumu_plot", "Baseline level M_{#mu#mu} plot", 500, 500);
+
+    double data_muon_value = data_muon_mll->GetMaximum();
+    double Zmumu_TandP_max_value = Zmumu_TandP_mll->GetMaximum();
+
+    data_muon_mll->SetMarkerColor(kBlack);
+    data_muon_mll->SetMarkerStyle(kFullCircle);
+    data_muon_mll->SetLineColor(kBlack);
+    data_muon_mll->SetTitle("");
+    data_muon_mll->SetXTitle("M_{#mu#mu} [GeV]");
+    data_muon_mll->SetYTitle("Events");
+    data_muon_mll->SetMaximum(max(data_muon_value, Zmumu_TandP_max_value) * 1.05);
+    data_muon_mll->SetMinimum(0.);
+    data_muon_mll->SetStats(kFALSE);
+    data_muon_mll->Draw();
+    //Zmumu_TandP_mll->SetMarkerColor(kRed);
+    //Zmumu_TandP_mll->SetMarkerStyle(kFullSquare);
+    Zmumu_TandP_mll->SetLineColor(kRed);
+    Zmumu_TandP_mll->SetFillColor(kRed);
+    Zmumu_TandP_mll->SetFillStyle(3004);
+    Zmumu_TandP_mll->Draw("hist,same");
+
+    if (truth_match) {
+        //Zmumu_truth_mll->SetMarkerColor(kBlue);
+        //Zmumu_truth_mll->SetMarkerStyle(kFullTriangleUp);
+        Zmumu_truth_mll->SetLineColor(kBlue);
+        Zmumu_truth_mll->SetFillColor(kBlue);
+        Zmumu_truth_mll->SetFillStyle(3005);
+        Zmumu_truth_mll->Draw("hist,same");
+    }
+
+    TLegend *leg2 = new TLegend(0.6, 0.7, 0.9, 0.9);
+    leg2->SetBorderSize(0);
+    leg2->SetFillStyle(0);
+    leg2->SetFillColor(0);
+    leg2->AddEntry(data_muon_mll, "Data");
+    leg2->AddEntry(Zmumu_TandP_mll, "Z#mu#mu Tag and Probe", "f");
+
+    if (truth_match) {
+        leg2->AddEntry(Zmumu_truth_mll, "Z#mu#mu truth match", "f");
+    }
+
+    leg2->Draw("same");
+
+    TPaveText *text2 = new TPaveText(0.6, 0.5, 0.9, 0.7, "NDC");
+    text2->SetTextSize(0.03);
+    text2->SetBorderSize(0);
+    text2->SetFillStyle(0);
+    text2->SetFillColor(0);
+    text2->AddText(string(sstream_pt_low.str() + " GeV < p_{T} <" + sstream_pt_up.str() + " GeV").c_str());
+    text2->Draw("same");
+
+    string filename2 = "baseline_level_Mmumu_pt" + sstream_pt_low.str() + sstream_pt_up.str() + ".pdf";
+    Mmumu_plot->SaveAs(filename2.c_str(), "pdf");
+}
+
+void yt_baseline_mll_ratio_plots(int pt_bin_low = 0, int pt_bin_up = -1, bool truth_match = false, bool norm = false)
+{
+    // default pt bins are:
+    // 10, 15, 20, 25, 30, 35, 40, 50, 60, 70, 80, 120, 150, 200
+
+    bool debug = false;
+
+    TString path = "/Users/ytshen/Desktop/skim/Results/1005/";
+
+    TFile *data_elec = TFile::Open(path + "submitDir_Data_electron/hist-0929_80mll100.root");
+    TFile *data_muon = TFile::Open(path + "submitDir_Data_muon/hist-0929_80mll100.root");
+    TFile *Zee_TandP = TFile::Open(path + "submitDir_MC_Zee/hist-0929_80mll100.root");
+    TFile *Zmumu_TandP = TFile::Open(path + "submitDir_MC_Zmumu/hist-0929_80mll100.root");
+
+    TFile *Zee_truth;
+    TFile *Zmumu_truth;
+    if (truth_match) {
+        Zee_truth = TFile::Open(path + "submitDir_MC_Zee_truth_match/hist-0929_80mll100.root");
+        Zmumu_truth = TFile::Open(path + "submitDir_MC_Zmumu_truth_match/hist-0929_80mll100.root");
+    }
+
+    if (debug) {
+        cout << data_elec << endl;
+        cout << data_muon << endl;
+        cout << Zee_TandP << endl;
+        cout << Zmumu_TandP << endl;
+        if (truth_match) {
+            cout << Zee_truth << endl;
+            cout << Zmumu_truth << endl;
+        }
+    }
+
+    TH3F *data_elec_baseline_pt_eta_mll = (TH3F *)data_elec->Get("h_baseline_pt_eta_mll");
+    TH3F *data_muon_baseline_pt_eta_mll = (TH3F *)data_muon->Get("h_baseline_pt_eta_mll");
+    TH3F *Zee_TandP_baseline_pt_eta_mll = (TH3F *)Zee_TandP->Get("h_baseline_pt_eta_mll");
+    TH3F *Zmumu_TandP_baseline_pt_eta_mll = (TH3F *)Zmumu_TandP->Get("h_baseline_pt_eta_mll");
+
+    TH3F *Zee_truth_baseline_pt_eta_mll;
+    TH3F *Zmumu_truth_baseline_pt_eta_mll;
+    if (truth_match) {
+        Zee_truth_baseline_pt_eta_mll = (TH3F *)Zee_truth->Get("h_baseline_pt_eta_mll");
+        Zmumu_truth_baseline_pt_eta_mll = (TH3F *)Zmumu_truth->Get("h_baseline_pt_eta_mll");
+    }
+    if (debug) {
+        cout << data_elec_baseline_pt_eta_mll << endl;
+        cout << data_muon_baseline_pt_eta_mll << endl;
+        cout << Zee_TandP_baseline_pt_eta_mll << endl;
+        cout << Zmumu_TandP_baseline_pt_eta_mll << endl;
+        if (truth_match) {
+            cout << Zee_truth_baseline_pt_eta_mll << endl;
+            cout << Zmumu_truth_baseline_pt_eta_mll << endl;
+        }
+    }
+
+    TH1D *data_elec_mll = (TH1D *)data_elec_baseline_pt_eta_mll->ProjectionZ("data_elec_mll", pt_bin_low, pt_bin_up);
+    TH1D *data_muon_mll = (TH1D *)data_muon_baseline_pt_eta_mll->ProjectionZ("data_muon_mll", pt_bin_low, pt_bin_up);
+    TH1D *Zee_TandP_mll = (TH1D *)Zee_TandP_baseline_pt_eta_mll->ProjectionZ("Zee_TandP_mll", pt_bin_low, pt_bin_up);
+    TH1D *Zmumu_TandP_mll = (TH1D *)Zmumu_TandP_baseline_pt_eta_mll->ProjectionZ("Zmumu_TandP_mll", pt_bin_low, pt_bin_up);
+
+    TH1D *Zee_truth_mll;
+    TH1D *Zmumu_truth_mll;
+    if (truth_match) {
+        Zee_truth_mll = (TH1D *)Zee_truth_baseline_pt_eta_mll->ProjectionZ("Zee_truth_mll", pt_bin_low, pt_bin_up);
+        Zmumu_truth_mll = (TH1D *)Zmumu_truth_baseline_pt_eta_mll->ProjectionZ("Zmumu_truth_mll", pt_bin_low, pt_bin_up);
+    }
+    if (debug) {
+        cout << data_elec_mll << endl;
+        cout << data_muon_mll << endl;
+        cout << Zee_TandP_mll << endl;
+        cout << Zmumu_TandP_mll << endl;
+        if (truth_match) {
+            cout << Zee_truth_mll << endl;
+            cout << Zmumu_truth_mll << endl;
+        }
+    }
+
+    double pt_bin_low_value;
+    double pt_bin_up_value;
+    if (pt_bin_low != 0 && pt_bin_up != -1) {
+        pt_bin_low_value = data_elec_baseline_pt_eta_mll->GetXaxis()->GetBinLowEdge(pt_bin_low);
+        pt_bin_up_value = data_elec_baseline_pt_eta_mll->GetXaxis()->GetBinUpEdge(pt_bin_up);
+    }
+    else {
+        pt_bin_low_value = data_elec_baseline_pt_eta_mll->GetXaxis()->GetBinLowEdge(1);
+        int nbins = data_elec_baseline_pt_eta_mll->GetXaxis()->GetNbins();
+        pt_bin_up_value = data_elec_baseline_pt_eta_mll->GetXaxis()->GetBinUpEdge(nbins - 1);
+    }
+    // Convert double to string using stringstream
+    stringstream sstream_pt_low, sstream_pt_up;
+    sstream_pt_low << pt_bin_low_value;
+    sstream_pt_up << pt_bin_up_value;
+
+    //
+    // Normalize MC to data using a Gaussian fit of the Z peak (85 < mll < 95)
+    //
+    data_elec_mll->Fit("gaus", "0", "", 85, 95);
+    TF1 *func_ee = data_elec_mll->GetFunction("gaus");
+    //cout << func_ee->Integral(85., 95.) << endl;  // function integral uses values as arguments.
+    //cout << data_elec_mll->Integral(data_elec_mll->GetXaxis()->FindBin(85. + 0.01), data_elec_mll->GetXaxis()->FindBin(95. - 0.01)) << endl; // histogram integral uses bins as argument.
+    double data_elec_mll_peak_area = func_ee->Integral(85., 95.);
+
+    data_muon_mll->Fit("gaus", "0", "", 85, 95);
+    TF1 *func_mumu = data_muon_mll->GetFunction("gaus");
+    //cout << func_mumu->Integral(85., 95.) << endl;  // function integral uses values as arguments.
+    //cout << data_muon_mll->Integral(data_muon_mll->GetXaxis()->FindBin(85. + 0.01), data_muon_mll->GetXaxis()->FindBin(95. - 0.01)) << endl; // histogram integral uses bins as argument.
+    double data_muon_mll_peak_area = func_mumu->Integral(85., 95.);
+
+    if (norm) {
+        double Zee_TandP_mll_peak_area = Zee_TandP_mll->Integral(Zee_TandP_mll->GetXaxis()->FindBin(85. + 0.01), Zee_TandP_mll->GetXaxis()->FindBin(95. - 0.01));
+        double Zmumu_TandP_mll_peak_area = Zmumu_TandP_mll->Integral(Zmumu_TandP_mll->GetXaxis()->FindBin(85. + 0.01), Zmumu_TandP_mll->GetXaxis()->FindBin(95. - 0.01));
+        Zee_TandP_mll->Scale(data_elec_mll_peak_area / Zee_TandP_mll_peak_area);
+        Zmumu_TandP_mll->Scale(data_muon_mll_peak_area / Zmumu_TandP_mll_peak_area);
+        if (truth_match) {
+            double Zee_truth_mll_peak_area = Zee_truth_mll->Integral(Zee_truth_mll->GetXaxis()->FindBin(85. + 0.01), Zee_truth_mll->GetXaxis()->FindBin(95. - 0.01));
+            double Zmumu_truth_mll_peak_area = Zmumu_truth_mll->Integral(Zmumu_truth_mll->GetXaxis()->FindBin(85. + 0.01), Zmumu_truth_mll->GetXaxis()->FindBin(95. - 0.01));
+            Zee_truth_mll->Scale(data_elec_mll_peak_area / Zee_truth_mll_peak_area);
+            Zmumu_truth_mll->Scale(data_muon_mll_peak_area / Zmumu_truth_mll_peak_area);
+        }
+    }
+
+    //
+    // For Mee
+    //
+    TCanvas *Mee_plot = new TCanvas("Mee_plot", "Baseline level M_{ee} ratio plot", 600, 600);
+
+    //Upper plot will be in pad1
+    TPad *pad1_Mee = new TPad("pad1_Mee", "pad1_Mee", 0, 0.35, 1, 1.0);
+    pad1_Mee->SetBottomMargin(0); // Upper and lower plot are joined
+    pad1_Mee->SetRightMargin(0.08);
+    //pad1_Mee->SetGridy(); // grid lines
+    //pad1_Mee->SetLogx();
+    pad1_Mee->Draw();
+
+    // lower plot will be in pad
+    TPad *pad2_Mee = new TPad("pad2_Mee", "pad2_Mee", 0, 0.05, 1, 0.35);
+    pad2_Mee->SetTopMargin(0);
+    pad2_Mee->SetBottomMargin(0.3);
+    pad2_Mee->SetRightMargin(0.08);
+    pad2_Mee->SetGridy(); // grid lines
+    //pad2_Mee->SetLogx();
+    pad2_Mee->Draw();
+
+    pad1_Mee->cd(); // pad1 becomes the current pad
+    //pad1_Mee->SetFrameLineWidth(2);
+
+    // Draw curve here
+
+    double data_elec_value = data_elec_mll->GetMaximum();
+    double Zee_TandP_max_value = Zee_TandP_mll->GetMaximum();
+
+    data_elec_mll->SetMarkerColor(kBlack);
+    data_elec_mll->SetMarkerStyle(kFullCircle);
+    data_elec_mll->SetLineColor(kBlack);
+    data_elec_mll->SetTitle("");
+    data_elec_mll->SetYTitle("Events");
+    data_elec_mll->SetMaximum(max(data_elec_value, Zee_TandP_max_value) * 1.05);
+    data_elec_mll->SetMinimum(0.1);
+    data_elec_mll->SetStats(kFALSE);
+    data_elec_mll->Draw();
+    //Zee_TandP_mll->SetMarkerColor(kRed);
+    //Zee_TandP_mll->SetMarkerStyle(kFullSquare);
+    Zee_TandP_mll->SetLineColor(kRed);
+    Zee_TandP_mll->SetFillColor(kRed);
+    Zee_TandP_mll->SetFillStyle(3004);
+    Zee_TandP_mll->Draw("hist,same");
+
+    if (truth_match) {
+        //Zee_truth_mll->SetMarkerColor(kBlue);
+        //Zee_truth_mll->SetMarkerStyle(kFullTriangleUp);
+        Zee_truth_mll->SetLineColor(kBlue);
+        Zee_truth_mll->SetFillColor(kBlue);
+        Zee_truth_mll->SetFillStyle(3005);
+        Zee_truth_mll->Draw("hist,same");
+    }
+
+    TLegend *leg1 = new TLegend(0.6, 0.7, 0.9, 0.9);
+    leg1->AddEntry(data_elec_mll, "Data");
+    leg1->AddEntry(Zee_TandP_mll, "Zee Tag and Probe", "f");
+
+    if (truth_match) {
+        leg1->AddEntry(Zee_truth_mll, "Zee truth match", "f");
+    }
+
+    leg1->SetBorderSize(0);
+    leg1->SetTextFont(42);
+    leg1->SetTextSize(0.05);
+    leg1->SetFillColor(0);
+    leg1->SetFillStyle(0);
+    leg1->Draw("same");
+
+    TPaveText *text1 = new TPaveText(0.6, 0.5, 0.9, 0.7, "NDC");
+    text1->SetTextSize(0.05);
+    text1->SetBorderSize(0);
+    text1->SetFillStyle(0);
+    text1->SetFillColor(0);
+    text1->AddText(string(sstream_pt_low.str() + " GeV < p_{T} <" + sstream_pt_up.str() + " GeV").c_str());
+    text1->Draw("same");
+
+    pad2_Mee->cd(); // pad2 becomes the current pad
+
+    TH1F *frame_Mee = pad2_Mee->DrawFrame(60, 0.8, 150, 1.19);
+    frame_Mee->GetXaxis()->SetNdivisions(510);
+    frame_Mee->GetYaxis()->SetNdivisions(405);
+    frame_Mee->SetLineWidth(1);
+    frame_Mee->SetXTitle("M_{ll} [GeV]");
+    frame_Mee->GetXaxis()->SetTitleSize(20);
+    frame_Mee->GetXaxis()->SetTitleFont(47);
+    frame_Mee->GetXaxis()->SetTitleOffset(3.0);
+    frame_Mee->GetXaxis()->SetLabelFont(43); // Absolute font size in pixel (precision 3)
+    frame_Mee->GetXaxis()->SetLabelSize(15);
+    frame_Mee->SetYTitle("Data / MC");
+    frame_Mee->GetYaxis()->SetTitleSize(17);
+    frame_Mee->GetYaxis()->SetTitleFont(43);
+    frame_Mee->GetYaxis()->SetTitleOffset(1.5);
+    frame_Mee->GetYaxis()->SetLabelFont(43); // Absolute font size in pixel (precision 3)
+    frame_Mee->GetYaxis()->SetLabelSize(16);
+    frame_Mee->Draw();
+
+    TH1F *ratio_Mee_TandP = (TH1F *)data_elec_mll->Clone();
+    ratio_Mee_TandP->Sumw2();
+    ratio_Mee_TandP->Divide(Zee_TandP_mll);
+    ratio_Mee_TandP->SetMarkerColor(kRed);
+    ratio_Mee_TandP->SetMarkerStyle(kFullTriangleUp);
+    ratio_Mee_TandP->SetLineColor(kRed);
+    ratio_Mee_TandP->Draw("same");
+
+    if (truth_match) {
+        TH1F *ratio_Mee_truth = (TH1F *)data_elec_mll->Clone();
+        ratio_Mee_truth->Sumw2();
+        ratio_Mee_truth->Divide(Zee_truth_mll);
+        ratio_Mee_truth->SetMarkerColor(kBlue);
+        ratio_Mee_truth->SetMarkerStyle(kFullTriangleDown);
+        ratio_Mee_truth->SetLineColor(kBlue);
+        ratio_Mee_truth->Draw("same");
+    }
+
+    string filename1 = "baseline_level_Mee_pt" + sstream_pt_low.str() + sstream_pt_up.str() + "_ratio_plot.pdf";
+    Mee_plot->SaveAs(filename1.c_str(), "pdf");
+
+    //
+    // For Mmumu
+    //
+    TCanvas *Mmumu_plot = new TCanvas("Mmumu_plot", "Baseline level M_{#mu#mu} ratio plot", 600, 600);
+
+    //Upper plot will be in pad1
+    TPad *pad1_Mmumu = new TPad("pad1_Mmumu", "pad1_Mmumu", 0, 0.35, 1, 1.0);
+    pad1_Mmumu->SetBottomMargin(0); // Upper and lower plot are joined
+    pad1_Mmumu->SetRightMargin(0.08);
+    //pad1_Mmumu->SetGridy(); // grid lines
+    //pad1_Mmumu->SetLogx();
+    pad1_Mmumu->Draw();
+
+    // lower plot will be in pad
+    TPad *pad2_Mmumu = new TPad("pad2_Mmumu", "pad2_Mmumu", 0, 0.05, 1, 0.35);
+    pad2_Mmumu->SetTopMargin(0);
+    pad2_Mmumu->SetBottomMargin(0.3);
+    pad2_Mmumu->SetRightMargin(0.08);
+    pad2_Mmumu->SetGridy(); // grid lines
+    //pad2_Mmumu->SetLogx();
+    pad2_Mmumu->Draw();
+
+    pad1_Mmumu->cd(); // pad1 becomes the current pad
+    //pad1_Mmumu->SetFrameLineWidth(2);
+
+    // Draw curve here
+
+    double data_muon_value = data_muon_mll->GetMaximum();
+    double Zmumu_TandP_max_value = Zmumu_TandP_mll->GetMaximum();
+
+    data_muon_mll->SetMarkerColor(kBlack);
+    data_muon_mll->SetMarkerStyle(kFullCircle);
+    data_muon_mll->SetLineColor(kBlack);
+    data_muon_mll->SetTitle("");
+    data_muon_mll->SetMaximum(max(data_muon_value, Zmumu_TandP_max_value) * 1.05);
+    data_muon_mll->SetMinimum(0.1);
+    data_muon_mll->SetStats(kFALSE);
+    data_muon_mll->Draw();
+    //Zmumu_TandP_mll->SetMarkerColor(kRed);
+    //Zmumu_TandP_mll->SetMarkerStyle(kFullSquare);
+    Zmumu_TandP_mll->SetLineColor(kRed);
+    Zmumu_TandP_mll->SetFillColor(kRed);
+    Zmumu_TandP_mll->SetFillStyle(3004);
+    Zmumu_TandP_mll->Draw("hist,same");
+
+    if (truth_match) {
+        //Zmumu_truth_mll->SetMarkerColor(kBlue);
+        //Zmumu_truth_mll->SetMarkerStyle(kFullTriangleUp);
+        Zmumu_truth_mll->SetLineColor(kBlue);
+        Zmumu_truth_mll->SetFillColor(kBlue);
+        Zmumu_truth_mll->SetFillStyle(3005);
+        Zmumu_truth_mll->Draw("hist,same");
+    }
+
+    TLegend *leg2 = new TLegend(0.6, 0.7, 0.9, 0.9);
+    leg2->AddEntry(data_muon_mll, "Data");
+    leg2->AddEntry(Zmumu_TandP_mll, "Z#mu#mu Tag and Probe", "f");
+
+    if (truth_match) {
+        leg2->AddEntry(Zmumu_truth_mll, "Z#mu#mu truth match", "f");
+    }
+
+    leg2->SetBorderSize(0);
+    leg2->SetTextFont(42);
+    leg2->SetTextSize(0.05);
+    leg2->SetFillColor(0);
+    leg2->SetFillStyle(0);
+    leg2->Draw("same");
+
+    TPaveText *text2 = new TPaveText(0.6, 0.5, 0.9, 0.7, "NDC");
+    text2->SetTextSize(0.05);
+    text2->SetBorderSize(0);
+    text2->SetFillStyle(0);
+    text2->SetFillColor(0);
+    text2->AddText(string(sstream_pt_low.str() + " GeV < p_{T} <" + sstream_pt_up.str() + " GeV").c_str());
+    text2->Draw("same");
+
+    pad2_Mmumu->cd(); // pad2 becomes the current pad
+
+    TH1F *frame_Mmumu = pad2_Mmumu->DrawFrame(60, 0.8, 150, 1.19);
+    frame_Mmumu->GetXaxis()->SetNdivisions(510);
+    frame_Mmumu->GetYaxis()->SetNdivisions(405);
+    frame_Mmumu->SetLineWidth(1);
+    frame_Mmumu->SetXTitle("M_{ll} [GeV]");
+    frame_Mmumu->GetXaxis()->SetTitleSize(20);
+    frame_Mmumu->GetXaxis()->SetTitleFont(47);
+    frame_Mmumu->GetXaxis()->SetTitleOffset(3.0);
+    frame_Mmumu->GetXaxis()->SetLabelFont(43); // Absolute font size in pixel (precision 3)
+    frame_Mmumu->GetXaxis()->SetLabelSize(15);
+    frame_Mmumu->SetYTitle("Data / MC");
+    frame_Mmumu->GetYaxis()->SetTitleSize(17);
+    frame_Mmumu->GetYaxis()->SetTitleFont(43);
+    frame_Mmumu->GetYaxis()->SetTitleOffset(1.5);
+    frame_Mmumu->GetYaxis()->SetLabelFont(43); // Absolute font size in pixel (precision 3)
+    frame_Mmumu->GetYaxis()->SetLabelSize(16);
+    frame_Mmumu->Draw();
+
+    TH1F *ratio_Mmumu_TandP = (TH1F *)data_muon_mll->Clone();
+    ratio_Mmumu_TandP->Sumw2();
+    ratio_Mmumu_TandP->Divide(Zmumu_TandP_mll);
+    ratio_Mmumu_TandP->SetMarkerColor(kRed);
+    ratio_Mmumu_TandP->SetMarkerStyle(kFullTriangleUp);
+    ratio_Mmumu_TandP->SetLineColor(kRed);
+    ratio_Mmumu_TandP->Draw("same");
+
+    if (truth_match) {
+        TH1F *ratio_Mmumu_truth = (TH1F *)data_muon_mll->Clone();
+        ratio_Mmumu_truth->Sumw2();
+        ratio_Mmumu_truth->Divide(Zmumu_truth_mll);
+        ratio_Mmumu_truth->SetMarkerColor(kBlue);
+        ratio_Mmumu_truth->SetMarkerStyle(kFullTriangleDown);
+        ratio_Mmumu_truth->SetLineColor(kBlue);
+        ratio_Mmumu_truth->Draw("same");
+    }
+
+    string filename2 = "baseline_level_Mmumu_pt" + sstream_pt_low.str() + sstream_pt_up.str() + "_ratio_plot.pdf";
+    Mmumu_plot->SaveAs(filename2.c_str(), "pdf");
+}
+
+void yt_signal_mll_plots(int pt_bin_low = 0, int pt_bin_up = -1, bool truth_match = false)
+{
+    // default pt bins are:
+    // 10, 15, 20, 25, 30, 35, 40, 50, 60, 70, 80, 120, 150, 200
+
+    bool debug = false;
+
+    TString path = "/Users/ytshen/Desktop/skim/Results/1005/";
+
+    TFile *data_elec = TFile::Open(path + "submitDir_Data_electron/hist-0929_80mll100.root");
+    TFile *data_muon = TFile::Open(path + "submitDir_Data_muon/hist-0929_80mll100.root");
+    TFile *Zee_TandP = TFile::Open(path + "submitDir_MC_Zee/hist-0929_80mll100.root");
+    TFile *Zmumu_TandP = TFile::Open(path + "submitDir_MC_Zmumu/hist-0929_80mll100.root");
+
+    TFile *Zee_truth;
+    TFile *Zmumu_truth;
+    if (truth_match) {
+        Zee_truth = TFile::Open(path + "submitDir_MC_Zee_truth_match/hist-0929_80mll100.root");
+        Zmumu_truth = TFile::Open(path + "submitDir_MC_Zmumu_truth_match/hist-0929_80mll100.root");
+    }
+
+    if (debug) {
+        cout << data_elec << endl;
+        cout << data_muon << endl;
+        cout << Zee_TandP << endl;
+        cout << Zmumu_TandP << endl;
+        if (truth_match) {
+            cout << Zee_truth << endl;
+            cout << Zmumu_truth << endl;
+        }
+    }
+
+    TH3F *data_elec_signal_pt_eta_mll = (TH3F *)data_elec->Get("h_signal_pt_eta_mll");
+    TH3F *data_muon_signal_pt_eta_mll = (TH3F *)data_muon->Get("h_signal_pt_eta_mll");
+    TH3F *Zee_TandP_signal_pt_eta_mll = (TH3F *)Zee_TandP->Get("h_signal_pt_eta_mll");
+    TH3F *Zmumu_TandP_signal_pt_eta_mll = (TH3F *)Zmumu_TandP->Get("h_signal_pt_eta_mll");
+
+    TH3F *Zee_truth_signal_pt_eta_mll;
+    TH3F *Zmumu_truth_signal_pt_eta_mll;
+    if (truth_match) {
+        Zee_truth_signal_pt_eta_mll = (TH3F *)Zee_truth->Get("h_signal_pt_eta_mll");
+        Zmumu_truth_signal_pt_eta_mll = (TH3F *)Zmumu_truth->Get("h_signal_pt_eta_mll");
+    }
+    if (debug) {
+        cout << data_elec_signal_pt_eta_mll << endl;
+        cout << data_muon_signal_pt_eta_mll << endl;
+        cout << Zee_TandP_signal_pt_eta_mll << endl;
+        cout << Zmumu_TandP_signal_pt_eta_mll << endl;
+        if (truth_match) {
+            cout << Zee_truth_signal_pt_eta_mll << endl;
+            cout << Zmumu_truth_signal_pt_eta_mll << endl;
+        }
+    }
+
+    TH1D *data_elec_mll = (TH1D *)data_elec_signal_pt_eta_mll->ProjectionZ("data_elec_mll", pt_bin_low, pt_bin_up);
+    TH1D *data_muon_mll = (TH1D *)data_muon_signal_pt_eta_mll->ProjectionZ("data_muon_mll", pt_bin_low, pt_bin_up);
+    TH1D *Zee_TandP_mll = (TH1D *)Zee_TandP_signal_pt_eta_mll->ProjectionZ("Zee_TandP_mll", pt_bin_low, pt_bin_up);
+    TH1D *Zmumu_TandP_mll = (TH1D *)Zmumu_TandP_signal_pt_eta_mll->ProjectionZ("Zmumu_TandP_mll", pt_bin_low, pt_bin_up);
+
+    TH1D *Zee_truth_mll;
+    TH1D *Zmumu_truth_mll;
+    if (truth_match) {
+        Zee_truth_mll = (TH1D *)Zee_truth_signal_pt_eta_mll->ProjectionZ("Zee_truth_mll", pt_bin_low, pt_bin_up);
+        Zmumu_truth_mll = (TH1D *)Zmumu_truth_signal_pt_eta_mll->ProjectionZ("Zmumu_truth_mll", pt_bin_low, pt_bin_up);
+    }
+    if (debug) {
+        cout << data_elec_mll << endl;
+        cout << data_muon_mll << endl;
+        cout << Zee_TandP_mll << endl;
+        cout << Zmumu_TandP_mll << endl;
+        if (truth_match) {
+            cout << Zee_truth_mll << endl;
+            cout << Zmumu_truth_mll << endl;
+        }
+    }
+
+    double pt_bin_low_value;
+    double pt_bin_up_value;
+    if (pt_bin_low != 0 && pt_bin_up != -1) {
+        pt_bin_low_value = data_elec_signal_pt_eta_mll->GetXaxis()->GetBinLowEdge(pt_bin_low);
+        pt_bin_up_value = data_elec_signal_pt_eta_mll->GetXaxis()->GetBinUpEdge(pt_bin_up);
+    }
+    else {
+        pt_bin_low_value = data_elec_signal_pt_eta_mll->GetXaxis()->GetBinLowEdge(1);
+        int nbins = data_elec_signal_pt_eta_mll->GetXaxis()->GetNbins();
+        pt_bin_up_value = data_elec_signal_pt_eta_mll->GetXaxis()->GetBinUpEdge(nbins - 1);
+    }
+    // Convert double to string using stringstream
+    stringstream sstream_pt_low, sstream_pt_up;
+    sstream_pt_low << pt_bin_low_value;
+    sstream_pt_up << pt_bin_up_value;
+
+    TCanvas *Mee_plot = new TCanvas("Mee_plot", "Signal level M_{ee} plot", 500, 500);
+
+    double data_elec_value = data_elec_mll->GetMaximum();
+    double Zee_TandP_max_value = Zee_TandP_mll->GetMaximum();
+
+    data_elec_mll->SetMarkerColor(kBlack);
+    data_elec_mll->SetMarkerStyle(kFullCircle);
+    data_elec_mll->SetLineColor(kBlack);
+    data_elec_mll->SetTitle("");
+    data_elec_mll->SetXTitle("M_{ee} [GeV]");
+    data_elec_mll->SetYTitle("Events");
+    data_elec_mll->SetMaximum(max(data_elec_value, Zee_TandP_max_value) * 1.05);
+    data_elec_mll->SetMinimum(0.);
+    data_elec_mll->SetStats(kFALSE);
+    data_elec_mll->Draw();
+    //Zee_TandP_mll->SetMarkerColor(kRed);
+    //Zee_TandP_mll->SetMarkerStyle(kFullSquare);
+    Zee_TandP_mll->SetLineColor(kRed);
+    Zee_TandP_mll->SetFillColor(kRed);
+    Zee_TandP_mll->SetFillStyle(3004);
+    Zee_TandP_mll->Draw("hist,same");
+
+    if (truth_match) {
+        //Zee_truth_mll->SetMarkerColor(kBlue);
+        //Zee_truth_mll->SetMarkerStyle(kFullTriangleUp);
+        Zee_truth_mll->SetLineColor(kBlue);
+        Zee_truth_mll->SetFillColor(kBlue);
+        Zee_truth_mll->SetFillStyle(3005);
+        Zee_truth_mll->Draw("hist,same");
+    }
+
+    TLegend *leg1 = new TLegend(0.6, 0.7, 0.9, 0.9);
+    leg1->SetBorderSize(0);
+    leg1->SetFillStyle(0);
+    leg1->SetFillColor(0);
+    leg1->AddEntry(data_elec_mll, "Data");
+    leg1->AddEntry(Zee_TandP_mll, "Zee Tag and Probe", "f");
+
+    if (truth_match) {
+        leg1->AddEntry(Zee_truth_mll, "Zee truth match", "f");
+    }
+
+    leg1->Draw("same");
+
+    TPaveText *text1 = new TPaveText(0.6, 0.5, 0.9, 0.7, "NDC");
+    text1->SetTextSize(0.03);
+    text1->SetBorderSize(0);
+    text1->SetFillStyle(0);
+    text1->SetFillColor(0);
+    text1->AddText(string(sstream_pt_low.str() + " GeV < p_{T} <" + sstream_pt_up.str() + " GeV").c_str());
+    text1->Draw("same");
+
+    string filename1 = "signal_level_Mee_pt" + sstream_pt_low.str() + sstream_pt_up.str() + ".pdf";
+    Mee_plot->SaveAs(filename1.c_str(), "pdf");
+
+    TCanvas *Mmumu_plot = new TCanvas("Mmumu_plot", "Signal level M_{#mu#mu} plot", 500, 500);
+
+    double data_muon_value = data_muon_mll->GetMaximum();
+    double Zmumu_TandP_max_value = Zmumu_TandP_mll->GetMaximum();
+
+    data_muon_mll->SetMarkerColor(kBlack);
+    data_muon_mll->SetMarkerStyle(kFullCircle);
+    data_muon_mll->SetLineColor(kBlack);
+    data_muon_mll->SetTitle("");
+    data_muon_mll->SetXTitle("M_{#mu#mu} [GeV]");
+    data_muon_mll->SetYTitle("Events");
+    data_muon_mll->SetMaximum(max(data_muon_value, Zmumu_TandP_max_value) * 1.05);
+    data_muon_mll->SetMinimum(0.);
+    data_muon_mll->SetStats(kFALSE);
+    data_muon_mll->Draw();
+    //Zmumu_TandP_mll->SetMarkerColor(kRed);
+    //Zmumu_TandP_mll->SetMarkerStyle(kFullSquare);
+    Zmumu_TandP_mll->SetLineColor(kRed);
+    Zmumu_TandP_mll->SetFillColor(kRed);
+    Zmumu_TandP_mll->SetFillStyle(3004);
+    Zmumu_TandP_mll->Draw("hist,same");
+
+    if (truth_match) {
+        //Zmumu_truth_mll->SetMarkerColor(kBlue);
+        //Zmumu_truth_mll->SetMarkerStyle(kFullTriangleUp);
+        Zmumu_truth_mll->SetLineColor(kBlue);
+        Zmumu_truth_mll->SetFillColor(kBlue);
+        Zmumu_truth_mll->SetFillStyle(3005);
+        Zmumu_truth_mll->Draw("hist,same");
+    }
+
+    TLegend *leg2 = new TLegend(0.6, 0.7, 0.9, 0.9);
+    leg2->SetBorderSize(0);
+    leg2->SetFillStyle(0);
+    leg2->SetFillColor(0);
+    leg2->AddEntry(data_muon_mll, "Data");
+    leg2->AddEntry(Zmumu_TandP_mll, "Z#mu#mu Tag and Probe", "f");
+
+    if (truth_match) {
+        leg2->AddEntry(Zmumu_truth_mll, "Z#mu#mu truth match", "f");
+    }
+
+    leg2->Draw("same");
+
+    TPaveText *text2 = new TPaveText(0.6, 0.5, 0.9, 0.7, "NDC");
+    text2->SetTextSize(0.03);
+    text2->SetBorderSize(0);
+    text2->SetFillStyle(0);
+    text2->SetFillColor(0);
+    text2->AddText(string(sstream_pt_low.str() + " GeV < p_{T} <" + sstream_pt_up.str() + " GeV").c_str());
+    text2->Draw("same");
+    
+    string filename2 = "signal_level_Mmumu_pt" + sstream_pt_low.str() + sstream_pt_up.str() + ".pdf";
+    Mmumu_plot->SaveAs(filename2.c_str(), "pdf");
+}
+
+void yt_signal_mll_ratio_plots(int pt_bin_low = 0, int pt_bin_up = -1, bool truth_match = false, bool norm = false)
+{
+    // default pt bins are:
+    // 10, 15, 20, 25, 30, 35, 40, 50, 60, 70, 80, 120, 150, 200
+    
+    bool debug = false;
+    
+    TString path = "/Users/ytshen/Desktop/skim/Results/1005/";
+    
+    TFile *data_elec = TFile::Open(path + "submitDir_Data_electron/hist-0929_80mll100.root");
+    TFile *data_muon = TFile::Open(path + "submitDir_Data_muon/hist-0929_80mll100.root");
+    TFile *Zee_TandP = TFile::Open(path + "submitDir_MC_Zee/hist-0929_80mll100.root");
+    TFile *Zmumu_TandP = TFile::Open(path + "submitDir_MC_Zmumu/hist-0929_80mll100.root");
+    
+    TFile *Zee_truth;
+    TFile *Zmumu_truth;
+    if (truth_match) {
+        Zee_truth = TFile::Open(path + "submitDir_MC_Zee_truth_match/hist-0929_80mll100.root");
+        Zmumu_truth = TFile::Open(path + "submitDir_MC_Zmumu_truth_match/hist-0929_80mll100.root");
+    }
+    
+    if (debug) {
+        cout << data_elec << endl;
+        cout << data_muon << endl;
+        cout << Zee_TandP << endl;
+        cout << Zmumu_TandP << endl;
+        if (truth_match) {
+            cout << Zee_truth << endl;
+            cout << Zmumu_truth << endl;
+        }
+    }
+    
+    TH3F *data_elec_signal_pt_eta_mll = (TH3F *)data_elec->Get("h_signal_pt_eta_mll");
+    TH3F *data_muon_signal_pt_eta_mll = (TH3F *)data_muon->Get("h_signal_pt_eta_mll");
+    TH3F *Zee_TandP_signal_pt_eta_mll = (TH3F *)Zee_TandP->Get("h_signal_pt_eta_mll");
+    TH3F *Zmumu_TandP_signal_pt_eta_mll = (TH3F *)Zmumu_TandP->Get("h_signal_pt_eta_mll");
+    
+    TH3F *Zee_truth_signal_pt_eta_mll;
+    TH3F *Zmumu_truth_signal_pt_eta_mll;
+    if (truth_match) {
+        Zee_truth_signal_pt_eta_mll = (TH3F *)Zee_truth->Get("h_signal_pt_eta_mll");
+        Zmumu_truth_signal_pt_eta_mll = (TH3F *)Zmumu_truth->Get("h_signal_pt_eta_mll");
+    }
+    if (debug) {
+        cout << data_elec_signal_pt_eta_mll << endl;
+        cout << data_muon_signal_pt_eta_mll << endl;
+        cout << Zee_TandP_signal_pt_eta_mll << endl;
+        cout << Zmumu_TandP_signal_pt_eta_mll << endl;
+        if (truth_match) {
+            cout << Zee_truth_signal_pt_eta_mll << endl;
+            cout << Zmumu_truth_signal_pt_eta_mll << endl;
+        }
+    }
+    
+    TH1D *data_elec_mll = (TH1D *)data_elec_signal_pt_eta_mll->ProjectionZ("data_elec_mll", pt_bin_low, pt_bin_up);
+    TH1D *data_muon_mll = (TH1D *)data_muon_signal_pt_eta_mll->ProjectionZ("data_muon_mll", pt_bin_low, pt_bin_up);
+    TH1D *Zee_TandP_mll = (TH1D *)Zee_TandP_signal_pt_eta_mll->ProjectionZ("Zee_TandP_mll", pt_bin_low, pt_bin_up);
+    TH1D *Zmumu_TandP_mll = (TH1D *)Zmumu_TandP_signal_pt_eta_mll->ProjectionZ("Zmumu_TandP_mll", pt_bin_low, pt_bin_up);
+    
+    TH1D *Zee_truth_mll;
+    TH1D *Zmumu_truth_mll;
+    if (truth_match) {
+        Zee_truth_mll = (TH1D *)Zee_truth_signal_pt_eta_mll->ProjectionZ("Zee_truth_mll", pt_bin_low, pt_bin_up);
+        Zmumu_truth_mll = (TH1D *)Zmumu_truth_signal_pt_eta_mll->ProjectionZ("Zmumu_truth_mll", pt_bin_low, pt_bin_up);
+    }
+    if (debug) {
+        cout << data_elec_mll << endl;
+        cout << data_muon_mll << endl;
+        cout << Zee_TandP_mll << endl;
+        cout << Zmumu_TandP_mll << endl;
+        if (truth_match) {
+            cout << Zee_truth_mll << endl;
+            cout << Zmumu_truth_mll << endl;
+        }
+    }
+    
+    double pt_bin_low_value;
+    double pt_bin_up_value;
+    if (pt_bin_low != 0 && pt_bin_up != -1) {
+        pt_bin_low_value = data_elec_signal_pt_eta_mll->GetXaxis()->GetBinLowEdge(pt_bin_low);
+        pt_bin_up_value = data_elec_signal_pt_eta_mll->GetXaxis()->GetBinUpEdge(pt_bin_up);
+    }
+    else {
+        pt_bin_low_value = data_elec_signal_pt_eta_mll->GetXaxis()->GetBinLowEdge(1);
+        int nbins = data_elec_signal_pt_eta_mll->GetXaxis()->GetNbins();
+        pt_bin_up_value = data_elec_signal_pt_eta_mll->GetXaxis()->GetBinUpEdge(nbins - 1);
+    }
+    // Convert double to string using stringstream
+    stringstream sstream_pt_low, sstream_pt_up;
+    sstream_pt_low << pt_bin_low_value;
+    sstream_pt_up << pt_bin_up_value;
+
+    //
+    // Normalize MC to data using a Gaussian fit of the Z peak (85 < mll < 95)
+    //
+    data_elec_mll->Fit("gaus", "0", "", 85, 95);
+    TF1 *func_ee = data_elec_mll->GetFunction("gaus");
+    //cout << func_ee->Integral(85., 95.) << endl;  // function integral uses values as arguments.
+    //cout << data_elec_mll->Integral(data_elec_mll->GetXaxis()->FindBin(85. + 0.01), data_elec_mll->GetXaxis()->FindBin(95. - 0.01)) << endl; // histogram integral uses bins as argument.
+    double data_elec_mll_peak_area = func_ee->Integral(85., 95.);
+    
+    data_muon_mll->Fit("gaus", "0", "", 85, 95);
+    TF1 *func_mumu = data_muon_mll->GetFunction("gaus");
+    //cout << func_mumu->Integral(85., 95.) << endl;  // function integral uses values as arguments.
+    //cout << data_muon_mll->Integral(data_muon_mll->GetXaxis()->FindBin(85. + 0.01), data_muon_mll->GetXaxis()->FindBin(95. - 0.01)) << endl; // histogram integral uses bins as argument.
+    double data_muon_mll_peak_area = func_mumu->Integral(85., 95.);
+    
+    if (norm) {
+        double Zee_TandP_mll_peak_area = Zee_TandP_mll->Integral(Zee_TandP_mll->GetXaxis()->FindBin(85. + 0.01), Zee_TandP_mll->GetXaxis()->FindBin(95. - 0.01));
+        double Zmumu_TandP_mll_peak_area = Zmumu_TandP_mll->Integral(Zmumu_TandP_mll->GetXaxis()->FindBin(85. + 0.01), Zmumu_TandP_mll->GetXaxis()->FindBin(95. - 0.01));
+        Zee_TandP_mll->Scale(data_elec_mll_peak_area / Zee_TandP_mll_peak_area);
+        Zmumu_TandP_mll->Scale(data_muon_mll_peak_area / Zmumu_TandP_mll_peak_area);
+        if (truth_match) {
+            double Zee_truth_mll_peak_area = Zee_truth_mll->Integral(Zee_truth_mll->GetXaxis()->FindBin(85. + 0.01), Zee_truth_mll->GetXaxis()->FindBin(95. - 0.01));
+            double Zmumu_truth_mll_peak_area = Zmumu_truth_mll->Integral(Zmumu_truth_mll->GetXaxis()->FindBin(85. + 0.01), Zmumu_truth_mll->GetXaxis()->FindBin(95. - 0.01));
+            Zee_truth_mll->Scale(data_elec_mll_peak_area / Zee_truth_mll_peak_area);
+            Zmumu_truth_mll->Scale(data_muon_mll_peak_area / Zmumu_truth_mll_peak_area);
+        }
+    }
+    
+    //
+    // For Mee
+    //
+    TCanvas *Mee_plot = new TCanvas("Mee_plot", "Signal level M_{ee} ratio plot", 600, 600);
+    
+    //Upper plot will be in pad1
+    TPad *pad1_Mee = new TPad("pad1_Mee", "pad1_Mee", 0, 0.35, 1, 1.0);
+    pad1_Mee->SetBottomMargin(0); // Upper and lower plot are joined
+    pad1_Mee->SetRightMargin(0.08);
+    //pad1_Mee->SetGridy(); // grid lines
+    //pad1_Mee->SetLogx();
+    pad1_Mee->Draw();
+    
+    // lower plot will be in pad
+    TPad *pad2_Mee = new TPad("pad2_Mee", "pad2_Mee", 0, 0.05, 1, 0.35);
+    pad2_Mee->SetTopMargin(0);
+    pad2_Mee->SetBottomMargin(0.3);
+    pad2_Mee->SetRightMargin(0.08);
+    pad2_Mee->SetGridy(); // grid lines
+    //pad2_Mee->SetLogx();
+    pad2_Mee->Draw();
+    
+    pad1_Mee->cd(); // pad1 becomes the current pad
+    //pad1_Mee->SetFrameLineWidth(2);
+    
+    // Draw curve here
+    
+    double data_elec_value = data_elec_mll->GetMaximum();
+    double Zee_TandP_max_value = Zee_TandP_mll->GetMaximum();
+    
+    data_elec_mll->SetMarkerColor(kBlack);
+    data_elec_mll->SetMarkerStyle(kFullCircle);
+    data_elec_mll->SetLineColor(kBlack);
+    data_elec_mll->SetTitle("");
+    data_elec_mll->SetYTitle("Events");
+    data_elec_mll->SetMaximum(max(data_elec_value, Zee_TandP_max_value) * 1.05);
+    data_elec_mll->SetMinimum(0.1);
+    data_elec_mll->SetStats(kFALSE);
+    data_elec_mll->Draw();
+    //Zee_TandP_mll->SetMarkerColor(kRed);
+    //Zee_TandP_mll->SetMarkerStyle(kFullSquare);
+    Zee_TandP_mll->SetLineColor(kRed);
+    Zee_TandP_mll->SetFillColor(kRed);
+    Zee_TandP_mll->SetFillStyle(3004);
+    Zee_TandP_mll->Draw("hist,same");
+    
+    if (truth_match) {
+        //Zee_truth_mll->SetMarkerColor(kBlue);
+        //Zee_truth_mll->SetMarkerStyle(kFullTriangleUp);
+        Zee_truth_mll->SetLineColor(kBlue);
+        Zee_truth_mll->SetFillColor(kBlue);
+        Zee_truth_mll->SetFillStyle(3005);
+        Zee_truth_mll->Draw("hist,same");
+    }
+    
+    TLegend *leg1 = new TLegend(0.6, 0.7, 0.9, 0.9);
+    leg1->AddEntry(data_elec_mll, "Data");
+    leg1->AddEntry(Zee_TandP_mll, "Zee Tag and Probe", "f");
+    
+    if (truth_match) {
+        leg1->AddEntry(Zee_truth_mll, "Zee truth match", "f");
+    }
+    
+    leg1->SetBorderSize(0);
+    leg1->SetTextFont(42);
+    leg1->SetTextSize(0.05);
+    leg1->SetFillColor(0);
+    leg1->SetFillStyle(0);
+    leg1->Draw("same");
+    
+    TPaveText *text1 = new TPaveText(0.6, 0.5, 0.9, 0.7, "NDC");
+    text1->SetTextSize(0.05);
+    text1->SetBorderSize(0);
+    text1->SetFillStyle(0);
+    text1->SetFillColor(0);
+    text1->AddText(string(sstream_pt_low.str() + " GeV < p_{T} <" + sstream_pt_up.str() + " GeV").c_str());
+    text1->Draw("same");
+
+    pad2_Mee->cd(); // pad2 becomes the current pad
+    
+    TH1F *frame_Mee = pad2_Mee->DrawFrame(60, 0.8, 150, 1.19);
+    frame_Mee->GetXaxis()->SetNdivisions(510);
+    frame_Mee->GetYaxis()->SetNdivisions(405);
+    frame_Mee->SetLineWidth(1);
+    frame_Mee->SetXTitle("M_{ll} [GeV]");
+    frame_Mee->GetXaxis()->SetTitleSize(20);
+    frame_Mee->GetXaxis()->SetTitleFont(47);
+    frame_Mee->GetXaxis()->SetTitleOffset(3.0);
+    frame_Mee->GetXaxis()->SetLabelFont(43); // Absolute font size in pixel (precision 3)
+    frame_Mee->GetXaxis()->SetLabelSize(15);
+    frame_Mee->SetYTitle("Data / MC");
+    frame_Mee->GetYaxis()->SetTitleSize(17);
+    frame_Mee->GetYaxis()->SetTitleFont(43);
+    frame_Mee->GetYaxis()->SetTitleOffset(1.5);
+    frame_Mee->GetYaxis()->SetLabelFont(43); // Absolute font size in pixel (precision 3)
+    frame_Mee->GetYaxis()->SetLabelSize(16);
+    frame_Mee->Draw();
+    
+    TH1F *ratio_Mee_TandP = (TH1F *)data_elec_mll->Clone();
+    ratio_Mee_TandP->Sumw2();
+    ratio_Mee_TandP->Divide(Zee_TandP_mll);
+    ratio_Mee_TandP->SetMarkerColor(kRed);
+    ratio_Mee_TandP->SetMarkerStyle(kFullTriangleUp);
+    ratio_Mee_TandP->SetLineColor(kRed);
+    ratio_Mee_TandP->Draw("same");
+    
+    if (truth_match) {
+        TH1F *ratio_Mee_truth = (TH1F *)data_elec_mll->Clone();
+        ratio_Mee_truth->Sumw2();
+        ratio_Mee_truth->Divide(Zee_truth_mll);
+        ratio_Mee_truth->SetMarkerColor(kBlue);
+        ratio_Mee_truth->SetMarkerStyle(kFullTriangleDown);
+        ratio_Mee_truth->SetLineColor(kBlue);
+        ratio_Mee_truth->Draw("same");
+    }
+    
+    string filename1 = "signal_level_Mee_pt" + sstream_pt_low.str() + sstream_pt_up.str() + "_ratio_plot.pdf";
+    Mee_plot->SaveAs(filename1.c_str(), "pdf");
+
+    //
+    // For Mmumu
+    //
+    TCanvas *Mmumu_plot = new TCanvas("Mmumu_plot", "Signal level M_{#mu#mu} ratio plot", 600, 600);
+    
+    //Upper plot will be in pad1
+    TPad *pad1_Mmumu = new TPad("pad1_Mmumu", "pad1_Mmumu", 0, 0.35, 1, 1.0);
+    pad1_Mmumu->SetBottomMargin(0); // Upper and lower plot are joined
+    pad1_Mmumu->SetRightMargin(0.08);
+    //pad1_Mmumu->SetGridy(); // grid lines
+    //pad1_Mmumu->SetLogx();
+    pad1_Mmumu->Draw();
+    
+    // lower plot will be in pad
+    TPad *pad2_Mmumu = new TPad("pad2_Mmumu", "pad2_Mmumu", 0, 0.05, 1, 0.35);
+    pad2_Mmumu->SetTopMargin(0);
+    pad2_Mmumu->SetBottomMargin(0.3);
+    pad2_Mmumu->SetRightMargin(0.08);
+    pad2_Mmumu->SetGridy(); // grid lines
+    //pad2_Mmumu->SetLogx();
+    pad2_Mmumu->Draw();
+    
+    pad1_Mmumu->cd(); // pad1 becomes the current pad
+    //pad1_Mmumu->SetFrameLineWidth(2);
+    
+    // Draw curve here
+    
+    double data_muon_value = data_muon_mll->GetMaximum();
+    double Zmumu_TandP_max_value = Zmumu_TandP_mll->GetMaximum();
+    
+    data_muon_mll->SetMarkerColor(kBlack);
+    data_muon_mll->SetMarkerStyle(kFullCircle);
+    data_muon_mll->SetLineColor(kBlack);
+    data_muon_mll->SetTitle("");
+    data_muon_mll->SetMaximum(max(data_muon_value, Zmumu_TandP_max_value) * 1.05);
+    data_muon_mll->SetMinimum(0.1);
+    data_muon_mll->SetStats(kFALSE);
+    data_muon_mll->Draw();
+    //Zmumu_TandP_mll->SetMarkerColor(kRed);
+    //Zmumu_TandP_mll->SetMarkerStyle(kFullSquare);
+    Zmumu_TandP_mll->SetLineColor(kRed);
+    Zmumu_TandP_mll->SetFillColor(kRed);
+    Zmumu_TandP_mll->SetFillStyle(3004);
+    Zmumu_TandP_mll->Draw("hist,same");
+    
+    if (truth_match) {
+        //Zmumu_truth_mll->SetMarkerColor(kBlue);
+        //Zmumu_truth_mll->SetMarkerStyle(kFullTriangleUp);
+        Zmumu_truth_mll->SetLineColor(kBlue);
+        Zmumu_truth_mll->SetFillColor(kBlue);
+        Zmumu_truth_mll->SetFillStyle(3005);
+        Zmumu_truth_mll->Draw("hist,same");
+    }
+    
+    TLegend *leg2 = new TLegend(0.6, 0.7, 0.9, 0.9);
+    leg2->AddEntry(data_muon_mll, "Data");
+    leg2->AddEntry(Zmumu_TandP_mll, "Z#mu#mu Tag and Probe", "f");
+    
+    if (truth_match) {
+        leg2->AddEntry(Zmumu_truth_mll, "Z#mu#mu truth match", "f");
+    }
+    
+    leg2->SetBorderSize(0);
+    leg2->SetTextFont(42);
+    leg2->SetTextSize(0.05);
+    leg2->SetFillColor(0);
+    leg2->SetFillStyle(0);
+    leg2->Draw("same");
+    
+    TPaveText *text2 = new TPaveText(0.6, 0.5, 0.9, 0.7, "NDC");
+    text2->SetTextSize(0.05);
+    text2->SetBorderSize(0);
+    text2->SetFillStyle(0);
+    text2->SetFillColor(0);
+    text2->AddText(string(sstream_pt_low.str() + " GeV < p_{T} <" + sstream_pt_up.str() + " GeV").c_str());
+    text2->Draw("same");
+
+    pad2_Mmumu->cd(); // pad2 becomes the current pad
+    
+    TH1F *frame_Mmumu = pad2_Mmumu->DrawFrame(60, 0.8, 150, 1.19);
+    frame_Mmumu->GetXaxis()->SetNdivisions(510);
+    frame_Mmumu->GetYaxis()->SetNdivisions(405);
+    frame_Mmumu->SetLineWidth(1);
+    frame_Mmumu->SetXTitle("M_{ll} [GeV]");
+    frame_Mmumu->GetXaxis()->SetTitleSize(20);
+    frame_Mmumu->GetXaxis()->SetTitleFont(47);
+    frame_Mmumu->GetXaxis()->SetTitleOffset(3.0);
+    frame_Mmumu->GetXaxis()->SetLabelFont(43); // Absolute font size in pixel (precision 3)
+    frame_Mmumu->GetXaxis()->SetLabelSize(15);
+    frame_Mmumu->SetYTitle("Data / MC");
+    frame_Mmumu->GetYaxis()->SetTitleSize(17);
+    frame_Mmumu->GetYaxis()->SetTitleFont(43);
+    frame_Mmumu->GetYaxis()->SetTitleOffset(1.5);
+    frame_Mmumu->GetYaxis()->SetLabelFont(43); // Absolute font size in pixel (precision 3)
+    frame_Mmumu->GetYaxis()->SetLabelSize(16);
+    frame_Mmumu->Draw();
+    
+    TH1F *ratio_Mmumu_TandP = (TH1F *)data_muon_mll->Clone();
+    ratio_Mmumu_TandP->Sumw2();
+    ratio_Mmumu_TandP->Divide(Zmumu_TandP_mll);
+    ratio_Mmumu_TandP->SetMarkerColor(kRed);
+    ratio_Mmumu_TandP->SetMarkerStyle(kFullTriangleUp);
+    ratio_Mmumu_TandP->SetLineColor(kRed);
+    ratio_Mmumu_TandP->Draw("same");
+    
+    if (truth_match) {
+        TH1F *ratio_Mmumu_truth = (TH1F *)data_muon_mll->Clone();
+        ratio_Mmumu_truth->Sumw2();
+        ratio_Mmumu_truth->Divide(Zmumu_truth_mll);
+        ratio_Mmumu_truth->SetMarkerColor(kBlue);
+        ratio_Mmumu_truth->SetMarkerStyle(kFullTriangleDown);
+        ratio_Mmumu_truth->SetLineColor(kBlue);
+        ratio_Mmumu_truth->Draw("same");
+    }
+
+    string filename2 = "signal_level_Mmumu_pt" + sstream_pt_low.str() + sstream_pt_up.str() + "_ratio_plot.pdf";
+    Mmumu_plot->SaveAs(filename2.c_str(), "pdf");
 }
 
 
@@ -1011,6 +1338,9 @@ void yt_make_cut_efficiency_plot(TString filename, TString lepton)
         leg->AddEntry("h_cut_eff_sigd0", "|d_{0}/#sigma_{d0}| < 3");
     }
     leg->Draw();
+
+    string output_filename = "cut_efficiency_" + static_cast<string>(lepton) + ".pdf";
+    cut_efficiency_plot->SaveAs(output_filename.c_str(), "pdf");
 }
 
 void yt_make_electron_real_efficiency_plot(TString filename)
@@ -1095,6 +1425,8 @@ void yt_make_electron_real_efficiency_plot(TString filename)
     leg->AddEntry("ratio_2", "0.8 < |#eta| < 1.37");
     leg->AddEntry("ratio_3", "1.52 < |#eta| < 2.0");
     leg->Draw();
+
+    real_efficiency_plot->SaveAs("electron_real_efficiency_before_bkg_subtraction.pdf", "pdf");
 }
 
 void yt_make_muon_real_efficiency_plot(TString filename)
@@ -1192,36 +1524,38 @@ void yt_make_muon_real_efficiency_plot(TString filename)
     leg->AddEntry("ratio_3", "1.2 < |#eta| < 1.8");
     leg->AddEntry("ratio_4", "1.8 < |#eta| < 2.5");
     leg->Draw();
+
+    real_efficiency_plot->SaveAs("muon_real_efficiency_before_bkg_subtraction.pdf", "pdf");
 }
 
 void yt_make_real_efficiency_plots(bool truth_match = false, bool ttbar = false, bool Gtt = false)
 {
-	TString path = "/Users/ytshen/Desktop/skim/Results/all_no_cut4/";
+	TString path = "/Users/ytshen/Desktop/skim/Results/1005/";
 
-    TFile *data_elec = TFile::Open(path + "submitDir_Data_electron/hist-all_no_cut4.root");
-    TFile *data_muon = TFile::Open(path + "submitDir_Data_muon/hist-all_no_cut4.root");
-    TFile *Zee_TandP = TFile::Open(path + "submitDir_MC_Zee/hist-all_no_cut4.root");
-    TFile *Zmumu_TandP = TFile::Open(path + "submitDir_MC_Zmumu/hist-all_no_cut4.root");
+    TFile *data_elec = TFile::Open(path + "submitDir_Data_electron/hist-0929_80mll100.root");
+    TFile *data_muon = TFile::Open(path + "submitDir_Data_muon/hist-0929_80mll100.root");
+    TFile *Zee_TandP = TFile::Open(path + "submitDir_MC_Zee/hist-0929_80mll100.root");
+    TFile *Zmumu_TandP = TFile::Open(path + "submitDir_MC_Zmumu/hist-0929_80mll100.root");
 
     TFile *Zee_truth;
     TFile *Zmumu_truth;
     if (truth_match) {
-        Zee_truth = TFile::Open(path + "submitDir_MC_Zee_truth_match/hist-all_no_cut4.root");
-        Zmumu_truth = TFile::Open(path + "submitDir_MC_Zmumu_truth_match/hist-all_no_cut4.root");
+        Zee_truth = TFile::Open(path + "submitDir_MC_Zee_truth_match/hist-0929_80mll100.root");
+        Zmumu_truth = TFile::Open(path + "submitDir_MC_Zmumu_truth_match/hist-0929_80mll100.root");
     }
 
 	TFile *ttbar_elec;
 	TFile *ttbar_muon;
 	if (ttbar) {
-		ttbar_elec = TFile::Open(path + "submitDir_MC_ttbar_electron/hist-all_no_cut4.root");
-		ttbar_muon = TFile::Open(path + "submitDir_MC_ttbar_muon/hist-all_no_cut4.root");
+		ttbar_elec = TFile::Open(path + "submitDir_MC_ttbar_electron/hist-0929_80mll100.root");
+		ttbar_muon = TFile::Open(path + "submitDir_MC_ttbar_muon/hist-0929_80mll100.root");
 	}
 
 	TFile *Gtt_elec;
 	TFile *Gtt_muon;
 	if (Gtt) {
-		Gtt_elec = TFile::Open(path + "submitDir_MC_GG_ttn1_electron/hist-all_no_cut4.root");
-		Gtt_muon = TFile::Open(path + "submitDir_MC_GG_ttn1_muon/hist-all_no_cut4.root");
+		Gtt_elec = TFile::Open(path + "submitDir_MC_GG_ttn1_electron/hist-0929_80mll100.root");
+		Gtt_muon = TFile::Open(path + "submitDir_MC_GG_ttn1_muon/hist-0929_80mll100.root");
 	}
 
     TH1F *h_elec_eff_pt = (TH1F *)data_elec->Get("h_eff_pt");
@@ -1340,7 +1674,7 @@ void yt_make_real_efficiency_plots(bool truth_match = false, bool ttbar = false,
     	h_Gtt_muon_eff_dRjet->SetName("h_Gtt_muon_eff_dRjet");
 	}
 
-    TCanvas *real_efficiency_plot = new TCanvas("real_efficiency_plot", "Muon Real Efficiency", 1500, 1000);
+    TCanvas *real_efficiency_plot = new TCanvas("real_efficiency_plot", "Real Efficiency", 1500, 1000);
     real_efficiency_plot->Divide(3, 2);
 
     real_efficiency_plot->cd(1);
@@ -1666,28 +2000,30 @@ void yt_make_real_efficiency_plots(bool truth_match = false, bool ttbar = false,
     	leg6->AddEntry("h_Gtt_muon_eff_dRjet", "Gtt MC");
 	}
     leg6->Draw();
+
+    real_efficiency_plot->SaveAs("real_efficiency.pdf", "pdf");
 }
 
 // lepton = electron, muon
 // x: pt, eta, dRjet
 void yt_truth_match_TandP_comparison(TString lepton, TString x, bool TandP_truth_match = false)
 {
-    TString path = "/Users/ytshen/Desktop/skim/Results/all_no_cut4/";
+    TString path = "/Users/ytshen/Desktop/skim/Results/1005/";
 
     TFile *TandP_file;
     TFile *truth_match_file;
     TFile *TandP_truth_match_file;
     if (lepton == "electron") {
-        TandP_file = TFile::Open(path + "submitDir_MC_Zee/hist-all_no_cut4.root");
-        truth_match_file = TFile::Open(path + "submitDir_MC_Zee_truth_match/hist-all_no_cut4.root");
+        TandP_file = TFile::Open(path + "submitDir_MC_Zee/hist-0929_80mll100.root");
+        truth_match_file = TFile::Open(path + "submitDir_MC_Zee_truth_match/hist-0929_80mll100.root");
         if (TandP_truth_match)
-            TandP_truth_match_file = TFile::Open(path + "submitDir_MC_Zee_TandP_truth_match/hist-all_no_cut4.root");
+            TandP_truth_match_file = TFile::Open(path + "submitDir_MC_Zee_TandP_truth_match/hist-0929_80mll100.root");
     }
     else if (lepton == "muon") {
-        TandP_file = TFile::Open(path + "submitDir_MC_Zmumu/hist-all_no_cut4.root");
-        truth_match_file = TFile::Open(path + "submitDir_MC_Zmumu_truth_match/hist-all_no_cut4.root");
+        TandP_file = TFile::Open(path + "submitDir_MC_Zmumu/hist-0929_80mll100.root");
+        truth_match_file = TFile::Open(path + "submitDir_MC_Zmumu_truth_match/hist-0929_80mll100.root");
         if (TandP_truth_match)
-            TandP_truth_match_file = TFile::Open(path + "submitDir_MC_Zmumu_TandP_truth_match/hist-all_no_cut4.root");
+            TandP_truth_match_file = TFile::Open(path + "submitDir_MC_Zmumu_TandP_truth_match/hist-0929_80mll100.root");
     }
 
     TH1F *h_TandP_eff_pt = (TH1F *)TandP_file->Get("h_eff_pt");
@@ -1849,6 +2185,8 @@ void yt_truth_match_TandP_comparison(TString lepton, TString x, bool TandP_truth
         ratio2->SetLineColor(kGreen);
         ratio2->Draw("e0, same");
     }
+
+    c1->SaveAs("Compare_TandP_truth_match_" + lepton + "_" + x + ".pdf", "pdf");
 }
 
 
@@ -1858,9 +2196,9 @@ void yt_truth_match_TandP_comparison(TString lepton, TString x, bool TandP_truth
 
 void yt_background_subtraction_illustration()
 {
-    TString path = "/Users/ytshen/Desktop/skim/Results/all_no_cut4/";
+    TString path = "/Users/ytshen/Desktop/skim/Results/1005/";
 
-    TFile *data_elec = TFile::Open(path + "submitDir_Data_electron/hist-all_no_cut4.root");
+    TFile *data_elec = TFile::Open(path + "submitDir_Data_electron/hist-0929_80mll100.root");
     TH3F *data_elec_baseline_pt_eta_mll = (TH3F *)data_elec->Get("h_baseline_pt_eta_mll");
     TH1D *data_elec_mll = (TH1D *)data_elec_baseline_pt_eta_mll->ProjectionZ("data_elec_mll");
 
@@ -1903,9 +2241,9 @@ void yt_background_subtraction_illustration()
 
 void yt_background_template_mll_plot(int pt_bin_low = 0, int pt_bin_up = -1, int eta_bin_low = 0, int eta_bin_up = -1)
 {
-    TString path = "/Users/ytshen/Desktop/skim/Results/all_no_cut4/";
+    TString path = "/Users/ytshen/Desktop/skim/Results/1005/";
 
-    TFile *data_elec = TFile::Open(path + "submitDir_Data_electron/hist-all_no_cut4.root");
+    TFile *data_elec = TFile::Open(path + "submitDir_Data_electron/hist-0929_80mll100.root");
 
     TH1F *h_bkg_template_fail_id_and_CaloIso_and_TrackIso;
     TH1F *h_bkg_template_fail_id_and_CaloIso_and_TrackIso_tight;
@@ -1934,6 +2272,33 @@ void yt_background_template_mll_plot(int pt_bin_low = 0, int pt_bin_up = -1, int
         h_bkg_template_fail_CaloIso_and_TrackIso = (TH1F *)h_bkg_template_fail_CaloIso_and_TrackIso_pt_eta_mll->ProjectionZ("template1", pt_bin_low, pt_bin_up, eta_bin_low, eta_bin_up);
     }
 
+    double pt_bin_low_value, eta_bin_low_value;
+    double pt_bin_up_value, eta_bin_up_value;
+    if (pt_bin_low != 0 && pt_bin_up != -1) {
+        pt_bin_low_value = h_bkg_template_fail_id_and_CaloIso_and_TrackIso->GetXaxis()->GetBinLowEdge(pt_bin_low);
+        pt_bin_up_value = h_bkg_template_fail_id_and_CaloIso_and_TrackIso->GetXaxis()->GetBinUpEdge(pt_bin_up);
+    }
+    else {
+        pt_bin_low_value = h_bkg_template_fail_id_and_CaloIso_and_TrackIso->GetXaxis()->GetBinLowEdge(1);
+        int nbins = h_bkg_template_fail_id_and_CaloIso_and_TrackIso->GetXaxis()->GetNbins();
+        pt_bin_up_value = h_bkg_template_fail_id_and_CaloIso_and_TrackIso->GetXaxis()->GetBinUpEdge(nbins - 1);
+    }
+    if (eta_bin_low_value != 0 && eta_bin_up_value != -1) {
+        eta_bin_low_value = h_bkg_template_fail_id_and_CaloIso_and_TrackIso->GetYaxis()->GetBinLowEdge(eta_bin_low);
+        eta_bin_up_value = h_bkg_template_fail_id_and_CaloIso_and_TrackIso->GetYaxis()->GetBinUpEdge(eta_bin_up);
+    }
+    else {
+        eta_bin_low_value = h_bkg_template_fail_id_and_CaloIso_and_TrackIso->GetYaxis()->GetBinLowEdge(1);
+        int nbins = h_bkg_template_fail_id_and_CaloIso_and_TrackIso->GetYaxis()->GetNbins();
+        eta_bin_up_value = h_bkg_template_fail_id_and_CaloIso_and_TrackIso->GetYaxis()->GetBinUpEdge(nbins - 1);
+    }
+    // Convert double to string using stringstream
+    stringstream sstream_pt_low, sstream_pt_up, sstream_eta_low, sstream_eta_up;
+    sstream_pt_low << pt_bin_low_value;
+    sstream_pt_up << pt_bin_up_value;
+    sstream_eta_low << eta_bin_low_value;
+    sstream_eta_up << eta_bin_up_value;
+
     TCanvas *c_ee = new TCanvas("c_ee", "c_ee", 600, 600);
 
     // The current template 1 and 2 are exactly the same.
@@ -1959,5 +2324,7 @@ void yt_background_template_mll_plot(int pt_bin_low = 0, int pt_bin_up = -1, int
     leg->AddEntry(h_bkg_template_fail_id_and_CaloIso_and_TrackIso_tight, "variation 2 template", "l");
     leg->SetBorderSize(0);
     leg->Draw("same");
-    //c_ee->SaveAs("bkg_template.pdf");
+
+    string output_filename = "bkg_template_electron_pt_" + sstream_pt_low.str() + sstream_pt_up.str() + "_eta" + sstream_eta_low.str() + sstream_eta_up.str() + ".pdf";
+    c_ee->SaveAs(output_filename.c_str(), "pdf");
 }
