@@ -1228,8 +1228,8 @@ void ytRealLeptonsEfficiency_MC :: loop_over_electrons()
             h_bkg_template_fail_TrackIso_only_pt_eta_mll->Fill(El_pT->at(n_el) / 1000., El_eta->at(n_el), El_ZTandP_mll->at(n_el) / 1000., normalization * El_SFwLooseAndBLayerLH->at(n_el));
         }
         // reverse calo and track isolation only (variation1 bkg template)
-        if (calo_isolation > 0.20 &&
-            track_isolation > 0.15) {
+        if (calo_isolation > 0.06 &&
+            track_isolation > 0.06) {
             h_bkg_template_fail_CaloIso_and_TrackIso->Fill(El_ZTandP_mll->at(n_el) / 1000., normalization * El_SFwLooseAndBLayerLH->at(n_el));
             h_bkg_template_fail_CaloIso_and_TrackIso_pt_eta_mll->Fill(El_pT->at(n_el) / 1000., El_eta->at(n_el), El_ZTandP_mll->at(n_el) / 1000., normalization * El_SFwLooseAndBLayerLH->at(n_el));
         }

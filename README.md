@@ -1,6 +1,13 @@
 # Real_Lepton_Efficiency
 This is the new real lepton efficiency framework.
 
+v09. Loose the template 1 requirements.
+1. Both Calo and Track isolation variable require > 6% for template 1.
+2. chmod 755 python scripts.
+3. Fix bugs in run_bkg_subtraction.sh.
+4. Change the input folder in ytPlots.C and ytBackground_subtraction.C.
+5. Add Xsec.txt for the Sherpa samples.
+
 v08. Redirect the output of run_bkg_subtraction.sh.
 1. Redirect the output so I can use another script to get the results.
 2. Add New_Skimmed class
