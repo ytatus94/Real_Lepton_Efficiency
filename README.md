@@ -1,6 +1,10 @@
 # Real_Lepton_Efficiency
 This is the new real lepton efficiency framework.
 
+v08. Redirect the output of run_bkg_subtraction.sh.
+1. Redirect the output so I can use another script to get the results.
+2. Add New_Skimmed class
+
 v07. Correct background subtraction.
 1. In the ytBackground_subtraction.C:
 1a. Fix the bug when N_sig = 0.
