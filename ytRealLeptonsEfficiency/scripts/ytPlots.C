@@ -30,18 +30,18 @@ void yt_baseline_mll_plots(int pt_bin_low = 0, int pt_bin_up = -1, bool truth_ma
 
     bool debug = false;
 
-	TString path = "/Users/ytshen/Desktop/skim/Results/all_no_cut4/";
+	TString path = "/raid05/users/shen/Ximo_ntuples/ytRealEff/Results/all_with_cut4_0914/";
 
-    TFile *data_elec = TFile::Open(path + "submitDir_Data_electron/hist-all_no_cut4.root");
-    TFile *data_muon = TFile::Open(path + "submitDir_Data_muon/hist-all_no_cut4.root");
-    TFile *Zee_TandP = TFile::Open(path + "submitDir_MC_Zee/hist-all_no_cut4.root");
-    TFile *Zmumu_TandP = TFile::Open(path + "submitDir_MC_Zmumu/hist-all_no_cut4.root");
+    TFile *data_elec = TFile::Open(path + "submitDir_Data_electron/hist-all_with_cut4.root");
+    TFile *data_muon = TFile::Open(path + "submitDir_Data_muon/hist-all_with_cut4.root");
+    TFile *Zee_TandP = TFile::Open(path + "submitDir_MC_Zee/hist-all_with_cut4.root");
+    TFile *Zmumu_TandP = TFile::Open(path + "submitDir_MC_Zmumu/hist-all_with_cut4.root");
 
     TFile *Zee_truth;
     TFile *Zmumu_truth;
     if (truth_match) {
-        Zee_truth = TFile::Open(path + "submitDir_MC_Zee_truth_match/hist-all_no_cut4.root");
-        Zmumu_truth = TFile::Open(path + "submitDir_MC_Zmumu_truth_match/hist-all_no_cut4.root");
+        Zee_truth = TFile::Open(path + "submitDir_MC_Zee_truth_match/hist-all_with_cut4.root");
+        Zmumu_truth = TFile::Open(path + "submitDir_MC_Zmumu_truth_match/hist-all_with_cut4.root");
     }
 
     if (debug) {
@@ -186,19 +186,19 @@ void yt_baseline_mll_ratio_plots(int pt_bin_low = 0, int pt_bin_up = -1, bool tr
 
     bool debug = false;
 
-    TString path = "/Users/ytshen/Desktop/skim/Results/all_no_cut4_0906/";
+    TString path = "/raid05/users/shen/Ximo_ntuples/ytRealEff/Results/all_with_cut4_0914/";
 
-    TFile *data_elec = TFile::Open(path + "submitDir_Data_electron/hist-all_no_cut4.root");
-    TFile *data_muon = TFile::Open(path + "submitDir_Data_muon/hist-all_no_cut4.root");
-    //TFile *Zee_TandP = TFile::Open(path + "submitDir_MC_Zee/hist-all_no_cut4.root");
-    TFile *Zee_TandP = TFile::Open(path + "submitDir_MC_Zee/hist-all_with_cut4.root");
-    TFile *Zmumu_TandP = TFile::Open(path + "submitDir_MC_Zmumu/hist-all_no_cut4.root");
+    TFile *data_elec = TFile::Open(path + "submitDir_Data_electron/hist-all_with_cut4.root");
+    TFile *data_muon = TFile::Open(path + "submitDir_Data_muon/hist-all_with_cut4.root");
+    //TFile *Zee_TandP = TFile::Open(path + "submitDir_MC_Zee/hist-all_with_cut4.root");
+    TFile *Zee_TandP = TFile::Open("/raid05/users/shen/Ximo_ntuples/ytRealEff/submitDir_MC_Zee/hist-test.root");
+    TFile *Zmumu_TandP = TFile::Open(path + "submitDir_MC_Zmumu/hist-all_with_cut4.root");
 
     TFile *Zee_truth;
     TFile *Zmumu_truth;
     if (truth_match) {
-        Zee_truth = TFile::Open(path + "submitDir_MC_Zee_truth_match/hist-all_no_cut4.root");
-        Zmumu_truth = TFile::Open(path + "submitDir_MC_Zmumu_truth_match/hist-all_no_cut4.root");
+        Zee_truth = TFile::Open(path + "submitDir_MC_Zee_truth_match/hist-all_with_cut4.root");
+        Zmumu_truth = TFile::Open(path + "submitDir_MC_Zmumu_truth_match/hist-all_with_cut4.root");
     }
 
     if (debug) {
@@ -507,18 +507,19 @@ void yt_signal_mll_ratio_plots(int pt_bin_low = 0, int pt_bin_up = -1, bool trut
     
     bool debug = false;
     
-    TString path = "/Users/ytshen/Desktop/skim/Results/all_no_cut4/";
+    TString path = "/raid05/users/shen/Ximo_ntuples/ytRealEff/Results/all_with_cut4_0914/";
     
-    TFile *data_elec = TFile::Open(path + "submitDir_Data_electron/hist-all_no_cut4.root");
-    TFile *data_muon = TFile::Open(path + "submitDir_Data_muon/hist-all_no_cut4.root");
-    TFile *Zee_TandP = TFile::Open(path + "submitDir_MC_Zee/hist-all_no_cut4.root");
-    TFile *Zmumu_TandP = TFile::Open(path + "submitDir_MC_Zmumu/hist-all_no_cut4.root");
+    TFile *data_elec = TFile::Open(path + "submitDir_Data_electron/hist-all_with_cut4.root");
+    TFile *data_muon = TFile::Open(path + "submitDir_Data_muon/hist-all_with_cut4.root");
+    //TFile *Zee_TandP = TFile::Open(path + "submitDir_MC_Zee/hist-all_with_cut4.root");
+    TFile *Zee_TandP = TFile::Open("/raid05/users/shen/Ximo_ntuples/ytRealEff/submitDir_MC_Zee/hist-test.root");
+    TFile *Zmumu_TandP = TFile::Open(path + "submitDir_MC_Zmumu/hist-all_with_cut4.root");
     
     TFile *Zee_truth;
     TFile *Zmumu_truth;
     if (truth_match) {
-        Zee_truth = TFile::Open(path + "submitDir_MC_Zee_truth_match/hist-all_no_cut4.root");
-        Zmumu_truth = TFile::Open(path + "submitDir_MC_Zmumu_truth_match/hist-all_no_cut4.root");
+        Zee_truth = TFile::Open(path + "submitDir_MC_Zee_truth_match/hist-all_with_cut4.root");
+        Zmumu_truth = TFile::Open(path + "submitDir_MC_Zmumu_truth_match/hist-all_with_cut4.root");
     }
     
     if (debug) {
@@ -822,10 +823,10 @@ void yt_signal_mll_ratio_plots(int pt_bin_low = 0, int pt_bin_up = -1, bool trut
 
 void yt_mll_plots()
 {
-    TString path = "/Users/ytshen/Desktop/skim/Results/all_no_cut4/";
+    TString path = "/raid05/users/shen/Ximo_ntuples/ytRealEff/Results/all_with_cut4_0914/";
 
-    TFile *data_elec = TFile::Open(path + "submitDir_Data_electron/hist-all_no_cut4.root");
-    TFile *data_muon = TFile::Open(path + "submitDir_Data_muon/hist-all_no_cut4.root");
+    TFile *data_elec = TFile::Open(path + "submitDir_Data_electron/hist-all_with_cut4.root");
+    TFile *data_muon = TFile::Open(path + "submitDir_Data_muon/hist-all_with_cut4.root");
 
     TH3F *data_elec_baseline_pt_eta_mll = (TH3F *)data_elec->Get("h_baseline_pt_eta_mll");
     TH3F *data_muon_baseline_pt_eta_mll = (TH3F *)data_muon->Get("h_baseline_pt_eta_mll");
@@ -1196,32 +1197,32 @@ void yt_make_muon_real_efficiency_plot(TString filename)
 
 void yt_make_real_efficiency_plots(bool truth_match = false, bool ttbar = false, bool Gtt = false)
 {
-	TString path = "/Users/ytshen/Desktop/skim/Results/all_no_cut4/";
+	TString path = "/raid05/users/shen/Ximo_ntuples/ytRealEff/Results/all_with_cut4_0914/";
 
-    TFile *data_elec = TFile::Open(path + "submitDir_Data_electron/hist-all_no_cut4.root");
-    TFile *data_muon = TFile::Open(path + "submitDir_Data_muon/hist-all_no_cut4.root");
-    TFile *Zee_TandP = TFile::Open(path + "submitDir_MC_Zee/hist-all_no_cut4.root");
-    TFile *Zmumu_TandP = TFile::Open(path + "submitDir_MC_Zmumu/hist-all_no_cut4.root");
+    TFile *data_elec = TFile::Open(path + "submitDir_Data_electron/hist-all_with_cut4.root");
+    TFile *data_muon = TFile::Open(path + "submitDir_Data_muon/hist-all_with_cut4.root");
+    TFile *Zee_TandP = TFile::Open(path + "submitDir_MC_Zee/hist-all_with_cut4.root");
+    TFile *Zmumu_TandP = TFile::Open(path + "submitDir_MC_Zmumu/hist-all_with_cut4.root");
 
     TFile *Zee_truth;
     TFile *Zmumu_truth;
     if (truth_match) {
-        Zee_truth = TFile::Open(path + "submitDir_MC_Zee_truth_match/hist-all_no_cut4.root");
-        Zmumu_truth = TFile::Open(path + "submitDir_MC_Zmumu_truth_match/hist-all_no_cut4.root");
+        Zee_truth = TFile::Open(path + "submitDir_MC_Zee_truth_match/hist-all_with_cut4.root");
+        Zmumu_truth = TFile::Open(path + "submitDir_MC_Zmumu_truth_match/hist-all_with_cut4.root");
     }
 
 	TFile *ttbar_elec;
 	TFile *ttbar_muon;
 	if (ttbar) {
-		ttbar_elec = TFile::Open(path + "submitDir_MC_ttbar_electron/hist-all_no_cut4.root");
-		ttbar_muon = TFile::Open(path + "submitDir_MC_ttbar_muon/hist-all_no_cut4.root");
+		ttbar_elec = TFile::Open(path + "submitDir_MC_ttbar_electron/hist-all_with_cut4.root");
+		ttbar_muon = TFile::Open(path + "submitDir_MC_ttbar_muon/hist-all_with_cut4.root");
 	}
 
 	TFile *Gtt_elec;
 	TFile *Gtt_muon;
 	if (Gtt) {
-		Gtt_elec = TFile::Open(path + "submitDir_MC_GG_ttn1_electron/hist-all_no_cut4.root");
-		Gtt_muon = TFile::Open(path + "submitDir_MC_GG_ttn1_muon/hist-all_no_cut4.root");
+		Gtt_elec = TFile::Open(path + "submitDir_MC_GG_ttn1_electron/hist-all_with_cut4.root");
+		Gtt_muon = TFile::Open(path + "submitDir_MC_GG_ttn1_muon/hist-all_with_cut4.root");
 	}
 
     TH1F *h_elec_eff_pt = (TH1F *)data_elec->Get("h_eff_pt");
@@ -1672,22 +1673,22 @@ void yt_make_real_efficiency_plots(bool truth_match = false, bool ttbar = false,
 // x: pt, eta, dRjet
 void yt_truth_match_TandP_comparison(TString lepton, TString x, bool TandP_truth_match = false)
 {
-    TString path = "/Users/ytshen/Desktop/skim/Results/all_no_cut4/";
+    TString path = "/raid05/users/shen/Ximo_ntuples/ytRealEff/Results/all_with_cut4_0914/";
 
     TFile *TandP_file;
     TFile *truth_match_file;
     TFile *TandP_truth_match_file;
     if (lepton == "electron") {
-        TandP_file = TFile::Open(path + "submitDir_MC_Zee/hist-all_no_cut4.root");
-        truth_match_file = TFile::Open(path + "submitDir_MC_Zee_truth_match/hist-all_no_cut4.root");
+        TandP_file = TFile::Open(path + "submitDir_MC_Zee/hist-all_with_cut4.root");
+        truth_match_file = TFile::Open(path + "submitDir_MC_Zee_truth_match/hist-all_with_cut4.root");
         if (TandP_truth_match)
-            TandP_truth_match_file = TFile::Open(path + "submitDir_MC_Zee_TandP_truth_match/hist-all_no_cut4.root");
+            TandP_truth_match_file = TFile::Open(path + "submitDir_MC_Zee_TandP_truth_match/hist-all_with_cut4.root");
     }
     else if (lepton == "muon") {
-        TandP_file = TFile::Open(path + "submitDir_MC_Zmumu/hist-all_no_cut4.root");
-        truth_match_file = TFile::Open(path + "submitDir_MC_Zmumu_truth_match/hist-all_no_cut4.root");
+        TandP_file = TFile::Open(path + "submitDir_MC_Zmumu/hist-all_with_cut4.root");
+        truth_match_file = TFile::Open(path + "submitDir_MC_Zmumu_truth_match/hist-all_with_cut4.root");
         if (TandP_truth_match)
-            TandP_truth_match_file = TFile::Open(path + "submitDir_MC_Zmumu_TandP_truth_match/hist-all_no_cut4.root");
+            TandP_truth_match_file = TFile::Open(path + "submitDir_MC_Zmumu_TandP_truth_match/hist-all_with_cut4.root");
     }
 
     TH1F *h_TandP_eff_pt = (TH1F *)TandP_file->Get("h_eff_pt");
@@ -1858,9 +1859,9 @@ void yt_truth_match_TandP_comparison(TString lepton, TString x, bool TandP_truth
 
 void yt_background_subtraction_illustration()
 {
-    TString path = "/Users/ytshen/Desktop/skim/Results/all_no_cut4/";
+    TString path = "/raid05/users/shen/Ximo_ntuples/ytRealEff/Results/all_with_cut4_0914/";
 
-    TFile *data_elec = TFile::Open(path + "submitDir_Data_electron/hist-all_no_cut4.root");
+    TFile *data_elec = TFile::Open(path + "submitDir_Data_electron/hist-all_with_cut4.root");
     TH3F *data_elec_baseline_pt_eta_mll = (TH3F *)data_elec->Get("h_baseline_pt_eta_mll");
     TH1D *data_elec_mll = (TH1D *)data_elec_baseline_pt_eta_mll->ProjectionZ("data_elec_mll");
 
@@ -1903,9 +1904,9 @@ void yt_background_subtraction_illustration()
 
 void yt_background_template_mll_plot(int pt_bin_low = 0, int pt_bin_up = -1, int eta_bin_low = 0, int eta_bin_up = -1)
 {
-    TString path = "/Users/ytshen/Desktop/skim/Results/all_no_cut4/";
+    TString path = "/raid05/users/shen/Ximo_ntuples/ytRealEff/Results/all_with_cut4_0914/";
 
-    TFile *data_elec = TFile::Open(path + "submitDir_Data_electron/hist-all_no_cut4.root");
+    TFile *data_elec = TFile::Open(path + "submitDir_Data_electron/hist-all_with_cut4.root");
 
     TH1F *h_bkg_template_fail_id_and_CaloIso_and_TrackIso;
     TH1F *h_bkg_template_fail_id_and_CaloIso_and_TrackIso_tight;

@@ -487,7 +487,7 @@ EL::StatusCode ytEventSelection :: execute ()
 
 	//const char * function_name = "execute()";
 	//Info(function_name, "Function calls");
-
+/*
 	wk()->tree()->GetEntry(wk()->treeEntry());
 
     // Reset vectors
@@ -690,14 +690,14 @@ EL::StatusCode ytEventSelection :: execute ()
     bool cut3  = m_cutflow->pass_primary_vertex(PV_z);
     m_cutflow->update(Primary_vertex, cut3);
     if (!cut3) return EL::StatusCode::SUCCESS;
-
+//
     bool cut4  = m_cutflow->pass_trigger(isData, isMC, RunNb, PRWrandomRunNumber,
                                          HLT_2e12_lhloose_L12EM10VH, HLT_e17_lhloose_mu14, HLT_mu18_mu8noL1, HLT_xe70,
                                          HLT_2e17_lhvloose_nod0, HLT_e17_lhloose_nod0_mu14, HLT_mu20_mu8noL1, HLT_xe100_mht_L1XE50,
                                          Etmiss_TST_Et);
     m_cutflow->update(Trigger, cut4);
     if (!cut4) return EL::StatusCode::SUCCESS;
-
+//
     bool cut5  = m_cutflow->pass_global_flags(isData, isMC, DetError);
     m_cutflow->update(Global_flags, cut5);
     if (!cut5) return EL::StatusCode::SUCCESS;
@@ -705,11 +705,11 @@ EL::StatusCode ytEventSelection :: execute ()
     bool cut6  = m_cutflow->pass_bad_muon(vec_baseline_muon); // use baseline muons
     m_cutflow->update(Bad_muon, cut6);
     if (!cut6) return EL::StatusCode::SUCCESS;
-
+//
     bool cut7  = m_cutflow->pass_at_least_one_jet_passes_jet_OR(vec_baseline_jets); // use baseline jets
     m_cutflow->update(At_least_one_jet_passes_jet_OR, cut7);
     if (!cut7) return EL::StatusCode::SUCCESS;
-
+//
     bool cut8  = m_cutflow->pass_bad_jet(vec_jets); // we have to use the raw jet objects (vec_jets) at this step.
     m_cutflow->update(Bad_jet, cut8);
     if (!cut8) return EL::StatusCode::SUCCESS;
@@ -724,11 +724,11 @@ EL::StatusCode ytEventSelection :: execute ()
 
     // JVT cut applied after OR and jet quality
     fill_JVT_jets(vec_OR_jets);
-
+//
     bool cut9  = m_cutflow->pass_at_least_one_signal_jet(vec_JVT_jets);
     m_cutflow->update(At_least_one_signal_jet, cut9);
     if (!cut9) return EL::StatusCode::SUCCESS;
-
+//
     bool cut10 = m_cutflow->pass_cosmic_muon_veto(vec_OR_muon);
     m_cutflow->update(Cosmic_muons_veto, cut10);
     if (!cut10) return EL::StatusCode::SUCCESS;
@@ -825,7 +825,7 @@ EL::StatusCode ytEventSelection :: execute ()
     bool mumu_cut5 = m_cutflow->pass_MET_greater_than_125GeV(Etmiss_TST_Et);
     if (mumu_cut1 == 3 && mumu_cut2 && mumu_cut3 && mumu_cut4 && mumu_cut5)
         m_cutflow->update(mumu_MET_greater_than_125GeV, mumu_cut5);
-
+*/
 	return EL::StatusCode::SUCCESS;
 }
 
