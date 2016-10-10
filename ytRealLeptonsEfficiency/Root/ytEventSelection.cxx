@@ -119,8 +119,10 @@ EL::StatusCode ytEventSelection :: initialize ()
     Mu_passOR = 0;
     Mu_isTight = 0;
     Mu_isCosmic = 0;
+    //#ifdef _IS_MC_
     Mu_type = 0;
     Mu_origin = 0;
+    //#endif // #ifdef _IS_MC_
     Mu_ptcone20 = 0;
     Mu_ptcone30 = 0;
     Mu_ptcone40 = 0;
@@ -177,11 +179,13 @@ EL::StatusCode ytEventSelection :: initialize ()
     El_isTightLH = 0;
     El_nBLayerHits = 0;
     El_expectBLayerHit = 0;
+    //#ifdef _IS_MC_
     El_type = 0;
     El_origin = 0;
     El_bkgMotherPdgId = 0;
     El_bkgOrigin = 0;
     El_chFlip = 0;
+    //#endif // #ifdef _IS_MC_
     El_ptcone20 = 0;
     El_ptcone30 = 0;
     El_ptcone40 = 0;
@@ -222,12 +226,15 @@ EL::StatusCode ytEventSelection :: initialize ()
     Jet_MV2c20 = 0;
     Jet_MV2c10 = 0;
     Jet_SFw = 0;
+    //#ifdef _IS_MC_
     Jet_ConeTruthLabel = 0;
     Jet_PartonTruthLabel = 0;
     Jet_HadronConeExclTruthLabel = 0;
     Jet_deltaR = 0;
+    //#endif // #ifdef _IS_MC_
     Jet_nTrk = 0;
     Jet_passOR = 0;
+    //#ifdef _IS_MC_
     TruthJet_eta = 0;
     TruthJet_phi = 0;
     TruthJet_pT = 0;
@@ -238,6 +245,7 @@ EL::StatusCode ytEventSelection :: initialize ()
     TruthL_phi = 0;
     TruthL_pT = 0;
     TruthL_id = 0;
+    //#endif // #ifdef _IS_MC_
 
     // Set branch addresses and branch pointers
     fChain = wk()->tree();
@@ -325,8 +333,10 @@ EL::StatusCode ytEventSelection :: initialize ()
     fChain->SetBranchAddress("Mu_passOR", &Mu_passOR, &b_Mu_passOR);
     fChain->SetBranchAddress("Mu_isTight", &Mu_isTight, &b_Mu_isTight);
     fChain->SetBranchAddress("Mu_isCosmic", &Mu_isCosmic, &b_Mu_isCosmic);
+    //#ifdef _IS_MC_
     fChain->SetBranchAddress("Mu_type", &Mu_type, &b_Mu_type);
     fChain->SetBranchAddress("Mu_origin", &Mu_origin, &b_Mu_origin);
+    //#endif // #ifdef _IS_MC_
     fChain->SetBranchAddress("Mu_ptcone20", &Mu_ptcone20, &b_Mu_ptcone20);
     fChain->SetBranchAddress("Mu_ptcone30", &Mu_ptcone30, &b_Mu_ptcone30);
     fChain->SetBranchAddress("Mu_ptcone40", &Mu_ptcone40, &b_Mu_ptcone40);
@@ -385,11 +395,13 @@ EL::StatusCode ytEventSelection :: initialize ()
     fChain->SetBranchAddress("El_isTightLH", &El_isTightLH, &b_El_isTightLH);
     fChain->SetBranchAddress("El_nBLayerHits", &El_nBLayerHits, &b_El_nBLayerHits);
     fChain->SetBranchAddress("El_expectBLayerHit", &El_expectBLayerHit, &b_El_expectBLayerHit);
+    //#ifdef _IS_MC_
     fChain->SetBranchAddress("El_type", &El_type, &b_El_type);
     fChain->SetBranchAddress("El_origin", &El_origin, &b_El_origin);
     fChain->SetBranchAddress("El_bkgMotherPdgId", &El_bkgMotherPdgId, &b_El_bkgMotherPdgId);
     fChain->SetBranchAddress("El_bkgOrigin", &El_bkgOrigin, &b_El_bkgOrigin);
     fChain->SetBranchAddress("El_chFlip", &El_chFlip, &b_El_chFlip);
+    //#endif // #ifdef _IS_MC_
     fChain->SetBranchAddress("El_ptcone20", &El_ptcone20, &b_El_ptcone20);
     fChain->SetBranchAddress("El_ptcone30", &El_ptcone30, &b_El_ptcone30);
     fChain->SetBranchAddress("El_ptcone40", &El_ptcone40, &b_El_ptcone40);
@@ -431,10 +443,12 @@ EL::StatusCode ytEventSelection :: initialize ()
     fChain->SetBranchAddress("Jet_MV2c20", &Jet_MV2c20, &b_Jet_MV2c20);
     fChain->SetBranchAddress("Jet_MV2c10", &Jet_MV2c10, &b_Jet_MV2c10);
     fChain->SetBranchAddress("Jet_SFw", &Jet_SFw, &b_Jet_SFw);
+    //#ifdef _IS_MC_
     fChain->SetBranchAddress("Jet_ConeTruthLabel", &Jet_ConeTruthLabel, &b_Jet_ConeTruthLabel);
     fChain->SetBranchAddress("Jet_PartonTruthLabel", &Jet_PartonTruthLabel, &b_Jet_PartonTruthLabel);
     fChain->SetBranchAddress("Jet_HadronConeExclTruthLabel", &Jet_HadronConeExclTruthLabel, &b_Jet_HadronConeExclTruthLabel);
     fChain->SetBranchAddress("Jet_deltaR", &Jet_deltaR, &b_Jet_deltaR);
+    //#endif // #ifdef _IS_MC_
     fChain->SetBranchAddress("Jet_nTrk", &Jet_nTrk, &b_Jet_nTrk);
     fChain->SetBranchAddress("Jet_passOR", &Jet_passOR, &b_Jet_passOR);
     fChain->SetBranchAddress("Etmiss_CST_Etx", &Etmiss_CST_Etx, &b_Etmiss_CST_Etx);
@@ -449,6 +463,7 @@ EL::StatusCode ytEventSelection :: initialize ()
     fChain->SetBranchAddress("Etmiss_Truth_Etx", &Etmiss_Truth_Etx, &b_Etmiss_Truth_Etx);
     fChain->SetBranchAddress("Etmiss_Truth_Ety", &Etmiss_Truth_Ety, &b_Etmiss_Truth_Ety);
     fChain->SetBranchAddress("Etmiss_Truth_Et", &Etmiss_Truth_Et, &b_Etmiss_Truth_Et);
+    //#ifdef _IS_MC_
     fChain->SetBranchAddress("NTruthJet", &NTruthJet, &b_NTruthJet);
     fChain->SetBranchAddress("TruthJet_eta", &TruthJet_eta, &b_TruthJet_eta);
     fChain->SetBranchAddress("TruthJet_phi", &TruthJet_phi, &b_TruthJet_phi);
@@ -467,6 +482,7 @@ EL::StatusCode ytEventSelection :: initialize ()
     fChain->SetBranchAddress("SUSY_Gluino_decay2", &SUSY_Gluino_decay2, &b_SUSY_Gluino_decay2);
     fChain->SetBranchAddress("GenFiltHT", &GenFiltHT, &b_GenFiltHT);
     fChain->SetBranchAddress("GenFiltMET", &GenFiltMET, &b_GenFiltMET);
+    //#endif // #ifdef _IS_MC_
     fChain->SetBranchAddress("PV_z", &PV_z, &b_PV_z);
     fChain->SetBranchAddress("Nvtx", &Nvtx, &b_Nvtx);
     fChain->SetBranchAddress("TruthX1", &TruthX1, &b_TruthX1);
@@ -516,139 +532,287 @@ EL::StatusCode ytEventSelection :: execute ()
     vec_signal_jets.clear();
     vec_signal_lept.clear();
 
-    fill_electrons(
-		NEl,
-		11, // particle id e- = 11
-		El_eta,
-		El_etaclus,
-		El_phi,
-		El_pT,
-		El_E,
-		El_charge,
-		El_sigd0,
-		El_z0sinTheta,
-		El_d0pvtx,
-		El_passOR,
-		El_SFwMediumLH,
-		El_IsoSFwMediumLH,
-		El_SFwTightLH,
-		El_SFwLooseAndBLayerLH,
-		El_SFwTrigMediumLH_e12_lhloose_L1EM10VH,
-		El_SFwTrigMediumLH_e17_lhloose,
-		El_SFwTrigMediumLH_single,
-		El_SFwTrigLooseAndBLayerLH_e12_lhloose_L1EM10VH,
-		El_isLooseAndBLayerLH,
-		El_isMediumLH,
-		El_isTightLH,
-		El_nBLayerHits,
-		El_expectBLayerHit,
-		El_type,
-		El_origin,
-		El_bkgMotherPdgId,
-		El_bkgOrigin,
-		El_chFlip,
-		El_ptcone20,
-		El_ptcone30,
-		El_ptcone40,
-		El_ptvarcone20,
-		El_ptvarcone30,
-		El_ptvarcone40,
-		El_topoetcone20,
-		El_topoetcone30,
-		El_topoetcone40,
-		El_passIsoLooseTO,
-		El_passIsoLoose,
-		El_passIsoTight,
-		El_passIsoGrad,
-		El_passIsoGradCustomTight,
-		El_passIsoGradCustom,
-		El_passIsoGradLoose,
-		El_trigMatch_e12_lhloose_L1EM10VH,
-		El_trigMatch_e17_lhloose,
-		El_trigMatch_e60_lhmedium,
-		El_trigMatch_e24_lhmedium_iloose_L1EM20VH,
-		El_trigMatch_2e12_lhloose_L12EM10VH,
-		El_trigMatch_2e15_lhloose_L12EM10VH,
-		El_trigMatch_2e15_lhvloose_L12EM13VH,
-		El_trigMatch_2e15_lhvloose_nod0_L12EM13VH,
-		El_trigMatch_2e17_lhvloose_nod0,
-		El_trigMatch_e17_lhloose_mu14,
-		El_trigMatch_e17_lhloose_nod0_mu14,
-		El_TrigMatch_e24_lhmedium_nod0_ivarloose,
-		El_TrigMatch_e24_lhtight_nod0_ivarloose,
-		El_TrigMatch_e60_lhmedium_nod0);
+    if (isMC) {
+        //#ifdef _IS_MC_
+        fill_electrons(
+            NEl,
+            11, // particle id e- = 11
+            El_eta,
+            El_etaclus,
+            El_phi,
+            El_pT,
+            El_E,
+            El_charge,
+            El_sigd0,
+            El_z0sinTheta,
+            El_d0pvtx,
+            El_passOR,
+            El_SFwMediumLH,
+            El_IsoSFwMediumLH,
+            El_SFwTightLH,
+            El_SFwLooseAndBLayerLH,
+            El_SFwTrigMediumLH_e12_lhloose_L1EM10VH,
+            El_SFwTrigMediumLH_e17_lhloose,
+            El_SFwTrigMediumLH_single,
+            El_SFwTrigLooseAndBLayerLH_e12_lhloose_L1EM10VH,
+            El_isLooseAndBLayerLH,
+            El_isMediumLH,
+            El_isTightLH,
+            El_nBLayerHits,
+            El_expectBLayerHit,
+            El_type,
+            El_origin,
+            El_bkgMotherPdgId,
+            El_bkgOrigin,
+            El_chFlip,
+            El_ptcone20,
+            El_ptcone30,
+            El_ptcone40,
+            El_ptvarcone20,
+            El_ptvarcone30,
+            El_ptvarcone40,
+            El_topoetcone20,
+            El_topoetcone30,
+            El_topoetcone40,
+            El_passIsoLooseTO,
+            El_passIsoLoose,
+            El_passIsoTight,
+            El_passIsoGrad,
+            El_passIsoGradCustomTight,
+            El_passIsoGradCustom,
+            El_passIsoGradLoose,
+            El_trigMatch_e12_lhloose_L1EM10VH,
+            El_trigMatch_e17_lhloose,
+            El_trigMatch_e60_lhmedium,
+            El_trigMatch_e24_lhmedium_iloose_L1EM20VH,
+            El_trigMatch_2e12_lhloose_L12EM10VH,
+            El_trigMatch_2e15_lhloose_L12EM10VH,
+            El_trigMatch_2e15_lhvloose_L12EM13VH,
+            El_trigMatch_2e15_lhvloose_nod0_L12EM13VH,
+            El_trigMatch_2e17_lhvloose_nod0,
+            El_trigMatch_e17_lhloose_mu14,
+            El_trigMatch_e17_lhloose_nod0_mu14,
+            El_TrigMatch_e24_lhmedium_nod0_ivarloose,
+            El_TrigMatch_e24_lhtight_nod0_ivarloose,
+            El_TrigMatch_e60_lhmedium_nod0);
 
-    fill_muons(
-		NMu,
-		13, // particle id mu- = 13
-		Mu_eta,
-		Mu_phi,
-		Mu_pT,
-		Mu_SFw,
-		Mu_IsoSFw,
-		Mu_charge,
-		Mu_d0pvtx,
-		Mu_sigd0,
-		Mu_z0sinTheta,
-		Mu_isBad,
-		Mu_passOR,
-		Mu_isTight,
-		Mu_isCosmic,
-		Mu_type,
-		Mu_origin,
-		Mu_ptcone20,
-		Mu_ptcone30,
-		Mu_ptcone40,
-		Mu_ptvarcone20,
-		Mu_ptvarcone30,
-		Mu_ptvarcone40,
-		Mu_topoetcone20,
-		Mu_topoetcone30,
-		Mu_topoetcone40,
-		Mu_passIsoLooseTO,
-		Mu_passIsoLoose,
-		Mu_passIsoTight,
-		Mu_passIsoGrad,
-		Mu_passIsoGradCustomTight,
-		Mu_passIsoGradCustom,
-		Mu_passIsoGradLoose,
-		MuTrigSF_HLT_mu20_iloose_L1MU15_OR_HLT_mu50,
-		Mu_trigMatch_mu26_imedium,
-		Mu_trigMatch_mu50,
-		Mu_trigMatch_mu8noL1,
-		Mu_trigMatch_mu14,
-		Mu_trigMatch_mu18,
-		Mu_trigMatch_mu18_mu8noL1,
-		Mu_trigMatch_e17_lhloose_mu14,
-		Mu_trigMatch_e17_lhloose_nod0_mu14,
-		Mu_trigMatch_mu20_mu8noL1,
-		Mu_trigMatch_mu22_mu8noL1,
-		Mu_TrigMatch_mu24_iloose,
-		Mu_TrigMatch_mu24_ivarloose,
-		Mu_TrigMatch_mu24_iloose_L1MU15,
-		Mu_TrigMatch_mu24_ivarloose_L1MU15,
-		Mu_trigMatchPair_mu18_mu8noL1,
-		Mu_trigMatchPair_mu20_mu8noL1,
-		Mu_trigMatchPair_mu22_mu8noL1);
+        fill_muons(
+            NMu,
+            13, // particle id mu- = 13
+            Mu_eta,
+            Mu_phi,
+            Mu_pT,
+            Mu_SFw,
+            Mu_IsoSFw,
+            Mu_charge,
+            Mu_d0pvtx,
+            Mu_sigd0,
+            Mu_z0sinTheta,
+            Mu_isBad,
+            Mu_passOR,
+            Mu_isTight,
+            Mu_isCosmic,
+            Mu_type,
+            Mu_origin,
+            Mu_ptcone20,
+            Mu_ptcone30,
+            Mu_ptcone40,
+            Mu_ptvarcone20,
+            Mu_ptvarcone30,
+            Mu_ptvarcone40,
+            Mu_topoetcone20,
+            Mu_topoetcone30,
+            Mu_topoetcone40,
+            Mu_passIsoLooseTO,
+            Mu_passIsoLoose,
+            Mu_passIsoTight,
+            Mu_passIsoGrad,
+            Mu_passIsoGradCustomTight,
+            Mu_passIsoGradCustom,
+            Mu_passIsoGradLoose,
+            MuTrigSF_HLT_mu20_iloose_L1MU15_OR_HLT_mu50,
+            Mu_trigMatch_mu26_imedium,
+            Mu_trigMatch_mu50,
+            Mu_trigMatch_mu8noL1,
+            Mu_trigMatch_mu14,
+            Mu_trigMatch_mu18,
+            Mu_trigMatch_mu18_mu8noL1,
+            Mu_trigMatch_e17_lhloose_mu14,
+            Mu_trigMatch_e17_lhloose_nod0_mu14,
+            Mu_trigMatch_mu20_mu8noL1,
+            Mu_trigMatch_mu22_mu8noL1,
+            Mu_TrigMatch_mu24_iloose,
+            Mu_TrigMatch_mu24_ivarloose,
+            Mu_TrigMatch_mu24_iloose_L1MU15,
+            Mu_TrigMatch_mu24_ivarloose_L1MU15,
+            Mu_trigMatchPair_mu18_mu8noL1,
+            Mu_trigMatchPair_mu20_mu8noL1,
+            Mu_trigMatchPair_mu22_mu8noL1);
 
-    fill_jets(
-		NJet,
-		Jet_eta,
-		Jet_phi,
-		Jet_pT,
-		Jet_E,
-		Jet_quality,
-		Jet_JVT,
-		Jet_JVTsf,
-		Jet_MV2c20,
-		Jet_MV2c10,
-		Jet_SFw,
-		Jet_ConeTruthLabel,
-		Jet_PartonTruthLabel,
-		Jet_HadronConeExclTruthLabel,
-		Jet_deltaR,
-		Jet_nTrk,
-		Jet_passOR);
+        fill_jets(
+            NJet,
+            Jet_eta,
+            Jet_phi,
+            Jet_pT,
+            Jet_E,
+            Jet_quality,
+            Jet_JVT,
+            Jet_JVTsf,
+            Jet_MV2c20,
+            Jet_MV2c10,
+            Jet_SFw,
+            Jet_ConeTruthLabel,
+            Jet_PartonTruthLabel,
+            Jet_HadronConeExclTruthLabel,
+            Jet_deltaR,
+            Jet_nTrk,
+            Jet_passOR);
+        //#endif // #ifdef _IS_MC_
+    }
+
+    if (isData) {
+        //#ifdef _IS_DATA_
+        fill_electrons(
+            NEl,
+            11, // particle id e- = 11
+            El_eta,
+            El_etaclus,
+            El_phi,
+            El_pT,
+            El_E,
+            El_charge,
+            El_sigd0,
+            El_z0sinTheta,
+            El_d0pvtx,
+            El_passOR,
+            El_SFwMediumLH,
+            El_IsoSFwMediumLH,
+            El_SFwTightLH,
+            El_SFwLooseAndBLayerLH,
+            El_SFwTrigMediumLH_e12_lhloose_L1EM10VH,
+            El_SFwTrigMediumLH_e17_lhloose,
+            El_SFwTrigMediumLH_single,
+            El_SFwTrigLooseAndBLayerLH_e12_lhloose_L1EM10VH,
+            El_isLooseAndBLayerLH,
+            El_isMediumLH,
+            El_isTightLH,
+            El_nBLayerHits,
+            El_expectBLayerHit,
+            /*
+            El_type, // MC only
+            El_origin, // MC only
+            El_bkgMotherPdgId, // MC only
+            El_bkgOrigin, // MC only
+            El_chFlip, // MC only
+            */
+            El_ptcone20,
+            El_ptcone30,
+            El_ptcone40,
+            El_ptvarcone20,
+            El_ptvarcone30,
+            El_ptvarcone40,
+            El_topoetcone20,
+            El_topoetcone30,
+            El_topoetcone40,
+            El_passIsoLooseTO,
+            El_passIsoLoose,
+            El_passIsoTight,
+            El_passIsoGrad,
+            El_passIsoGradCustomTight,
+            El_passIsoGradCustom,
+            El_passIsoGradLoose,
+            El_trigMatch_e12_lhloose_L1EM10VH,
+            El_trigMatch_e17_lhloose,
+            El_trigMatch_e60_lhmedium,
+            El_trigMatch_e24_lhmedium_iloose_L1EM20VH,
+            El_trigMatch_2e12_lhloose_L12EM10VH,
+            El_trigMatch_2e15_lhloose_L12EM10VH,
+            El_trigMatch_2e15_lhvloose_L12EM13VH,
+            El_trigMatch_2e15_lhvloose_nod0_L12EM13VH,
+            El_trigMatch_2e17_lhvloose_nod0,
+            El_trigMatch_e17_lhloose_mu14,
+            El_trigMatch_e17_lhloose_nod0_mu14,
+            El_TrigMatch_e24_lhmedium_nod0_ivarloose,
+            El_TrigMatch_e24_lhtight_nod0_ivarloose,
+            El_TrigMatch_e60_lhmedium_nod0);
+    
+        fill_muons(
+            NMu,
+            13, // particle id mu- = 13
+            Mu_eta,
+            Mu_phi,
+            Mu_pT,
+            Mu_SFw,
+            Mu_IsoSFw,
+            Mu_charge,
+            Mu_d0pvtx,
+            Mu_sigd0,
+            Mu_z0sinTheta,
+            Mu_isBad,
+            Mu_passOR,
+            Mu_isTight,
+            Mu_isCosmic,
+            /*
+            Mu_type, // MC only
+            Mu_origin, // MC only
+            */
+            Mu_ptcone20,
+            Mu_ptcone30,
+            Mu_ptcone40,
+            Mu_ptvarcone20,
+            Mu_ptvarcone30,
+            Mu_ptvarcone40,
+            Mu_topoetcone20,
+            Mu_topoetcone30,
+            Mu_topoetcone40,
+            Mu_passIsoLooseTO,
+            Mu_passIsoLoose,
+            Mu_passIsoTight,
+            Mu_passIsoGrad,
+            Mu_passIsoGradCustomTight,
+            Mu_passIsoGradCustom,
+            Mu_passIsoGradLoose,
+            MuTrigSF_HLT_mu20_iloose_L1MU15_OR_HLT_mu50,
+            Mu_trigMatch_mu26_imedium,
+            Mu_trigMatch_mu50,
+            Mu_trigMatch_mu8noL1,
+            Mu_trigMatch_mu14,
+            Mu_trigMatch_mu18,
+            Mu_trigMatch_mu18_mu8noL1,
+            Mu_trigMatch_e17_lhloose_mu14,
+            Mu_trigMatch_e17_lhloose_nod0_mu14,
+            Mu_trigMatch_mu20_mu8noL1,
+            Mu_trigMatch_mu22_mu8noL1,
+            Mu_TrigMatch_mu24_iloose,
+            Mu_TrigMatch_mu24_ivarloose,
+            Mu_TrigMatch_mu24_iloose_L1MU15,
+            Mu_TrigMatch_mu24_ivarloose_L1MU15,
+            Mu_trigMatchPair_mu18_mu8noL1,
+            Mu_trigMatchPair_mu20_mu8noL1,
+            Mu_trigMatchPair_mu22_mu8noL1);
+    
+        fill_jets(
+            NJet,
+            Jet_eta,
+            Jet_phi,
+            Jet_pT,
+            Jet_E,
+            Jet_quality,
+            Jet_JVT,
+            Jet_JVTsf,
+            Jet_MV2c20,
+            Jet_MV2c10,
+            Jet_SFw,
+            /*
+            Jet_ConeTruthLabel, // MC only
+            Jet_PartonTruthLabel, // MC only
+            Jet_HadronConeExclTruthLabel, // MC only
+            Jet_deltaR, // MC only
+            */
+            Jet_nTrk,
+            Jet_passOR);
+        //#endif // #ifdef _IS_DATA_
+    }
 
     // sort by descending Pt
     sort(vec_elec.begin(), vec_elec.end(), sort_descending_Pt<Electron>);
@@ -755,6 +919,7 @@ EL::StatusCode ytEventSelection :: execute ()
     update(Bad_muon, cut6, calculate_weight(EventWeight, PRWWeight, lepton_weight, jet_weight));
     if (!cut6) return EL::StatusCode::SUCCESS;
 
+//#ifndef _SKIM_
     bool cut7  = m_cutflow->pass_at_least_one_jet_passes_jet_OR(vec_baseline_jets); // use baseline jets
     m_cutflow->update(At_least_one_jet_passes_jet_OR, cut7);
     elec_ID_weight = ID_weight(vec_baseline_elec, false);
@@ -765,6 +930,7 @@ EL::StatusCode ytEventSelection :: execute ()
     jet_weight = jets_weight(vec_baseline_jets);
     update(At_least_one_jet_passes_jet_OR, cut7, calculate_weight(EventWeight, PRWWeight, lepton_weight, jet_weight));
     if (!cut7) return EL::StatusCode::SUCCESS;
+//#endif // #ifdef _SKIM_
 
     bool cut8  = m_cutflow->pass_bad_jet(vec_jets); // we have to use the raw jet objects (vec_jets) at this step.
     m_cutflow->update(Bad_jet, cut8);
@@ -788,6 +954,7 @@ EL::StatusCode ytEventSelection :: execute ()
     // JVT cut applied after OR and jet quality
     fill_JVT_jets(vec_OR_jets);
 
+//#ifndef _SKIM_
     bool cut9  = m_cutflow->pass_at_least_one_signal_jet(vec_JVT_jets);
     m_cutflow->update(At_least_one_signal_jet, cut9);
     elec_ID_weight = ID_weight(vec_OR_elec, false);
@@ -798,6 +965,7 @@ EL::StatusCode ytEventSelection :: execute ()
     jet_weight = jets_weight(vec_JVT_jets);
     update(At_least_one_signal_jet, cut9, calculate_weight(EventWeight, PRWWeight, lepton_weight, jet_weight));
     if (!cut9) return EL::StatusCode::SUCCESS;
+//#endif // #ifdef _SKIM_
 
     bool cut10 = m_cutflow->pass_cosmic_muon_veto(vec_OR_muon);
     m_cutflow->update(Cosmic_muons_veto, cut10);
@@ -834,8 +1002,11 @@ EL::StatusCode ytEventSelection :: execute ()
     baseline_weight = ID_weight(vec_baseline_elec, false) * ID_weight(vec_baseline_muon) * jets_weight(vec_signal_jets);
     signal_weight = ID_weight(vec_signal_elec, true) * Iso_weight(vec_signal_elec) * ID_weight(vec_signal_muon) * Iso_weight(vec_signal_muon) * jets_weight(vec_signal_jets);
 
+//#ifndef _SKIM_
+    //cout << "Doing skim at here..." << endl;
+//#endif // #ifdef _SKIM_
+
     bool cut12 = m_cutflow->pass_at_least_two_signal_leptons_greater_than_20GeV(vec_signal_lept);
-    m_cutflow->update(At_least_two_signal_leptons_greater_than_20GeV, cut12);
     m_cutflow->update(At_least_two_signal_leptons_greater_than_20GeV, cut12);
     elec_ID_weight = ID_weight(vec_signal_elec, true);
     elec_iso_weight = Iso_weight(vec_signal_elec);
@@ -1394,7 +1565,7 @@ void ytEventSelection::debug_sum_of_weight_print()
     cout << "**************************************************" << endl;
 }
 
-
+//#ifdef _IS_MC_
 void ytEventSelection::fill_electrons(
     Int_t           NEl,
 	int             flavor,
@@ -1692,6 +1863,319 @@ void ytEventSelection::fill_jets(
         vec_jets.push_back(je);
     }
 }
+//#endif // #ifdef _IS_MC_
+
+//#ifdef _IS_DATA_
+void ytEventSelection::fill_electrons(
+    Int_t           NEl,
+    int             flavor,
+    vector<double>  *El_eta,
+    vector<double>  *El_etaclus,
+    vector<double>  *El_phi,
+    vector<double>  *El_pT,
+    vector<double>  *El_E,
+    vector<int>     *El_charge,
+    vector<double>  *El_sigd0,
+    vector<double>  *El_z0sinTheta,
+    vector<double>  *El_d0pvtx,
+    vector<bool>    *El_passOR,
+    vector<double>  *El_SFwMediumLH,
+    vector<float>   *El_IsoSFwMediumLH,
+    vector<double>  *El_SFwTightLH,
+    vector<double>  *El_SFwLooseAndBLayerLH,
+    vector<double>  *El_SFwTrigMediumLH_e12_lhloose_L1EM10VH,
+    vector<double>  *El_SFwTrigMediumLH_e17_lhloose,
+    vector<double>  *El_SFwTrigMediumLH_single,
+    vector<double>  *El_SFwTrigLooseAndBLayerLH_e12_lhloose_L1EM10VH,
+    vector<bool>    *El_isLooseAndBLayerLH,
+    vector<bool>    *El_isMediumLH,
+    vector<bool>    *El_isTightLH,
+    vector<int>     *El_nBLayerHits,
+    vector<int>     *El_expectBLayerHit,
+    /*
+    vector<int>     *El_type, // MC only
+    vector<int>     *El_origin, // MC only
+    vector<int>     *El_bkgMotherPdgId, // MC only
+    vector<int>     *El_bkgOrigin, // MC only
+    vector<int>     *El_chFlip, // MC only
+    */
+    vector<double>  *El_ptcone20,
+    vector<double>  *El_ptcone30,
+    vector<double>  *El_ptcone40,
+    vector<double>  *El_ptvarcone20,
+    vector<double>  *El_ptvarcone30,
+    vector<double>  *El_ptvarcone40,
+    vector<double>  *El_topoetcone20,
+    vector<double>  *El_topoetcone30,
+    vector<double>  *El_topoetcone40,
+    vector<bool>    *El_passIsoLooseTO,
+    vector<bool>    *El_passIsoLoose,
+    vector<bool>    *El_passIsoTight,
+    vector<bool>    *El_passIsoGrad,
+    vector<bool>    *El_passIsoGradCustomTight,
+    vector<bool>    *El_passIsoGradCustom,
+    vector<bool>    *El_passIsoGradLoose,
+    vector<bool>    *El_trigMatch_e12_lhloose_L1EM10VH,
+    vector<bool>    *El_trigMatch_e17_lhloose,
+    vector<bool>    *El_trigMatch_e60_lhmedium,
+    vector<bool>    *El_trigMatch_e24_lhmedium_iloose_L1EM20VH,
+    vector<bool>    *El_trigMatch_2e12_lhloose_L12EM10VH,
+    vector<bool>    *El_trigMatch_2e15_lhloose_L12EM10VH,
+    vector<bool>    *El_trigMatch_2e15_lhvloose_L12EM13VH,
+    vector<bool>    *El_trigMatch_2e15_lhvloose_nod0_L12EM13VH,
+    vector<bool>    *El_trigMatch_2e17_lhvloose_nod0,
+    vector<bool>    *El_trigMatch_e17_lhloose_mu14,
+    vector<bool>    *El_trigMatch_e17_lhloose_nod0_mu14,
+    vector<bool>    *El_TrigMatch_e24_lhmedium_nod0_ivarloose,
+    vector<bool>    *El_TrigMatch_e24_lhtight_nod0_ivarloose,
+    vector<bool>    *El_TrigMatch_e60_lhmedium_nod0)
+{
+    for (int i = 0; i < NEl; i++) {
+        Electron el;
+        el.set_index(i);
+        el.set_number(NEl);
+        el.set_flavor(flavor);
+        el.set_eta( (*El_eta)[i] );
+        el.set_etaclus( (*El_etaclus)[i] );
+        el.set_phi( (*El_phi)[i] );
+        el.set_pt( (*El_pT)[i] );
+        el.set_E( (*El_E)[i] );
+        el.set_charge( (*El_charge)[i] );
+        el.set_sigd0( (*El_sigd0)[i] );
+        el.set_z0sinTheta( (*El_z0sinTheta)[i] );
+        el.set_d0pvtx( (*El_d0pvtx)[i] );
+        el.set_passOR( (*El_passOR)[i] );
+        el.set_SFwMediumLH( (*El_SFwMediumLH)[i] );
+        el.set_IsoSFwMediumLH( (*El_IsoSFwMediumLH)[i] );
+        el.set_SFwTightLH( (*El_SFwTightLH)[i] );
+        el.set_SFwLooseAndBLayerLH( (*El_SFwLooseAndBLayerLH)[i] );
+        el.set_SFwTrigMediumLH_e12_lhloose_L1EM10VH( (*El_SFwTrigMediumLH_e12_lhloose_L1EM10VH)[i] );
+        el.set_SFwTrigMediumLH_e17_lhloose( (*El_SFwTrigMediumLH_e17_lhloose)[i] );
+        el.set_SFwTrigMediumLH_single( (*El_SFwTrigMediumLH_single)[i] );
+        el.set_SFwTrigLooseAndBLayerLH_e12_lhloose_L1EM10VH( (*El_SFwTrigLooseAndBLayerLH_e12_lhloose_L1EM10VH)[i] );
+        el.set_isLooseAndBLayerLH( (*El_isLooseAndBLayerLH)[i] );
+        el.set_isMediumLH( (*El_isMediumLH)[i] );
+        el.set_isTightLH( (*El_isTightLH)[i] );
+        el.set_nBLayerHits( (*El_nBLayerHits)[i] );
+        el.set_expectBLayerHit( (*El_expectBLayerHit)[i] );
+        /*
+        el.set_type( (*El_type)[i] ); // MC only
+        el.set_origin( (*El_origin)[i] ); // MC only
+        el.set_bkgMotherPdgId( (*El_bkgMotherPdgId)[i] ); // MC only
+        el.set_bkgOrigin( (*El_bkgOrigin)[i] ); // MC only
+        el.set_chFlip( (*El_chFlip)[i] ); // MC only
+        */
+        el.set_ptcone20( (*El_ptcone20)[i] );
+        el.set_ptcone30( (*El_ptcone30)[i] );
+        el.set_ptcone40( (*El_ptcone40)[i] );
+        el.set_ptvarcone20( (*El_ptvarcone20)[i] );
+        el.set_ptvarcone30( (*El_ptvarcone30)[i] );
+        el.set_ptvarcone40( (*El_ptvarcone40)[i] );
+        el.set_topoetcone20( (*El_topoetcone20)[i] );
+        el.set_topoetcone30( (*El_topoetcone30)[i] );
+        el.set_topoetcone40( (*El_topoetcone40)[i] );
+        el.set_passIsoLooseTO( (*El_passIsoLooseTO)[i] );
+        el.set_passIsoLoose( (*El_passIsoLoose)[i] );
+        el.set_passIsoTight( (*El_passIsoTight)[i] );
+        el.set_passIsoGrad( (*El_passIsoGrad)[i] );
+        el.set_passIsoGradCustomTight( (*El_passIsoGradCustomTight)[i] );
+        el.set_passIsoGradCustom( (*El_passIsoGradCustom)[i] );
+        el.set_passIsoGradLoose( (*El_passIsoGradLoose)[i] );
+        el.set_trigMatch_e12_lhloose_L1EM10VH( (*El_trigMatch_e12_lhloose_L1EM10VH)[i] );
+        el.set_trigMatch_e17_lhloose( (*El_trigMatch_e17_lhloose)[i] );
+        el.set_trigMatch_e60_lhmedium( (*El_trigMatch_e60_lhmedium)[i] );
+        el.set_trigMatch_e24_lhmedium_iloose_L1EM20VH( (*El_trigMatch_e24_lhmedium_iloose_L1EM20VH)[i] );
+        el.set_trigMatch_2e12_lhloose_L12EM10VH( (*El_trigMatch_2e12_lhloose_L12EM10VH)[i] );
+        el.set_trigMatch_2e15_lhloose_L12EM10VH( (*El_trigMatch_2e15_lhloose_L12EM10VH)[i] );
+        el.set_trigMatch_2e15_lhvloose_L12EM13VH( (*El_trigMatch_2e15_lhvloose_L12EM13VH)[i] );
+        el.set_trigMatch_2e15_lhvloose_nod0_L12EM13VH( (*El_trigMatch_2e15_lhvloose_nod0_L12EM13VH)[i] );
+        el.set_trigMatch_2e17_lhvloose_nod0( (*El_trigMatch_2e17_lhvloose_nod0)[i] );
+        el.set_trigMatch_e17_lhloose_mu14( (*El_trigMatch_e17_lhloose_mu14)[i] );
+        el.set_trigMatch_e17_lhloose_nod0_mu14( (*El_trigMatch_e17_lhloose_nod0_mu14)[i] );
+        el.set_trigMatch_e24_lhmedium_nod0_ivarloose( (*El_TrigMatch_e24_lhmedium_nod0_ivarloose)[i] );
+        el.set_trigMatch_e24_lhtight_nod0_ivarloose( (*El_TrigMatch_e24_lhtight_nod0_ivarloose)[i] );
+        el.set_trigMatch_e60_lhmedium_nod0( (*El_TrigMatch_e60_lhmedium_nod0)[i] );
+        el.set_TLV_E(el.get_pt(), el.get_eta(), el.get_phi(), el.get_E());
+        vec_elec.push_back(el);
+    }
+}
+
+void ytEventSelection::fill_muons(
+    Int_t           NMu,
+    int             flavor,
+    vector<double>  *Mu_eta,
+    vector<double>  *Mu_phi,
+    vector<double>  *Mu_pT,
+    vector<double>  *Mu_SFw,
+    vector<float>   *Mu_IsoSFw,
+    vector<int>     *Mu_charge,
+    vector<double>  *Mu_d0pvtx,
+    vector<double>  *Mu_sigd0,
+    vector<double>  *Mu_z0sinTheta,
+    vector<bool>    *Mu_isBad,
+    vector<bool>    *Mu_passOR,
+    vector<bool>    *Mu_isTight,
+    vector<bool>    *Mu_isCosmic,
+    /*
+    vector<int>     *Mu_type, // MC only
+    vector<int>     *Mu_origin, // MC only
+    */
+    vector<double>  *Mu_ptcone20,
+    vector<double>  *Mu_ptcone30,
+    vector<double>  *Mu_ptcone40,
+    vector<double>  *Mu_ptvarcone20,
+    vector<double>  *Mu_ptvarcone30,
+    vector<double>  *Mu_ptvarcone40,
+    vector<double>  *Mu_topoetcone20,
+    vector<double>  *Mu_topoetcone30,
+    vector<double>  *Mu_topoetcone40,
+    vector<bool>    *Mu_passIsoLooseTO,
+    vector<bool>    *Mu_passIsoLoose,
+    vector<bool>    *Mu_passIsoTight,
+    vector<bool>    *Mu_passIsoGrad,
+    vector<bool>    *Mu_passIsoGradCustomTight,
+    vector<bool>    *Mu_passIsoGradCustom,
+    vector<bool>    *Mu_passIsoGradLoose,
+    Float_t         MuTrigSF_HLT_mu20_iloose_L1MU15_OR_HLT_mu50,
+    vector<bool>    *Mu_trigMatch_mu26_imedium,
+    vector<bool>    *Mu_trigMatch_mu50,
+    vector<bool>    *Mu_trigMatch_mu8noL1,
+    vector<bool>    *Mu_trigMatch_mu14,
+    vector<bool>    *Mu_trigMatch_mu18,
+    vector<bool>    *Mu_trigMatch_mu18_mu8noL1,
+    vector<bool>    *Mu_trigMatch_e17_lhloose_mu14,
+    vector<bool>    *Mu_trigMatch_e17_lhloose_nod0_mu14,
+    vector<bool>    *Mu_trigMatch_mu20_mu8noL1,
+    vector<bool>    *Mu_trigMatch_mu22_mu8noL1,
+    vector<bool>    *Mu_TrigMatch_mu24_iloose,
+    vector<bool>    *Mu_TrigMatch_mu24_ivarloose,
+    vector<bool>    *Mu_TrigMatch_mu24_iloose_L1MU15,
+    vector<bool>    *Mu_TrigMatch_mu24_ivarloose_L1MU15,
+    vector<vector<bool> > *Mu_trigMatchPair_mu18_mu8noL1,
+    vector<vector<bool> > *Mu_trigMatchPair_mu20_mu8noL1,
+    vector<vector<bool> > *Mu_trigMatchPair_mu22_mu8noL1)
+{
+    for (int i = 0; i < NMu; i++) {
+        Muon mu;
+        mu.set_index(i);
+        mu.set_number(NMu);
+        mu.set_flavor(flavor);
+        mu.set_eta( (*Mu_eta)[i] );
+        mu.set_phi( (*Mu_phi)[i] );
+        mu.set_pt( (*Mu_pT)[i] );
+        mu.set_SFw( (*Mu_SFw)[i] );
+        mu.set_IsoSFw( (*Mu_IsoSFw)[i] );
+        mu.set_charge( (*Mu_charge)[i] );
+        mu.set_d0pvtx( (*Mu_d0pvtx)[i] );
+        mu.set_sigd0( (*Mu_sigd0)[i] );
+        mu.set_z0sinTheta( (*Mu_z0sinTheta)[i] );
+        mu.set_isBad( (*Mu_isBad)[i] );
+        mu.set_passOR( (*Mu_passOR)[i] );
+        mu.set_isTight( (*Mu_isTight)[i] );
+        mu.set_isCosmic( (*Mu_isCosmic)[i] );
+        /*
+        mu.set_type( (*Mu_type)[i] ); // MC only
+        mu.set_origin( (*Mu_origin)[i] ); // MC only
+        */
+        mu.set_ptcone20( (*Mu_ptcone20)[i] );
+        mu.set_ptcone30( (*Mu_ptcone30)[i] );
+        mu.set_ptcone40( (*Mu_ptcone40)[i] );
+        mu.set_ptvarcone20( (*Mu_ptvarcone20)[i] );
+        mu.set_ptvarcone30( (*Mu_ptvarcone30)[i] );
+        mu.set_ptvarcone40( (*Mu_ptvarcone40)[i] );
+        mu.set_topoetcone20( (*Mu_topoetcone20)[i] );
+        mu.set_topoetcone30( (*Mu_topoetcone30)[i] );
+        mu.set_topoetcone40( (*Mu_topoetcone40)[i] );
+        mu.set_passIsoLooseTO( (*Mu_passIsoLooseTO)[i] );
+        mu.set_passIsoLoose( (*Mu_passIsoLoose)[i] );
+        mu.set_passIsoTight( (*Mu_passIsoTight)[i] );
+        mu.set_passIsoGrad( (*Mu_passIsoGrad)[i] );
+        mu.set_passIsoGradCustomTight( (*Mu_passIsoGradCustomTight)[i] );
+        mu.set_passIsoGradCustom( (*Mu_passIsoGradCustom)[i] );
+        mu.set_passIsoGradLoose( (*Mu_passIsoGradLoose)[i] );
+        mu.set_MuTrigSF_HLT_mu20_iloose_L1MU15_OR_HLT_mu50( MuTrigSF_HLT_mu20_iloose_L1MU15_OR_HLT_mu50 );
+        mu.set_trigMatch_mu26_imedium( (*Mu_trigMatch_mu26_imedium)[i] );
+        mu.set_trigMatch_mu50( (*Mu_trigMatch_mu50)[i] );
+        mu.set_trigMatch_mu8noL1( (*Mu_trigMatch_mu8noL1)[i] );
+        mu.set_trigMatch_mu14( (*Mu_trigMatch_mu14)[i] );
+        mu.set_trigMatch_mu18( (*Mu_trigMatch_mu18)[i] );
+        mu.set_trigMatch_mu18_mu8noL1( (*Mu_trigMatch_mu18_mu8noL1)[i] );
+        mu.set_trigMatch_e17_lhloose_mu14( (*Mu_trigMatch_e17_lhloose_mu14)[i] );
+        mu.set_trigMatch_e17_lhloose_nod0_mu14( (*Mu_trigMatch_e17_lhloose_nod0_mu14)[i] );
+        mu.set_trigMatch_mu20_mu8noL1( (*Mu_trigMatch_mu20_mu8noL1)[i] );
+        mu.set_trigMatch_mu22_mu8noL1( (*Mu_trigMatch_mu22_mu8noL1)[i] );
+        mu.set_trigMatch_mu24_iloose( (*Mu_TrigMatch_mu24_iloose)[i] );
+        mu.set_trigMatch_mu24_ivarloose( (*Mu_TrigMatch_mu24_ivarloose)[i] );
+        mu.set_trigMatch_mu24_iloose_L1MU15( (*Mu_TrigMatch_mu24_iloose_L1MU15)[i] );
+        mu.set_trigMatch_mu24_ivarloose_L1MU15( (*Mu_TrigMatch_mu24_ivarloose_L1MU15)[i] );
+        for (vector<bool>::iterator itr = (*Mu_trigMatchPair_mu18_mu8noL1)[i].begin();
+             itr != (*Mu_trigMatchPair_mu18_mu8noL1)[i].end(); itr++) {
+            int index = distance((*Mu_trigMatchPair_mu18_mu8noL1)[i].begin(), itr);
+            mu.set_trigMatchPair_mu18_mu8noL1(index, *itr);
+        }
+        for (vector<bool>::iterator itr = (*Mu_trigMatchPair_mu20_mu8noL1)[i].begin();
+             itr != (*Mu_trigMatchPair_mu20_mu8noL1)[i].end(); itr++) {
+            int index = distance((*Mu_trigMatchPair_mu20_mu8noL1)[i].begin(), itr);
+            mu.set_trigMatchPair_mu20_mu8noL1(index, *itr);
+        }
+        for (vector<bool>::iterator itr = (*Mu_trigMatchPair_mu22_mu8noL1)[i].begin();
+             itr != (*Mu_trigMatchPair_mu22_mu8noL1)[i].end(); itr++) {
+            int index = distance((*Mu_trigMatchPair_mu22_mu8noL1)[i].begin(), itr);
+            mu.set_trigMatchPair_mu22_mu8noL1(index, *itr);
+        }
+        mu.set_TLV_M(mu.get_pt(), mu.get_eta(), mu.get_phi(), Mu_Mass);
+        vec_muon.push_back(mu);
+    }
+}
+
+void ytEventSelection::fill_jets(
+    Int_t           NJet,
+    vector<double>  *Jet_eta,
+    vector<double>  *Jet_phi,
+    vector<double>  *Jet_pT,
+    vector<double>  *Jet_E,
+    vector<double>  *Jet_quality,
+    vector<double>  *Jet_JVT,
+    vector<double>  *Jet_JVTsf,
+    vector<double>  *Jet_MV2c20,
+    vector<double>  *Jet_MV2c10,
+    vector<double>  *Jet_SFw,
+    /*
+    vector<int>     *Jet_ConeTruthLabel, // MC only
+    vector<int>     *Jet_PartonTruthLabel, // MC only
+    vector<int>     *Jet_HadronConeExclTruthLabel, // MC only
+    vector<double>  *Jet_deltaR, // MC only
+    */
+    vector<int>     *Jet_nTrk,
+    vector<bool>    *Jet_passOR)
+{
+    for (int i = 0; i < NJet; i++) {
+        Jet je;
+        je.set_index(i);
+        je.set_number(NJet);
+        je.set_eta( (*Jet_eta)[i] );
+        je.set_phi( (*Jet_phi)[i] );
+        je.set_pt( (*Jet_pT)[i] );
+        je.set_E( (*Jet_E)[i] );
+        je.set_quality( (*Jet_quality)[i] );
+        je.set_JVT( (*Jet_JVT)[i] );
+        je.set_JVTsf( (*Jet_JVTsf)[i] );
+        je.set_MV2c20( (*Jet_MV2c20)[i] );
+        je.set_MV2c10( (*Jet_MV2c10)[i] );
+        je.set_SFw( (*Jet_SFw)[i] );
+        /*
+        je.set_ConeTruthLabel( (*Jet_ConeTruthLabel)[i] ); // MC only
+        je.set_PartonTruthLabel( (*Jet_PartonTruthLabel)[i] ); // MC only
+        je.set_HadronConeExclTruthLabel( (*Jet_HadronConeExclTruthLabel)[i] ); // MC only
+        je.set_deltaR( (*Jet_deltaR)[i] ); // MC only
+        */
+        je.set_nTrk( (*Jet_nTrk)[i] );
+        je.set_passOR( (*Jet_passOR)[i]);
+        je.set_TLV_E(je.get_pt(), je.get_eta(), je.get_phi(), je.get_E());
+        vec_jets.push_back(je);
+    }
+}
+//#endif // #ifdef _IS_DATA_
 
 void ytEventSelection::fill_leptons(vector<Electron> vec_elec, vector<Muon> vec_muon)
 {

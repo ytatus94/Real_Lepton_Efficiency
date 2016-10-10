@@ -1,8 +1,8 @@
 // Usage:
-// cutflow isData
-// cutflow isMC Zee/Zmumu/ttbar
-// cutflow isMC Gtt_n1: uses boosed region of Gtt
-// cutflow isMC GG_ttn1 compressed: uses compressed region of Gtt
+// cutflow [skim] isData
+// cutflow [skim] isMC Zee/Zmumu/ttbar
+// cutflow [skim] isMC Gtt_n1: uses boosed region of Gtt
+// cutflow [skim] isMC GG_ttn1 compressed: uses compressed region of Gtt
 //
 
 #include "SampleHandler/SampleHandler.h"
@@ -11,6 +11,8 @@
 #include "SampleHandler/ToolsDiscovery.h"
 #include "EventLoop/Job.h"
 #include "EventLoop/DirectDriver.h"
+#include "EventLoop/CondorDriver.h"
+#include "EventLoop/ProofDriver.h"
 #include "SampleHandler/DiskListLocal.h"
 #include <TSystem.h>
 #include <TH1.h>
@@ -32,15 +34,24 @@ int main( int argc, char* argv[] ) {
 
 	bool isMC = false;
 	bool isData = false;
+	bool skim = false;
 	string process;
 	bool isBoosted = true; // default use boosted Gtt
+	bool use_Condor = false;
+	bool use_Grid = false;
+	bool use_PROOF = false;
 
 	for (int i = 1; i < argc; i++) {
 		const char *key = argv[i];
+		// Check MC or data.
 		if (strcmp(key, "isMC") == 0)
             isMC = true;
         else if (strcmp(key, "isData") == 0)
             isData = true;
+        // Doing skim?
+        else if (strcmp(key, "skim") == 0)
+        	skim = true;
+        // Choose samples to run.
         else if (strcmp(key, "4topSM") == 0)
             process = "4topSM";
         else if (strcmp(key, "Zee") == 0)
@@ -51,11 +62,19 @@ int main( int argc, char* argv[] ) {
             process = "ttbar";
         else if (strcmp(key, "GG_ttn1") == 0)
             process = "GG_ttn1";
+        // Run boosted or compressed for GG_ttn1?
 		else if (strcmp(key, "compressed") == 0)
 			isBoosted = false;
-	}
+		// Specify the driver to run.
+		else if (strcmp(key, "Condor") == 0)
+			use_Condor = true;
+		else if (strcmp(key, "Grid") == 0)
+			use_Grid = true;
+		else if (strcmp(key, "PROOF") == 0)
+			use_PROOF = true;
+	}	
 
-	printf("isMC = %s, isData = %s\n", isMC ? "true" : "false", isData ? "true" : "false");
+	printf("isMC = %s, isData = %s, skim = %s\n", isMC ? "true" : "false", isData ? "true" : "false", skim ? "true" : "false");
 
 	if (isMC && !process.empty())
 		cout << "process = " << process << endl;
@@ -73,7 +92,7 @@ int main( int argc, char* argv[] ) {
 
     if (isMC) {
         cout << "Read MC files..." << endl;
-        inputFilePath = "/UserDisk2/yushen/Ximo_ntuples/v44/MC";
+        inputFilePath = "/UserDisk2/yushen/Ximo_ntuples/v44/MC"; // no slash (/) at the end.
         // For cutflow study
         if (process == "4topSM") {
 			//inputFilePath = "/UserDisk2/yushen/Ximo_ntuples/v44/MC/user.jpoveda.t0789_v44.410080.MadGraphPythia8EvtGen_A14NNPDF23_4topSM.DAOD_SUSY2.s2608_r7725_p2666_output.root";
@@ -135,7 +154,7 @@ int main( int argc, char* argv[] ) {
     }
     else if (isData) {
         cout << "Read Data files..." << endl;
-        inputFilePath = "/UserDisk2/yushen/Ximo_ntuples/v44/Data";
+        inputFilePath = "/UserDisk2/yushen/Ximo_ntuples/v44/Data"; // no slash (/) at the end.
         //SH::ScanDir().scan(sh, inputFilePath); // Get all datasets in inputFilePath
         SH::ScanDir().samplePattern("user.jpoveda.t0789_v44.*.physics_Main.DAOD_SUSY2.*").scan(sh, inputFilePath); // Get all root files in this dataset
     }
@@ -159,7 +178,7 @@ int main( int argc, char* argv[] ) {
 		//cout << hist->GetBinContent(1) << endl;
 	}
 */
-/*
+
 	// Create an EventLoop job:
 	EL::Job job;
 	job.sampleHandler( sh );
@@ -174,9 +193,32 @@ int main( int argc, char* argv[] ) {
     //alg->set_derivation_stat_weights(derivation_stat_weights);
     job.algsAdd( alg );
 
-	// Run the job using the local/direct driver:
-	EL::DirectDriver driver;
-	driver.submit( job, submitDir );
+    if (use_Condor) {
+    	// Run the jobs using the Condor driver:
+    	EL::CondorDriver driver;
+    	// some commands for setting up root on the nodes
+    	driver.shellInit = "export ATLAS_LOCAL_ROOT_BASE=/cvmfs/atlas.cern.ch/repo/ATLASLocalRootBase ; source ${ATLAS_LOCAL_ROOT_BASE}/user/atlasLocalSetup.sh ; rcSetup Base,2.4.19";
+    	driver.submitOnly( job, submitDir );
+    }
+/*
+    else if (use_Grid) {
+    	// Run the jobs using the Grid driver:
+    	EL::PrunDriver driver;
+    	// Specify how to name the grid output datasets
+    	// Note that %nickname% is populated when you do voms-proxy init, so this does not have to be replaced by hand
+    	driver.options()->setString("nc_outputSampleName", "user.%nickname%.%in:name[2]%.%in:name[3]%.%in:name[6]%.");
+    	driver.submitOnly( job, submitDir )
+    }
 */
+    else if (use_PROOF) {
+    	EL::ProofDriver driver;
+    	driver.submit( job, submitDir );
+    }
+    else {
+    	// Run the job using the local/direct driver:
+    	EL::DirectDriver driver;
+    	driver.submit( job, submitDir );
+    }
+
 	return 0;
 }

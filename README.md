@@ -1,8 +1,10 @@
 # Real_Lepton_Efficiency
 This is the new real lepton efficiency framework.
 
+v01-2. This is the version on ouhep04.
+The latest modified data of files on ouhep04 is Sep./29/2016.
 
-v01-1. This is the version from ouhep04.
+v01-1. This is the version on ouhep04.
 The latest modified data of files on ouhep04 is Sep./22/2016.
 
 v01. The initial commit.

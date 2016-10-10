@@ -6,8 +6,8 @@ if [ -e rcSetup.sh ]; then
 	echo ">>>>> Using the existing rcSetup.sh."
 	rcSetup # defaults to whatever was previously set up
 else
-	echo ">>>>> Setup rcSetup SUSY,2.4.17"
-	rcSetup SUSY,2.4.17
+	echo ">>>>> Setup rcSetup Base,2.4.19"
+	rcSetup Base,2.4.19
 fi
 
 # Find and compile these packages
@@ -16,10 +16,5 @@ rc find_packages
 rc clean
 rc compile
 
-# For config files
-#export PYTHONPATH=$PYTHONPATH:$PWD/TagAndProbeFrame/config
-
-# For config files in LH tuning package, if it is checked out
-#if [ -d "ElectronIDDevelopment/" ]; then
-#  export PYTHONPATH=$PYTHONPATH:$PWD/ElectronIDDevelopment/config
-#fi
+# For python scripts
+export PYTHONPATH=$PYTHONPATH:$PWD/ytRealLeptonsEfficiency/python

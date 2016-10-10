@@ -88,7 +88,7 @@ int main( int argc, char* argv[] ) {
 	//SH::ScanDir().filePattern("data_probes_all_periods.root").scan(sh, inputFilePath);
 	const char* inputFilePath;
 	if (isMC) {
-		inputFilePath = "/UserDisk2/yushen/Ximo_ntuples/v44/Skimmed";
+		inputFilePath = "/UserDisk2/yushen/Ximo_ntuples/v44/Skimmed/0929";
 		if (process == "Zee" ||
             process == "Zee_truth_match" ||
             process == "Zee_TandP_truth_match") {
