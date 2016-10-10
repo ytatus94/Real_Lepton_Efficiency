@@ -1,6 +1,10 @@
 # Real_Lepton_Efficiency
 This is the new real lepton efficiency framework.
 
+v10. Add 2 functions in ytPlot.C and add a python script.
+1. Add yt_kinematics_distribution() and yt_deltaR_and_NJets_distribution()
+2. Add run_background_subtraction.py in python/
+
 v09. Loose the template 1 requirements.
 1. Both Calo and Track isolation variable require > 6% for template 1.
 2. chmod 755 python scripts.

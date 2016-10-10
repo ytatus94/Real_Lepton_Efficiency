@@ -1395,7 +1395,7 @@ void yt_make_electron_real_efficiency_plot(TString filename)
     ratio_1->SetYTitle("Electron Real Efficiency");
     ratio_1->SetStats(kFALSE);
     ratio_1->SetMaximum(1.1);
-    ratio_1->SetMinimum(0.);
+    ratio_1->SetMinimum(0.5);
     ratio_1->SetTitle("");
     ratio_1->Draw();
 
@@ -1418,7 +1418,7 @@ void yt_make_electron_real_efficiency_plot(TString filename)
     line->SetLineWidth(1);
     line->Draw("SAME");
 
-    TLegend *leg = new TLegend(0.5, 0.2, 0.7, 0.7);
+    TLegend *leg = new TLegend(0.5, 0.2, 0.8, 0.7);
     leg->SetBorderSize(0);
     leg->SetFillColor(0);
     leg->AddEntry("ratio_1", "0 < |#eta| < 0.8");
@@ -1426,7 +1426,7 @@ void yt_make_electron_real_efficiency_plot(TString filename)
     leg->AddEntry("ratio_3", "1.52 < |#eta| < 2.0");
     leg->Draw();
 
-    real_efficiency_plot->SaveAs("electron_real_efficiency_before_bkg_subtraction.pdf", "pdf");
+    real_efficiency_plot->SaveAs("real_efficiency_electron_before_bkg_subtraction.pdf", "pdf");
 }
 
 void yt_make_muon_real_efficiency_plot(TString filename)
@@ -1488,7 +1488,7 @@ void yt_make_muon_real_efficiency_plot(TString filename)
     ratio_1->SetYTitle("Muon Real Efficiency");
     ratio_1->SetStats(kFALSE);
     ratio_1->SetMaximum(1.1);
-    ratio_1->SetMinimum(0.);
+    ratio_1->SetMinimum(0.4);
     ratio_1->SetTitle("");
     ratio_1->Draw();
 
@@ -1516,7 +1516,7 @@ void yt_make_muon_real_efficiency_plot(TString filename)
     line->SetLineWidth(1);
     line->Draw("SAME");
 
-    TLegend *leg = new TLegend(0.5, 0.2, 0.7, 0.7);
+    TLegend *leg = new TLegend(0.5, 0.2, 0.8, 0.7);
     leg->SetBorderSize(0);
     leg->SetFillColor(0);
     leg->AddEntry("ratio_1", "0 < |#eta| < 0.6");
@@ -1525,7 +1525,7 @@ void yt_make_muon_real_efficiency_plot(TString filename)
     leg->AddEntry("ratio_4", "1.8 < |#eta| < 2.5");
     leg->Draw();
 
-    real_efficiency_plot->SaveAs("muon_real_efficiency_before_bkg_subtraction.pdf", "pdf");
+    real_efficiency_plot->SaveAs("real_efficiency_muon.pdf", "pdf");
 }
 
 void yt_make_real_efficiency_plots(bool truth_match = false, bool ttbar = false, bool Gtt = false)
@@ -2274,24 +2274,28 @@ void yt_background_template_mll_plot(int pt_bin_low = 0, int pt_bin_up = -1, int
 
     double pt_bin_low_value, eta_bin_low_value;
     double pt_bin_up_value, eta_bin_up_value;
+    TH3F *h_bkg_template_fail_id_and_CaloIso_and_TrackIso_pt_eta_mll = (TH3F *)data_elec->Get("h_bkg_template_fail_id_and_CaloIso_and_TrackIso_pt_eta_mll");
     if (pt_bin_low != 0 && pt_bin_up != -1) {
-        pt_bin_low_value = h_bkg_template_fail_id_and_CaloIso_and_TrackIso->GetXaxis()->GetBinLowEdge(pt_bin_low);
-        pt_bin_up_value = h_bkg_template_fail_id_and_CaloIso_and_TrackIso->GetXaxis()->GetBinUpEdge(pt_bin_up);
+        pt_bin_low_value = h_bkg_template_fail_id_and_CaloIso_and_TrackIso_pt_eta_mll->GetXaxis()->GetBinLowEdge(pt_bin_low);
+        pt_bin_up_value = h_bkg_template_fail_id_and_CaloIso_and_TrackIso_pt_eta_mll->GetXaxis()->GetBinUpEdge(pt_bin_up);
     }
     else {
-        pt_bin_low_value = h_bkg_template_fail_id_and_CaloIso_and_TrackIso->GetXaxis()->GetBinLowEdge(1);
-        int nbins = h_bkg_template_fail_id_and_CaloIso_and_TrackIso->GetXaxis()->GetNbins();
-        pt_bin_up_value = h_bkg_template_fail_id_and_CaloIso_and_TrackIso->GetXaxis()->GetBinUpEdge(nbins - 1);
+        pt_bin_low_value = h_bkg_template_fail_id_and_CaloIso_and_TrackIso_pt_eta_mll->GetXaxis()->GetBinLowEdge(1);
+        int nbins = h_bkg_template_fail_id_and_CaloIso_and_TrackIso_pt_eta_mll->GetXaxis()->GetNbins();
+        pt_bin_up_value = h_bkg_template_fail_id_and_CaloIso_and_TrackIso_pt_eta_mll->GetXaxis()->GetBinUpEdge(nbins - 1);
     }
     if (eta_bin_low_value != 0 && eta_bin_up_value != -1) {
-        eta_bin_low_value = h_bkg_template_fail_id_and_CaloIso_and_TrackIso->GetYaxis()->GetBinLowEdge(eta_bin_low);
-        eta_bin_up_value = h_bkg_template_fail_id_and_CaloIso_and_TrackIso->GetYaxis()->GetBinUpEdge(eta_bin_up);
+        eta_bin_low_value = h_bkg_template_fail_id_and_CaloIso_and_TrackIso_pt_eta_mll->GetYaxis()->GetBinLowEdge(eta_bin_low);
+        eta_bin_up_value = h_bkg_template_fail_id_and_CaloIso_and_TrackIso_pt_eta_mll->GetYaxis()->GetBinUpEdge(eta_bin_up);
     }
     else {
-        eta_bin_low_value = h_bkg_template_fail_id_and_CaloIso_and_TrackIso->GetYaxis()->GetBinLowEdge(1);
-        int nbins = h_bkg_template_fail_id_and_CaloIso_and_TrackIso->GetYaxis()->GetNbins();
-        eta_bin_up_value = h_bkg_template_fail_id_and_CaloIso_and_TrackIso->GetYaxis()->GetBinUpEdge(nbins - 1);
+        eta_bin_low_value = h_bkg_template_fail_id_and_CaloIso_and_TrackIso_pt_eta_mll->GetYaxis()->GetBinLowEdge(1);
+        int nbins = h_bkg_template_fail_id_and_CaloIso_and_TrackIso_pt_eta_mll->GetYaxis()->GetNbins();
+        eta_bin_up_value = h_bkg_template_fail_id_and_CaloIso_and_TrackIso_pt_eta_mll->GetYaxis()->GetBinUpEdge(nbins - 1);
     }
+    cout << "(pt_bin_low_value, pt_bin_up_value, eta_bin_low_value, eta_bin_up_value) = ("
+        << pt_bin_low_value << ", " << pt_bin_up_value << ", " << eta_bin_low_value << ", " << eta_bin_up_value << ")" << endl;
+
     // Convert double to string using stringstream
     stringstream sstream_pt_low, sstream_pt_up, sstream_eta_low, sstream_eta_up;
     sstream_pt_low << pt_bin_low_value;
@@ -2327,4 +2331,530 @@ void yt_background_template_mll_plot(int pt_bin_low = 0, int pt_bin_up = -1, int
 
     string output_filename = "bkg_template_electron_pt_" + sstream_pt_low.str() + sstream_pt_up.str() + "_eta" + sstream_eta_low.str() + sstream_eta_up.str() + ".pdf";
     c_ee->SaveAs(output_filename.c_str(), "pdf");
+}
+
+void yt_kinematics_distribution()
+{
+    TString path = "/Users/ytshen/Desktop/skim/Results/1006/";
+
+    TFile *data_elec = TFile::Open(path + "submitDir_Data_electron/hist-0929_80mll100.root");
+    TFile *data_muon = TFile::Open(path + "submitDir_Data_muon/hist-0929_80mll100.root");
+
+    TFile *TandP_elec = TFile::Open(path + "submitDir_MC_Zee/hist-0929_80mll100.root");
+    TFile *TandP_muon = TFile::Open(path + "submitDir_MC_Zmumu/hist-0929_80mll100.root");
+
+    TFile *truth_match_elec = TFile::Open(path + "submitDir_MC_Zee_truth_match/hist-0929_80mll100.root");
+    TFile *truth_match_muon = TFile::Open(path + "submitDir_MC_Zmumu_truth_match/hist-0929_80mll100.root");
+
+    TFile *TandP_truth_match_elec = TFile::Open(path + "submitDir_MC_Zee_TandP_truth_match/hist-0929_80mll100.root");
+    TFile *TandP_truth_match_muon = TFile::Open(path + "submitDir_MC_Zmumu_TandP_truth_match/hist-0929_80mll100.root");
+    
+    TFile *ttbar_elec = TFile::Open(path + "submitDir_MC_ttbar_electron/hist-0929_80mll100.root");
+    TFile *ttbar_muon = TFile::Open(path + "submitDir_MC_ttbar_muon/hist-0929_80mll100.root");
+
+    TFile *Gtt_elec = TFile::Open(path + "submitDir_MC_GG_ttn1_electron/hist-0929_80mll100.root");
+    TFile *Gtt_muon = TFile::Open(path + "submitDir_MC_GG_ttn1_muon/hist-0929_80mll100.root");
+
+    TH1F *h_baseline_pt_data_elec = (TH1F *)data_elec->Get("h_baseline_pt");
+    TH1F *h_baseline_eta_data_elec = (TH1F *)data_elec->Get("h_baseline_eta");
+
+    TH1F *h_baseline_pt_data_muon = (TH1F *)data_muon->Get("h_baseline_pt");
+    TH1F *h_baseline_eta_data_muon = (TH1F *)data_muon->Get("h_baseline_eta");
+
+    TH1F *h_baseline_pt_TandP_elec = (TH1F *)TandP_elec->Get("h_baseline_pt");
+    TH1F *h_baseline_eta_TandP_elec = (TH1F *)TandP_elec->Get("h_baseline_eta");
+
+    TH1F *h_baseline_pt_TandP_muon = (TH1F *)TandP_muon->Get("h_baseline_pt");
+    TH1F *h_baseline_eta_TandP_muon = (TH1F *)TandP_muon->Get("h_baseline_eta");
+
+    TH1F *h_baseline_pt_truth_match_elec = (TH1F *)truth_match_elec->Get("h_baseline_pt");
+    TH1F *h_baseline_eta_truth_match_elec = (TH1F *)truth_match_elec->Get("h_baseline_eta");
+
+    TH1F *h_baseline_pt_truth_match_muon = (TH1F *)truth_match_muon->Get("h_baseline_pt");
+    TH1F *h_baseline_eta_truth_match_muon = (TH1F *)truth_match_muon->Get("h_baseline_eta");
+
+    TH1F *h_baseline_pt_TandP_truth_match_elec = (TH1F *)TandP_truth_match_elec->Get("h_baseline_pt");
+    TH1F *h_baseline_eta_TandP_truth_match_elec = (TH1F *)TandP_truth_match_elec->Get("h_baseline_eta");
+
+    TH1F *h_baseline_pt_TandP_truth_match_muon = (TH1F *)TandP_truth_match_muon->Get("h_baseline_pt");
+    TH1F *h_baseline_eta_TandP_truth_match_muon = (TH1F *)TandP_truth_match_muon->Get("h_baseline_eta");
+
+    TH1F *h_baseline_pt_ttbar_elec = (TH1F *)ttbar_elec->Get("h_baseline_pt");
+    TH1F *h_baseline_eta_ttbar_elec = (TH1F *)ttbar_elec->Get("h_baseline_eta");
+
+    TH1F *h_baseline_pt_ttbar_muon = (TH1F *)ttbar_muon->Get("h_baseline_pt");
+    TH1F *h_baseline_eta_ttbar_muon = (TH1F *)ttbar_muon->Get("h_baseline_eta");
+
+    TH1F *h_baseline_pt_Gtt_elec = (TH1F *)Gtt_elec->Get("h_baseline_pt");
+    TH1F *h_baseline_eta_Gtt_elec = (TH1F *)Gtt_elec->Get("h_baseline_eta");
+
+    TH1F *h_baseline_pt_Gtt_muon = (TH1F *)Gtt_muon->Get("h_baseline_pt");
+    TH1F *h_baseline_eta_Gtt_muon = (TH1F *)Gtt_muon->Get("h_baseline_eta");
+
+    h_baseline_pt_data_elec->Sumw2();
+    h_baseline_eta_data_muon->Sumw2();
+    h_baseline_pt_data_elec->Sumw2();
+    h_baseline_eta_data_muon->Sumw2();
+    h_baseline_pt_TandP_elec->Sumw2();
+    h_baseline_eta_TandP_elec->Sumw2();
+    h_baseline_pt_TandP_muon->Sumw2();
+    h_baseline_eta_TandP_muon->Sumw2();
+    h_baseline_pt_truth_match_elec->Sumw2();
+    h_baseline_eta_truth_match_elec->Sumw2();
+    h_baseline_pt_TandP_truth_match_muon->Sumw2();
+    h_baseline_eta_TandP_truth_match_muon->Sumw2();
+    h_baseline_pt_TandP_truth_match_elec->Sumw2();
+    h_baseline_eta_TandP_truth_match_elec->Sumw2();
+    h_baseline_pt_TandP_truth_match_muon->Sumw2();
+    h_baseline_eta_TandP_truth_match_muon->Sumw2();
+    h_baseline_pt_ttbar_elec->Sumw2();
+    h_baseline_eta_ttbar_elec->Sumw2();
+    h_baseline_pt_ttbar_muon->Sumw2();
+    h_baseline_eta_ttbar_muon->Sumw2();
+    h_baseline_pt_Gtt_elec->Sumw2();
+    h_baseline_eta_Gtt_elec->Sumw2();
+    h_baseline_pt_Gtt_muon->Sumw2();
+    h_baseline_eta_Gtt_muon->Sumw2();
+
+    h_baseline_pt_data_elec->Scale(1. / h_baseline_pt_data_elec->Integral());
+    h_baseline_eta_data_elec->Scale(1. / h_baseline_eta_data_elec->Integral());
+    h_baseline_pt_data_muon->Scale(1. / h_baseline_pt_data_muon->Integral());
+    h_baseline_eta_data_muon->Scale(1. / h_baseline_eta_data_muon->Integral());
+    h_baseline_pt_TandP_elec->Scale(1. / h_baseline_pt_TandP_elec->Integral());
+    h_baseline_eta_TandP_elec->Scale(1. / h_baseline_eta_TandP_elec->Integral());
+    h_baseline_pt_TandP_muon->Scale(1. / h_baseline_pt_TandP_muon->Integral());
+    h_baseline_eta_TandP_muon->Scale(1. / h_baseline_eta_TandP_muon->Integral());
+    h_baseline_pt_truth_match_elec->Scale(1. / h_baseline_pt_truth_match_elec->Integral());
+    h_baseline_eta_truth_match_elec->Scale(1. / h_baseline_eta_truth_match_elec->Integral());
+    h_baseline_pt_truth_match_muon->Scale(1. / h_baseline_pt_truth_match_muon->Integral());
+    h_baseline_eta_truth_match_muon->Scale(1. / h_baseline_eta_truth_match_muon->Integral());
+    h_baseline_pt_TandP_truth_match_elec->Scale(1. / h_baseline_pt_TandP_truth_match_elec->Integral());
+    h_baseline_eta_TandP_truth_match_elec->Scale(1. / h_baseline_eta_TandP_truth_match_elec->Integral());
+    h_baseline_pt_TandP_truth_match_muon->Scale(1. / h_baseline_pt_TandP_truth_match_muon->Integral());
+    h_baseline_eta_TandP_truth_match_muon->Scale(1. / h_baseline_eta_TandP_truth_match_muon->Integral());
+    h_baseline_pt_ttbar_elec->Scale(1. / h_baseline_pt_ttbar_elec->Integral());
+    h_baseline_eta_ttbar_elec->Scale(1. / h_baseline_eta_ttbar_elec->Integral());
+    h_baseline_pt_ttbar_muon->Scale(1. / h_baseline_pt_ttbar_muon->Integral());
+    h_baseline_eta_ttbar_muon->Scale(1. / h_baseline_eta_ttbar_muon->Integral());
+    h_baseline_pt_Gtt_elec->Scale(1. / h_baseline_pt_Gtt_elec->Integral());
+    h_baseline_eta_Gtt_elec->Scale(1. / h_baseline_eta_Gtt_elec->Integral());
+    h_baseline_pt_Gtt_muon->Scale(1. / h_baseline_pt_Gtt_muon->Integral());
+    h_baseline_eta_Gtt_muon->Scale(1. / h_baseline_eta_Gtt_muon->Integral());
+
+    TCanvas *kinematics = new TCanvas("kinematics", "kinematics", 1200, 1200);
+    gStyle->SetOptStat(0);
+    kinematics->Divide(2, 2);
+
+    kinematics->cd(1);
+    h_baseline_pt_data_elec->SetTitle("");
+    h_baseline_pt_data_elec->SetXTitle("p_{T} [GeV]");
+    h_baseline_pt_data_elec->SetYTitle("Normalized number of probe electrons");
+    h_baseline_pt_data_elec->SetMaximum(h_baseline_pt_data_elec->GetMaximum() * 1.1);
+    h_baseline_pt_data_elec->SetMarkerStyle(kFullCircle);
+    h_baseline_pt_data_elec->SetMarkerColor(kBlack);
+    h_baseline_pt_data_elec->SetLineColor(kBlack);
+    h_baseline_pt_data_elec->Draw("E1");
+    h_baseline_pt_TandP_elec->SetMarkerStyle(kFullSquare);
+    h_baseline_pt_TandP_elec->SetMarkerColor(kRed);
+    h_baseline_pt_TandP_elec->SetLineColor(kRed);
+    h_baseline_pt_TandP_elec->Draw("E1,same");
+    h_baseline_pt_truth_match_elec->SetMarkerStyle(kFullTriangleUp);
+    h_baseline_pt_truth_match_elec->SetMarkerColor(kBlue);
+    h_baseline_pt_truth_match_elec->SetLineColor(kBlue);
+    h_baseline_pt_truth_match_elec->Draw("E1,same");
+    h_baseline_pt_ttbar_elec->SetMarkerStyle(kFullDiamond);
+    h_baseline_pt_ttbar_elec->SetMarkerColor(kMagenta);
+    h_baseline_pt_ttbar_elec->SetLineColor(kMagenta);
+    h_baseline_pt_ttbar_elec->Draw("E1,same");
+    h_baseline_pt_Gtt_elec->SetMarkerStyle(kFullCross);
+    h_baseline_pt_Gtt_elec->SetMarkerColor(kOrange);
+    h_baseline_pt_Gtt_elec->SetLineColor(kOrange);
+    h_baseline_pt_Gtt_elec->Draw("E1,same");
+
+    TLegend *leg1 = new TLegend(0.6, 0.5, 0.9, 0.9);
+    leg1->SetBorderSize(0);
+    leg1->SetFillColor(0);
+    leg1->SetFillStyle(0);
+    leg1->AddEntry(h_baseline_pt_data_elec, "Data");
+    leg1->AddEntry(h_baseline_pt_TandP_elec, "Z #rightarrow ee T&P MC");
+    leg1->AddEntry(h_baseline_pt_truth_match_elec, "Z #rightarrow ee truth matched MC");
+    leg1->AddEntry(h_baseline_pt_ttbar_elec, "ttbar MC");
+    leg1->AddEntry(h_baseline_pt_Gtt_elec, "Gtt MC");
+    leg1->Draw();
+
+    kinematics->cd(2);
+    h_baseline_pt_data_muon->SetTitle("");
+    h_baseline_pt_data_muon->SetXTitle("p_{T} [GeV]");
+    h_baseline_pt_data_muon->SetYTitle("Normalized number of probe muons");
+    h_baseline_pt_data_muon->SetMaximum(h_baseline_pt_data_muon->GetMaximum() * 1.1);
+    h_baseline_pt_data_muon->SetMarkerStyle(kFullCircle);
+    h_baseline_pt_data_muon->SetMarkerColor(kBlack);
+    h_baseline_pt_data_muon->SetLineColor(kBlack);
+    h_baseline_pt_data_muon->Draw("E1");
+    h_baseline_pt_TandP_muon->SetMarkerStyle(kFullSquare);
+    h_baseline_pt_TandP_muon->SetMarkerColor(kRed);
+    h_baseline_pt_TandP_muon->SetLineColor(kRed);
+    h_baseline_pt_TandP_muon->Draw("E1,same");
+    h_baseline_pt_truth_match_muon->SetMarkerStyle(kFullTriangleUp);
+    h_baseline_pt_truth_match_muon->SetMarkerColor(kBlue);
+    h_baseline_pt_truth_match_muon->SetLineColor(kBlue);
+    h_baseline_pt_truth_match_muon->Draw("E1,same");
+    h_baseline_pt_ttbar_muon->SetMarkerStyle(kFullDiamond);
+    h_baseline_pt_ttbar_muon->SetMarkerColor(kMagenta);
+    h_baseline_pt_ttbar_muon->SetLineColor(kMagenta);
+    h_baseline_pt_ttbar_muon->Draw("E1,same");
+    h_baseline_pt_Gtt_muon->SetMarkerStyle(kFullCross);
+    h_baseline_pt_Gtt_muon->SetMarkerColor(kOrange);
+    h_baseline_pt_Gtt_muon->SetLineColor(kOrange);
+    h_baseline_pt_Gtt_muon->Draw("E1,same");
+
+    TLegend *leg2 = new TLegend(0.6, 0.5, 0.9, 0.9);
+    leg2->SetBorderSize(0);
+    leg2->SetFillColor(0);
+    leg2->SetFillStyle(0);
+    leg2->AddEntry(h_baseline_pt_data_muon, "Data");
+    leg2->AddEntry(h_baseline_pt_TandP_muon, "Z #rightarrow ee T&P MC");
+    leg2->AddEntry(h_baseline_pt_truth_match_muon, "Z #rightarrow ee truth matched MC");
+    leg2->AddEntry(h_baseline_pt_ttbar_muon, "ttbar MC");
+    leg2->AddEntry(h_baseline_pt_Gtt_muon, "Gtt MC");
+    leg2->Draw("same");
+
+    kinematics->cd(3);
+    h_baseline_eta_data_elec->SetTitle("");
+    h_baseline_eta_data_elec->SetXTitle("|#eta|");
+    h_baseline_eta_data_elec->SetYTitle("Normalized number of probe electrons");
+    h_baseline_eta_data_elec->SetMaximum(h_baseline_eta_data_elec->GetMaximum() * 1.1);
+    h_baseline_eta_data_elec->SetMarkerStyle(kFullCircle);
+    h_baseline_eta_data_elec->SetMarkerColor(kBlack);
+    h_baseline_eta_data_elec->SetLineColor(kBlack);
+    h_baseline_eta_data_elec->Draw("E1");
+    h_baseline_eta_TandP_elec->SetMarkerStyle(kFullSquare);
+    h_baseline_eta_TandP_elec->SetMarkerColor(kRed);
+    h_baseline_eta_TandP_elec->SetLineColor(kRed);
+    h_baseline_eta_TandP_elec->Draw("E1,same");
+    h_baseline_eta_truth_match_elec->SetMarkerStyle(kFullTriangleUp);
+    h_baseline_eta_truth_match_elec->SetMarkerColor(kBlue);
+    h_baseline_eta_truth_match_elec->SetLineColor(kBlue);
+    h_baseline_eta_truth_match_elec->Draw("E1,same");
+    h_baseline_eta_ttbar_elec->SetMarkerStyle(kFullDiamond);
+    h_baseline_eta_ttbar_elec->SetMarkerColor(kMagenta);
+    h_baseline_eta_ttbar_elec->SetLineColor(kMagenta);
+    h_baseline_eta_ttbar_elec->Draw("E1,same");
+    h_baseline_eta_Gtt_elec->SetMarkerStyle(kFullCross);
+    h_baseline_eta_Gtt_elec->SetMarkerColor(kOrange);
+    h_baseline_eta_Gtt_elec->SetLineColor(kOrange);
+    h_baseline_eta_Gtt_elec->Draw("E1,same");
+
+    TLegend *leg3 = new TLegend(0.6, 0.5, 0.9, 0.9);
+    leg3->SetBorderSize(0);
+    leg3->SetFillColor(0);
+    leg3->SetFillStyle(0);
+    leg3->AddEntry(h_baseline_eta_data_elec, "Data");
+    leg3->AddEntry(h_baseline_eta_TandP_elec, "Z #rightarrow ee T&P MC");
+    leg3->AddEntry(h_baseline_eta_truth_match_elec, "Z #rightarrow ee truth matched MC");
+    leg3->AddEntry(h_baseline_eta_ttbar_elec, "ttbar MC");
+    leg3->AddEntry(h_baseline_eta_Gtt_elec, "Gtt MC");
+    leg3->Draw("same");
+
+    kinematics->cd(4);
+    h_baseline_eta_data_muon->SetTitle("");
+    h_baseline_eta_data_muon->SetXTitle("|#eta|");
+    h_baseline_eta_data_muon->SetYTitle("Normalized number of probe muons");
+    h_baseline_eta_data_muon->SetMaximum(h_baseline_eta_Gtt_muon->GetMaximum() * 1.1);
+    h_baseline_eta_data_muon->SetMarkerStyle(kFullCircle);
+    h_baseline_eta_data_muon->SetMarkerColor(kBlack);
+    h_baseline_eta_data_muon->SetLineColor(kBlack);
+    h_baseline_eta_data_muon->Draw("E1");
+    h_baseline_eta_TandP_muon->SetMarkerStyle(kFullCircle);
+    h_baseline_eta_TandP_muon->SetMarkerColor(kRed);
+    h_baseline_eta_TandP_muon->SetLineColor(kRed);
+    h_baseline_eta_TandP_muon->Draw("E1,same");
+    h_baseline_eta_truth_match_muon->SetMarkerStyle(kFullTriangleUp);
+    h_baseline_eta_truth_match_muon->SetMarkerColor(kBlue);
+    h_baseline_eta_truth_match_muon->SetLineColor(kBlue);
+    h_baseline_eta_truth_match_muon->Draw("E1,same");
+    h_baseline_eta_ttbar_muon->SetMarkerStyle(kFullDiamond);
+    h_baseline_eta_ttbar_muon->SetMarkerColor(kMagenta);
+    h_baseline_eta_ttbar_muon->SetLineColor(kMagenta);
+    h_baseline_eta_ttbar_muon->Draw("E1,same");
+    h_baseline_eta_Gtt_muon->SetMarkerStyle(kFullCross);
+    h_baseline_eta_Gtt_muon->SetMarkerColor(kOrange);
+    h_baseline_eta_Gtt_muon->SetLineColor(kOrange);
+    h_baseline_eta_Gtt_muon->Draw("E1,same");
+
+    TLegend *leg4 = new TLegend(0.6, 0.5, 0.9, 0.9);
+    leg4->SetBorderSize(0);
+    leg4->SetFillColor(0);
+    leg4->SetFillStyle(0);
+    leg4->AddEntry(h_baseline_eta_data_muon, "Data");
+    leg4->AddEntry(h_baseline_eta_TandP_muon, "Z #rightarrow ee T&P MC");
+    leg4->AddEntry(h_baseline_eta_truth_match_muon, "Z #rightarrow ee truth matched MC");
+    leg4->AddEntry(h_baseline_eta_ttbar_muon, "ttbar MC");
+    leg4->AddEntry(h_baseline_eta_Gtt_muon, "Gtt MC");
+    leg4->Draw("same");
+
+    kinematics->SaveAs("baseline_kinematics.pdf", "pdf");
+}
+
+void yt_deltaR_and_NJets_distribution()
+{
+    TString path = "/Users/ytshen/Desktop/skim/Results/1006/";
+
+    TFile *data_elec = TFile::Open(path + "submitDir_Data_electron/hist-0929_80mll100.root");
+    TFile *data_muon = TFile::Open(path + "submitDir_Data_muon/hist-0929_80mll100.root");
+
+    TFile *TandP_elec = TFile::Open(path + "submitDir_MC_Zee/hist-0929_80mll100.root");
+    TFile *TandP_muon = TFile::Open(path + "submitDir_MC_Zmumu/hist-0929_80mll100.root");
+
+    TFile *truth_match_elec = TFile::Open(path + "submitDir_MC_Zee_truth_match/hist-0929_80mll100.root");
+    TFile *truth_match_muon = TFile::Open(path + "submitDir_MC_Zmumu_truth_match/hist-0929_80mll100.root");
+
+    TFile *TandP_truth_match_elec = TFile::Open(path + "submitDir_MC_Zee_TandP_truth_match/hist-0929_80mll100.root");
+    TFile *TandP_truth_match_muon = TFile::Open(path + "submitDir_MC_Zmumu_TandP_truth_match/hist-0929_80mll100.root");
+    
+    TFile *ttbar_elec = TFile::Open(path + "submitDir_MC_ttbar_electron/hist-0929_80mll100.root");
+    TFile *ttbar_muon = TFile::Open(path + "submitDir_MC_ttbar_muon/hist-0929_80mll100.root");
+
+    TFile *Gtt_elec = TFile::Open(path + "submitDir_MC_GG_ttn1_electron/hist-0929_80mll100.root");
+    TFile *Gtt_muon = TFile::Open(path + "submitDir_MC_GG_ttn1_muon/hist-0929_80mll100.root");
+
+    TH1F *h_baseline_dRjet_data_elec = (TH1F *)data_elec->Get("h_baseline_dRjet");
+    TH1F *h_baseline_nJets_data_elec = (TH1F *)data_elec->Get("h_baseline_nJets");
+
+    TH1F *h_baseline_dRjet_data_muon = (TH1F *)data_muon->Get("h_baseline_dRjet");
+    TH1F *h_baseline_nJets_data_muon = (TH1F *)data_muon->Get("h_baseline_nJets");
+
+    TH1F *h_baseline_dRjet_TandP_elec = (TH1F *)TandP_elec->Get("h_baseline_dRjet");
+    TH1F *h_baseline_nJets_TandP_elec = (TH1F *)TandP_elec->Get("h_baseline_nJets");
+
+    TH1F *h_baseline_dRjet_TandP_muon = (TH1F *)TandP_muon->Get("h_baseline_dRjet");
+    TH1F *h_baseline_nJets_TandP_muon = (TH1F *)TandP_muon->Get("h_baseline_nJets");
+
+    TH1F *h_baseline_dRjet_truth_match_elec = (TH1F *)truth_match_elec->Get("h_baseline_dRjet");
+    TH1F *h_baseline_nJets_truth_match_elec = (TH1F *)truth_match_elec->Get("h_baseline_nJets");
+
+    TH1F *h_baseline_dRjet_truth_match_muon = (TH1F *)truth_match_muon->Get("h_baseline_dRjet");
+    TH1F *h_baseline_nJets_truth_match_muon = (TH1F *)truth_match_muon->Get("h_baseline_nJets");
+
+    TH1F *h_baseline_dRjet_TandP_truth_match_elec = (TH1F *)TandP_truth_match_elec->Get("h_baseline_dRjet");
+    TH1F *h_baseline_nJets_TandP_truth_match_elec = (TH1F *)TandP_truth_match_elec->Get("h_baseline_nJets");
+
+    TH1F *h_baseline_dRjet_TandP_truth_match_muon = (TH1F *)TandP_truth_match_muon->Get("h_baseline_dRjet");
+    TH1F *h_baseline_nJets_TandP_truth_match_muon = (TH1F *)TandP_truth_match_muon->Get("h_baseline_nJets");
+
+    TH1F *h_baseline_dRjet_ttbar_elec = (TH1F *)ttbar_elec->Get("h_baseline_dRjet");
+    TH1F *h_baseline_nJets_ttbar_elec = (TH1F *)ttbar_elec->Get("h_baseline_nJets");
+
+    TH1F *h_baseline_dRjet_ttbar_muon = (TH1F *)ttbar_muon->Get("h_baseline_dRjet");
+    TH1F *h_baseline_nJets_ttbar_muon = (TH1F *)ttbar_muon->Get("h_baseline_nJets");
+
+    TH1F *h_baseline_dRjet_Gtt_elec = (TH1F *)Gtt_elec->Get("h_baseline_dRjet");
+    TH1F *h_baseline_nJets_Gtt_elec = (TH1F *)Gtt_elec->Get("h_baseline_nJets");
+
+    TH1F *h_baseline_dRjet_Gtt_muon = (TH1F *)Gtt_muon->Get("h_baseline_dRjet");
+    TH1F *h_baseline_nJets_Gtt_muon = (TH1F *)Gtt_muon->Get("h_baseline_nJets");
+
+    h_baseline_dRjet_data_elec->Sumw2();
+    h_baseline_nJets_data_elec->Sumw2();
+    h_baseline_dRjet_data_muon->Sumw2();
+    h_baseline_nJets_data_muon->Sumw2();
+    h_baseline_dRjet_TandP_elec->Sumw2();
+    h_baseline_nJets_TandP_elec->Sumw2();
+    h_baseline_dRjet_TandP_muon->Sumw2();
+    h_baseline_nJets_TandP_muon->Sumw2();
+    h_baseline_dRjet_truth_match_elec->Sumw2();
+    h_baseline_nJets_truth_match_elec->Sumw2();
+    h_baseline_dRjet_truth_match_muon->Sumw2();
+    h_baseline_nJets_truth_match_muon->Sumw2();
+    h_baseline_dRjet_TandP_truth_match_elec->Sumw2();
+    h_baseline_nJets_TandP_truth_match_elec->Sumw2();
+    h_baseline_dRjet_TandP_truth_match_muon->Sumw2();
+    h_baseline_nJets_TandP_truth_match_muon->Sumw2();
+    h_baseline_dRjet_ttbar_elec->Sumw2();
+    h_baseline_nJets_ttbar_elec->Sumw2();
+    h_baseline_dRjet_ttbar_muon->Sumw2();
+    h_baseline_nJets_ttbar_muon->Sumw2();
+    h_baseline_dRjet_Gtt_elec->Sumw2();
+    h_baseline_nJets_Gtt_elec->Sumw2();
+    h_baseline_dRjet_Gtt_muon->Sumw2();
+    h_baseline_nJets_Gtt_muon->Sumw2();
+
+    h_baseline_dRjet_data_elec->Scale(1. / h_baseline_dRjet_data_elec->Integral());
+    h_baseline_nJets_data_elec->Scale(1. / h_baseline_nJets_data_elec->Integral());
+    h_baseline_dRjet_data_muon->Scale(1. / h_baseline_dRjet_data_muon->Integral());
+    h_baseline_nJets_data_muon->Scale(1. / h_baseline_nJets_data_muon->Integral());
+    h_baseline_dRjet_TandP_elec->Scale(1. / h_baseline_dRjet_TandP_elec->Integral());
+    h_baseline_nJets_TandP_elec->Scale(1. / h_baseline_nJets_TandP_elec->Integral());
+    h_baseline_dRjet_TandP_muon->Scale(1. / h_baseline_dRjet_TandP_muon->Integral());
+    h_baseline_nJets_TandP_muon->Scale(1. / h_baseline_nJets_TandP_muon->Integral());
+    h_baseline_dRjet_truth_match_elec->Scale(1. / h_baseline_dRjet_truth_match_elec->Integral());
+    h_baseline_nJets_truth_match_elec->Scale(1. / h_baseline_nJets_truth_match_elec->Integral());
+    h_baseline_dRjet_truth_match_muon->Scale(1. / h_baseline_dRjet_truth_match_muon->Integral());
+    h_baseline_nJets_truth_match_muon->Scale(1. / h_baseline_nJets_truth_match_muon->Integral());
+    h_baseline_dRjet_TandP_truth_match_elec->Scale(1. / h_baseline_dRjet_TandP_truth_match_elec->Integral());
+    h_baseline_nJets_TandP_truth_match_elec->Scale(1. / h_baseline_nJets_TandP_truth_match_elec->Integral());
+    h_baseline_dRjet_TandP_truth_match_muon->Scale(1. / h_baseline_dRjet_TandP_truth_match_muon->Integral());
+    h_baseline_nJets_TandP_truth_match_muon->Scale(1. / h_baseline_nJets_TandP_truth_match_muon->Integral());
+    h_baseline_dRjet_ttbar_elec->Scale(1. / h_baseline_dRjet_ttbar_elec->Integral());
+    h_baseline_nJets_ttbar_elec->Scale(1. / h_baseline_nJets_ttbar_elec->Integral());
+    h_baseline_dRjet_ttbar_muon->Scale(1. / h_baseline_dRjet_ttbar_muon->Integral());
+    h_baseline_nJets_ttbar_muon->Scale(1. / h_baseline_nJets_ttbar_muon->Integral());
+    h_baseline_dRjet_Gtt_elec->Scale(1. / h_baseline_dRjet_Gtt_elec->Integral());
+    h_baseline_nJets_Gtt_elec->Scale(1. / h_baseline_nJets_Gtt_elec->Integral());
+    h_baseline_dRjet_Gtt_muon->Scale(1. / h_baseline_dRjet_Gtt_muon->Integral());
+    h_baseline_nJets_Gtt_muon->Scale(1. / h_baseline_nJets_Gtt_muon->Integral());
+
+    TCanvas *distributions = new TCanvas("distributions", "distributions", 1200, 1200);
+    gStyle->SetOptStat(0);
+    distributions->Divide(2, 2);
+
+    distributions->cd(1);
+    h_baseline_dRjet_data_elec->SetTitle("");
+    h_baseline_dRjet_data_elec->SetXTitle("#Delta R(l, jet)");
+    h_baseline_dRjet_data_elec->SetYTitle("Normalized number of probe electrons");
+    h_baseline_dRjet_data_elec->SetMaximum(h_baseline_dRjet_Gtt_elec->GetMaximum() * 1.1);
+    h_baseline_dRjet_data_elec->SetMarkerStyle(kFullCircle);
+    h_baseline_dRjet_data_elec->SetMarkerColor(kBlack);
+    h_baseline_dRjet_data_elec->SetLineColor(kBlack);
+    h_baseline_dRjet_data_elec->Draw("E1");
+    h_baseline_dRjet_TandP_elec->SetMarkerStyle(kFullSquare);
+    h_baseline_dRjet_TandP_elec->SetMarkerColor(kRed);
+    h_baseline_dRjet_TandP_elec->SetLineColor(kRed);
+    h_baseline_dRjet_TandP_elec->Draw("E1,same");
+    h_baseline_dRjet_truth_match_elec->SetMarkerStyle(kFullTriangleUp);
+    h_baseline_dRjet_truth_match_elec->SetMarkerColor(kBlue);
+    h_baseline_dRjet_truth_match_elec->SetLineColor(kBlue);
+    h_baseline_dRjet_truth_match_elec->Draw("E1,same");
+    h_baseline_dRjet_ttbar_elec->SetMarkerStyle(kFullDiamond);
+    h_baseline_dRjet_ttbar_elec->SetMarkerColor(kMagenta);
+    h_baseline_dRjet_ttbar_elec->SetLineColor(kMagenta);
+    h_baseline_dRjet_ttbar_elec->Draw("E1,same");
+    h_baseline_dRjet_Gtt_elec->SetMarkerStyle(kFullCross);
+    h_baseline_dRjet_Gtt_elec->SetMarkerColor(kOrange);
+    h_baseline_dRjet_Gtt_elec->SetLineColor(kOrange);
+    h_baseline_dRjet_Gtt_elec->Draw("E1,same");
+
+    TLegend *leg1 = new TLegend(0.6, 0.5, 0.9, 0.9);
+    leg1->SetBorderSize(0);
+    leg1->SetFillColor(0);
+    leg1->SetFillStyle(0);
+    leg1->AddEntry(h_baseline_dRjet_data_elec, "Data");
+    leg1->AddEntry(h_baseline_dRjet_TandP_elec, "Z #rightarrow ee T&P MC");
+    leg1->AddEntry(h_baseline_dRjet_truth_match_elec, "Z #rightarrow ee truth matched MC");
+    leg1->AddEntry(h_baseline_dRjet_ttbar_elec, "ttbar MC");
+    leg1->AddEntry(h_baseline_dRjet_Gtt_elec, "Gtt MC");
+    leg1->Draw();
+
+    distributions->cd(2);
+    h_baseline_dRjet_data_muon->SetTitle("");
+    h_baseline_dRjet_data_muon->SetXTitle("#Delta R(l, jet)");
+    h_baseline_dRjet_data_muon->SetYTitle("Normalized number of probe muons");
+    h_baseline_dRjet_data_muon->SetMaximum(h_baseline_dRjet_Gtt_muon->GetMaximum() * 1.1);
+    h_baseline_dRjet_data_muon->SetMarkerStyle(kFullCircle);
+    h_baseline_dRjet_data_muon->SetMarkerColor(kBlack);
+    h_baseline_dRjet_data_muon->SetLineColor(kBlack);
+    h_baseline_dRjet_data_muon->Draw("E1");
+    h_baseline_dRjet_TandP_muon->SetMarkerStyle(kFullSquare);
+    h_baseline_dRjet_TandP_muon->SetMarkerColor(kRed);
+    h_baseline_dRjet_TandP_muon->SetLineColor(kRed);
+    h_baseline_dRjet_TandP_muon->Draw("E1,same");
+    h_baseline_dRjet_truth_match_muon->SetMarkerStyle(kFullTriangleUp);
+    h_baseline_dRjet_truth_match_muon->SetMarkerColor(kBlue);
+    h_baseline_dRjet_truth_match_muon->SetLineColor(kBlue);
+    h_baseline_dRjet_truth_match_muon->Draw("E1,same");
+    h_baseline_dRjet_ttbar_muon->SetMarkerStyle(kFullDiamond);
+    h_baseline_dRjet_ttbar_muon->SetMarkerColor(kMagenta);
+    h_baseline_dRjet_ttbar_muon->SetLineColor(kMagenta);
+    h_baseline_dRjet_ttbar_muon->Draw("E1,same");
+    h_baseline_dRjet_Gtt_muon->SetMarkerStyle(kFullCross);
+    h_baseline_dRjet_Gtt_muon->SetMarkerColor(kOrange);
+    h_baseline_dRjet_Gtt_muon->SetLineColor(kOrange);
+    h_baseline_dRjet_Gtt_muon->Draw("E1,same");
+
+    TLegend *leg2 = new TLegend(0.6, 0.5, 0.9, 0.9);
+    leg2->SetBorderSize(0);
+    leg2->SetFillColor(0);
+    leg2->SetFillStyle(0);
+    leg2->AddEntry(h_baseline_dRjet_data_muon, "Data");
+    leg2->AddEntry(h_baseline_dRjet_TandP_muon, "Z #rightarrow ee T&P MC");
+    leg2->AddEntry(h_baseline_dRjet_truth_match_muon, "Z #rightarrow ee truth matched MC");
+    leg2->AddEntry(h_baseline_dRjet_ttbar_muon, "ttbar MC");
+    leg2->AddEntry(h_baseline_dRjet_Gtt_muon, "Gtt MC");
+    leg2->Draw("same");
+
+    distributions->cd(3);
+    h_baseline_nJets_data_elec->SetTitle("");
+    h_baseline_nJets_data_elec->SetXTitle("N_{jets}");
+    h_baseline_nJets_data_elec->SetYTitle("Normalized number of probe electrons");
+    h_baseline_nJets_data_elec->SetMaximum(h_baseline_nJets_Gtt_elec->GetMaximum() * 1.1);
+    h_baseline_nJets_data_elec->SetMarkerStyle(kFullCircle);
+    h_baseline_nJets_data_elec->SetMarkerColor(kBlack);
+    h_baseline_nJets_data_elec->SetLineColor(kBlack);
+    h_baseline_nJets_data_elec->Draw("E1");
+    h_baseline_nJets_TandP_elec->SetMarkerStyle(kFullSquare);
+    h_baseline_nJets_TandP_elec->SetMarkerColor(kRed);
+    h_baseline_nJets_TandP_elec->SetLineColor(kRed);
+    h_baseline_nJets_TandP_elec->Draw("E1,same");
+    h_baseline_nJets_truth_match_elec->SetMarkerStyle(kFullTriangleUp);
+    h_baseline_nJets_truth_match_elec->SetMarkerColor(kBlue);
+    h_baseline_nJets_truth_match_elec->SetLineColor(kBlue);
+    h_baseline_nJets_truth_match_elec->Draw("E1,same");
+    h_baseline_nJets_ttbar_elec->SetMarkerStyle(kFullDiamond);
+    h_baseline_nJets_ttbar_elec->SetMarkerColor(kMagenta);
+    h_baseline_nJets_ttbar_elec->SetLineColor(kMagenta);
+    h_baseline_nJets_ttbar_elec->Draw("E1,same");
+    h_baseline_nJets_Gtt_elec->SetMarkerStyle(kFullCross);
+    h_baseline_nJets_Gtt_elec->SetMarkerColor(kOrange);
+    h_baseline_nJets_Gtt_elec->SetLineColor(kOrange);
+    h_baseline_nJets_Gtt_elec->Draw("E1,same");
+
+    TLegend *leg3 = new TLegend(0.2, 0.5, 0.5, 0.9);
+    leg3->SetBorderSize(0);
+    leg3->SetFillColor(0);
+    leg3->SetFillStyle(0);
+    leg3->AddEntry(h_baseline_nJets_data_elec, "Data");
+    leg3->AddEntry(h_baseline_nJets_TandP_elec, "Z #rightarrow ee T&P MC");
+    leg3->AddEntry(h_baseline_nJets_truth_match_elec, "Z #rightarrow ee truth matched MC");
+    leg3->AddEntry(h_baseline_nJets_ttbar_elec, "ttbar MC");
+    leg3->AddEntry(h_baseline_nJets_Gtt_elec, "Gtt MC");
+    leg3->Draw("same");
+
+    distributions->cd(4);
+    h_baseline_nJets_data_muon->SetTitle("");
+    h_baseline_nJets_data_muon->SetXTitle("N_{jets}");
+    h_baseline_nJets_data_muon->SetYTitle("Normalized number of probe muons");
+    h_baseline_nJets_data_muon->SetMaximum(h_baseline_nJets_Gtt_muon->GetMaximum() * 1.1);
+    h_baseline_nJets_data_muon->SetMarkerStyle(kFullCircle);
+    h_baseline_nJets_data_muon->SetMarkerColor(kBlack);
+    h_baseline_nJets_data_muon->SetLineColor(kBlack);
+    h_baseline_nJets_data_muon->Draw("E1");
+    h_baseline_nJets_TandP_muon->SetMarkerStyle(kFullCircle);
+    h_baseline_nJets_TandP_muon->SetMarkerColor(kRed);
+    h_baseline_nJets_TandP_muon->SetLineColor(kRed);
+    h_baseline_nJets_TandP_muon->Draw("E1,same");
+    h_baseline_nJets_truth_match_muon->SetMarkerStyle(kFullTriangleUp);
+    h_baseline_nJets_truth_match_muon->SetMarkerColor(kBlue);
+    h_baseline_nJets_truth_match_muon->SetLineColor(kBlue);
+    h_baseline_nJets_truth_match_muon->Draw("E1,same");
+    h_baseline_nJets_ttbar_muon->SetMarkerStyle(kFullDiamond);
+    h_baseline_nJets_ttbar_muon->SetMarkerColor(kMagenta);
+    h_baseline_nJets_ttbar_muon->SetLineColor(kMagenta);
+    h_baseline_nJets_ttbar_muon->Draw("E1,same");
+    h_baseline_nJets_Gtt_muon->SetMarkerStyle(kFullCross);
+    h_baseline_nJets_Gtt_muon->SetMarkerColor(kOrange);
+    h_baseline_nJets_Gtt_muon->SetLineColor(kOrange);
+    h_baseline_nJets_Gtt_muon->Draw("E1,same");
+
+    TLegend *leg4 = new TLegend(0.2, 0.5, 0.5, 0.9);
+    leg4->SetBorderSize(0);
+    leg4->SetFillColor(0);
+    leg4->SetFillStyle(0);
+    leg4->AddEntry(h_baseline_nJets_data_muon, "Data");
+    leg4->AddEntry(h_baseline_nJets_TandP_muon, "Z #rightarrow ee T&P MC");
+    leg4->AddEntry(h_baseline_nJets_truth_match_muon, "Z #rightarrow ee truth matched MC");
+    leg4->AddEntry(h_baseline_nJets_ttbar_muon, "ttbar MC");
+    leg4->AddEntry(h_baseline_nJets_Gtt_muon, "Gtt MC");
+    leg4->Draw("same");
+
+    distributions->SaveAs("baseline_deltaR_and_NJets.pdf", "pdf");
 }
