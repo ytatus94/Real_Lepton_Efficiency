@@ -1024,7 +1024,7 @@ EL::StatusCode ytRealLeptonsEfficiency_MC :: execute ()
         // single lepton triggers:
         if (trigger == "single_lepton_trigger") {
             // Muon: mu20_iloose_L1MU15 (2015)
-            //       mu24_ivarloose (2016)
+            //       mu24_ivarmedium (2016)
             if (RunNb < 290000) { // 2015 data
                 if (!HLT_mu20_iloose_L1MU15)
                     return EL::StatusCode::SUCCESS; // Go to next event
