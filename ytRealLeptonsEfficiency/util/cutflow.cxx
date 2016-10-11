@@ -31,7 +31,6 @@ int main( int argc, char* argv[] ) {
 
 	bool isMC = false;
 	bool isData = false;
-	bool skim = false;
 	string process;
 	bool use_Condor = false;
 	bool use_Grid = false;
@@ -64,7 +63,7 @@ int main( int argc, char* argv[] ) {
 			use_PROOF = true;
 	}
 
-	printf("isMC = %s, isData = %s, skim = %s\n", isMC ? "true" : "false", isData ? "true" : "false", skim ? "true" : "false");
+	printf("isMC = %s, isData = %s\n", isMC ? "true" : "false", isData ? "true" : "false");
 
 	if (use_Condor) {
 		printf("Submit jobs to CondorDriver...\n");
