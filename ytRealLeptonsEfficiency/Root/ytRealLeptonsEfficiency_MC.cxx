@@ -1233,7 +1233,7 @@ void ytRealLeptonsEfficiency_MC :: loop_over_electrons()
             h_bkg_template_fail_CaloIso_and_TrackIso->Fill(El_ZTandP_mll->at(n_el) / 1000., normalization * El_SFwLooseAndBLayerLH->at(n_el));
             h_bkg_template_fail_CaloIso_and_TrackIso_pt_eta_mll->Fill(El_pT->at(n_el) / 1000., El_eta->at(n_el), El_ZTandP_mll->at(n_el) / 1000., normalization * El_SFwLooseAndBLayerLH->at(n_el));
         }
-
+/*
         // mll window
 /*
         h_baseline_mll->Fill(El_ZTandP_mll->at(n_el) / 1000., normalization * El_SFwLooseAndBLayerLH->at(n_el));
@@ -1426,11 +1426,19 @@ void ytRealLeptonsEfficiency_MC :: loop_over_muons()
         }
 
         // mll window
+/*
         h_baseline_mll->Fill(Mu_ZTandP_mll->at(n_mu) / 1000., normalization * Mu_SFw->at(n_mu));
         h_baseline_pt_eta_mll->Fill(Mu_pT->at(n_mu) / 1000., Mu_eta->at(n_mu), Mu_ZTandP_mll->at(n_mu) / 1000., normalization * Mu_SFw->at(n_mu));
         if (Mu_isSignal->at(n_mu)) {
             h_signal_mll->Fill(Mu_ZTandP_mll->at(n_mu) / 1000., normalization * Mu_SFw->at(n_mu) * Mu_IsoSFw->at(n_mu));
             h_signal_pt_eta_mll->Fill(Mu_pT->at(n_mu) / 1000., Mu_eta->at(n_mu), Mu_ZTandP_mll->at(n_mu) / 1000., normalization * Mu_SFw->at(n_mu) * Mu_IsoSFw->at(n_mu));
+        }
+*/
+        h_baseline_mll->Fill(Mu_ZTandP_mll->at(n_mu) / 1000., normalization * baseline_weight);
+        h_baseline_pt_eta_mll->Fill(Mu_pT->at(n_mu) / 1000., Mu_eta->at(n_mu), Mu_ZTandP_mll->at(n_mu) / 1000., normalization * baseline_weight);
+        if (Mu_isSignal->at(n_mu)) {
+            h_signal_mll->Fill(Mu_ZTandP_mll->at(n_mu) / 1000., normalization * signal_weight);
+            h_signal_pt_eta_mll->Fill(Mu_pT->at(n_mu) / 1000., Mu_eta->at(n_mu), Mu_ZTandP_mll->at(n_mu) / 1000., normalization * signal_weight);
         }
 
         if (process == "Zmumu") {

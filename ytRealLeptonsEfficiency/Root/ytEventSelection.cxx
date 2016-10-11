@@ -975,7 +975,6 @@ EL::StatusCode ytEventSelection :: execute ()
         if (!cut9) return EL::StatusCode::SUCCESS;
     }
     
-
     bool cut10 = m_cutflow->pass_cosmic_muon_veto(vec_OR_muon);
     m_cutflow->update(Cosmic_muons_veto, cut10);
     elec_ID_weight = ID_weight(vec_OR_elec, false);
@@ -1010,7 +1009,6 @@ EL::StatusCode ytEventSelection :: execute ()
     double baseline_weight = 1., signal_weight = 1.;
     baseline_weight = ID_weight(vec_baseline_elec, false) * ID_weight(vec_baseline_muon) * jets_weight(vec_signal_jets);
     signal_weight = ID_weight(vec_signal_elec, true) * Iso_weight(vec_signal_elec) * ID_weight(vec_signal_muon) * Iso_weight(vec_signal_muon) * jets_weight(vec_signal_jets);
-
 
     if (isSkim) {
         //cout << "Doing skim at here..." << endl;

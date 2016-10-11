@@ -1,9 +1,24 @@
 # Real_Lepton_Efficiency
 This is the new real lepton efficiency framework.
 
+v01.(ouhep04 branch)-04. Move share/*.* to misc/ and delete share.
+
+
+v01.(ouhep04 branch)-03. Modify the README.md
+
+
+v01.(ouhep04 branch)-02. This is the version on ouhep04.
+The latest modified data of files on ouhep04 is Sep./29/2016.
+
+
+v01.(ouhep04 branch)-01. This is the version on ouhep04.
+The latest modified data of files on ouhep04 is Sep./22/2016.
+
+
 v10. Add 2 functions in ytPlot.C and add a python script.
 1. Add yt_kinematics_distribution() and yt_deltaR_and_NJets_distribution()
 2. Add run_background_subtraction.py in python/
+
 
 v09. Loose the template 1 requirements.
 1. Both Calo and Track isolation variable require > 6% for template 1.
@@ -12,9 +27,11 @@ v09. Loose the template 1 requirements.
 4. Change the input folder in ytPlots.C and ytBackground_subtraction.C.
 5. Add Xsec.txt for the Sherpa samples.
 
+
 v08. Redirect the output of run_bkg_subtraction.sh.
 1. Redirect the output so I can use another script to get the results.
 2. Add New_Skimmed class
+
 
 v07. Correct background subtraction.
 1. In the ytBackground_subtraction.C:
@@ -24,6 +41,7 @@ v07. Correct background subtraction.
 1d. Fix the norm < 0 bug which happens on 10 < pT < 15 and 0 < eta < 0.8. Add a patch to fix it.
 2. Add function to save plots in ytPlots.C..
 3. Add variations in run_bkg_subtraction.sh.
+
 
 v06. Add skim
 1. Add yt_skim in LinkDef.h
