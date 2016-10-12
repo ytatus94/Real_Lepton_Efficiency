@@ -1240,54 +1240,6 @@ void yt_signal_mll_ratio_plots(int pt_bin_low = 0, int pt_bin_up = -1, bool trut
     }
 }
 
-void yt_mll_plots()
-{
-    TString path = "/raid05/users/shen/Ximo_ntuples/ytRealEff/Results/all_with_cut4_0914/";
-
-    TFile *data_elec = TFile::Open(path + "submitDir_Data_electron/hist-all_with_cut4.root");
-    TFile *data_muon = TFile::Open(path + "submitDir_Data_muon/hist-all_with_cut4.root");
-
-    TH3F *data_elec_baseline_pt_eta_mll = (TH3F *)data_elec->Get("h_baseline_pt_eta_mll");
-    TH3F *data_muon_baseline_pt_eta_mll = (TH3F *)data_muon->Get("h_baseline_pt_eta_mll");
-    TH3F *data_elec_signal_pt_eta_mll = (TH3F *)data_elec->Get("h_signal_pt_eta_mll");
-    TH3F *data_muon_signal_pt_eta_mll = (TH3F *)data_muon->Get("h_signal_pt_eta_mll");
-
-    // Project all bins to Z axis
-    TH1D *data_elec_baseline_mll = (TH1D *)data_elec_baseline_pt_eta_mll->ProjectionZ("data_elec_baseline_mll");
-    TH1D *data_muon_baseline_mll = (TH1D *)data_muon_baseline_pt_eta_mll->ProjectionZ("data_muon_baseline_mll");
-    TH1D *data_elec_signal_mll = (TH1D *)data_elec_signal_pt_eta_mll->ProjectionZ("data_elec_signal_mll");
-    TH1D *data_muon_signal_mll = (TH1D *)data_muon_signal_pt_eta_mll->ProjectionZ("data_muon_signal_mll");
-
-    double elec_max = max(data_elec_baseline_mll->GetMaximum(), data_elec_signal_mll->GetMaximum());
-    double muon_max = max(data_muon_baseline_mll->GetMaximum(), data_muon_signal_mll->GetMaximum());
-
-    // Create a dummy histogram in order to fill color between 80 < mll < 100
-    TH1F *h_80_100 = new TH1F("h_80_100", "h_80_100", 1, 80, 100);
-    h_80_100->SetFillColor(kYellow);
-    h_80_100->SetFillColorAlpha(kYellow, 0.35);
-    h_80_100->SetFillStyle(1001); // solid
-    h_80_100->SetLineColor(kYellow);
-
-    TCanvas *c_ee = new TCanvas("c_ee", "M_{ee}", 600, 600);
-    c_ee->SetGrid();
-    c_ee->SetLogy();
-
-    data_elec_baseline_mll->SetTitle("");
-    data_elec_baseline_mll->SetXTitle("M_{ee} [GeV]");
-    data_elec_baseline_mll->SetYTitle("Events");
-    data_elec_baseline_mll->SetStats(kFALSE);
-    data_elec_baseline_mll->SetMaximum(elec_max * 10);
-    data_elec_baseline_mll->SetMinimum(1000.);
-    data_elec_baseline_mll->SetLineColor(kBlack);
-    data_elec_baseline_mll->SetMarkerColor(kBlack);
-    data_elec_baseline_mll->SetMarkerStyle(kFullCircle);
-    data_elec_baseline_mll->Draw();
->>>>>>> ouhep05
-
-    string filename2 = "signal_level_Mmumu_pt" + sstream_pt_low.str() + sstream_pt_up.str() + "_ratio_plot.pdf";
-    Mmumu_plot->SaveAs(filename2.c_str(), "pdf");
-}
-
 
 
 //

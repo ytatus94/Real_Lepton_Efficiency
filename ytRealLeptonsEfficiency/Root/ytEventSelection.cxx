@@ -514,7 +514,7 @@ EL::StatusCode ytEventSelection :: execute ()
 
 	//const char * function_name = "execute()";
 	//Info(function_name, "Function calls");
-/*
+
 	wk()->tree()->GetEntry(wk()->treeEntry());
 
     // Reset vectors
@@ -890,7 +890,7 @@ EL::StatusCode ytEventSelection :: execute ()
     jet_weight = jets_weight(vec_baseline_jets);
     update(Primary_vertex, cut3, calculate_weight(EventWeight, PRWWeight, lepton_weight, jet_weight));
     if (!cut3) return EL::StatusCode::SUCCESS;
-//
+
     bool cut4  = m_cutflow->pass_trigger(isData, isMC, RunNb, PRWrandomRunNumber,
                                          HLT_2e12_lhloose_L12EM10VH, HLT_e17_lhloose_mu14, HLT_mu18_mu8noL1, HLT_xe70,
                                          HLT_2e17_lhvloose_nod0, HLT_e17_lhloose_nod0_mu14, HLT_mu20_mu8noL1, HLT_xe100_mht_L1XE50,
@@ -904,7 +904,7 @@ EL::StatusCode ytEventSelection :: execute ()
     jet_weight = jets_weight(vec_baseline_jets);
     update(Trigger, cut4, calculate_weight(EventWeight, PRWWeight, lepton_weight, jet_weight));
     if (!cut4) return EL::StatusCode::SUCCESS;
-//
+
     bool cut5  = m_cutflow->pass_global_flags(isData, isMC, DetError);
     m_cutflow->update(Global_flags, cut5);
     elec_ID_weight = ID_weight(vec_baseline_elec, false);
