@@ -1238,6 +1238,9 @@ void yt_signal_mll_ratio_plots(int pt_bin_low = 0, int pt_bin_up = -1, bool trut
         ratio_Mmumu_truth->SetLineColor(kBlue);
         ratio_Mmumu_truth->Draw("same");
     }
+
+	string filename2 = "signal_level_Mmumu_pt" + sstream_pt_low.str() + sstream_pt_up.str() + "_ratio_plot.pdf";
+	Mmumu_plot->SaveAs(filename2.c_str(), "pdf");
 }
 
 

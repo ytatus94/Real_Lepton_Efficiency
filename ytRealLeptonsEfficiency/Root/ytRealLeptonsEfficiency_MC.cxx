@@ -1477,9 +1477,6 @@ void ytRealLeptonsEfficiency_MC :: loop_over_muons()
             h_signal_pt_eta_mll->Fill(Mu_pT->at(n_mu) / 1000., fabs(Mu_eta->at(n_mu)), Mu_ZTandP_mll->at(n_mu) / 1000., normalization * signal_weight);
         }
 
-        if (Mu_isSignal->at(n_mu)) {
-        }
-
         if (process == "Zmumu") {
             // Use probe muons only
             if (!Mu_isZProbe->at(n_mu))
