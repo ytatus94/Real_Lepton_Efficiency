@@ -1,6 +1,29 @@
 # Real_Lepton_Efficiency
 This is the new real lepton efficiency framework.
 
+### v16. Merge ouhep05 branch into master branch.
+1. Conflict files are:
+   `ytRealLeptonsEfficiency_MC.h`, `Run.cxx`, `ytPlots.C`, `yt_cutflows.cxx`, 
+   `ytRealLeptonsEfficiency_MC.cxx`, `ytEventSelection.cxx`, `README.md`
+2. Auto-merging: `run_Real_lepton_efficiency.py`, 
+
+
+### v01.(ouhep05 branch)-04. Move `share/*.*` to `misc/`
+1. Move `share/*.*` to `misc/` and delete `share/`
+2. Using markdown language in `README.md`
+
+
+### v01.(ouhep05 branch)-03. Modify the `READMD.md`
+
+
+### v01.(ouhep05 branch)-02. This are files on ouhep05.
+The current results (20161006) are obtained using this version.
+
+
+### v01.(ouhep05 branch)-01. This are files on ouhep05
+The latest modified date of files is Sep./30/2016.
+
+
 ### v15. Correct the MC weight
 1. `normalization * baseline_weight` and `normalization * signal_weight`.
 2. Correct `EL_eta` and `Mu_eta` to `fabs(El_eta)` and `fabs(Mu_eta)`
@@ -84,7 +107,7 @@ The latest modified data of files on ouhep04 is Sep./22/2016.
 
 
 ### v03. Add GRL and PRW
-1. Add baseline_weight and signal_weight in `ytRealLeptonsEfficiency_MC` class.
+1. Add `baseline_weight` and `signal_weight` in `ytRealLeptonsEfficiency_MC` class.
 2. Add `data/GRL` and `data/PRW` and put the GRL and PRW files into thest two folders.
 3. Modify the GRL and PRW path in the `yt_cutflows` class.
 4. Change the type of `events_pass_cutflow` from int to double in order to keep `derivationStat_weight`.

@@ -1208,15 +1208,15 @@ void ytRealLeptonsEfficiency_MC :: loop_over_electrons()
             // reverse track isolation
             if (track_isolation > 0.06) {
                 //h_bkg_template_fail_id_and_TrackIso->Fill(El_ZTandP_mll->at(n_el) / 1000., normalization * El_SFwLooseAndBLayerLH->at(n_el));
-                //h_bkg_template_fail_id_and_TrackIso_pt_eta_mll->Fill(El_pT->at(n_el) / 1000., El_eta->at(n_el), El_ZTandP_mll->at(n_el) / 1000., normalization * El_SFwLooseAndBLayerLH->at(n_el));
+                //h_bkg_template_fail_id_and_TrackIso_pt_eta_mll->Fill(El_pT->at(n_el) / 1000., fabs(El_eta->at(n_el)), El_ZTandP_mll->at(n_el) / 1000., normalization * El_SFwLooseAndBLayerLH->at(n_el));
                 h_bkg_template_fail_id_and_TrackIso->Fill(El_ZTandP_mll->at(n_el) / 1000., normalization * baseline_weight);
-                h_bkg_template_fail_id_and_TrackIso_pt_eta_mll->Fill(El_pT->at(n_el) / 1000., fabs(El_eta->at(n_el)), El_ZTandP_mll->at(n_el) / 1000., normalization * baseline_weight);
+                h_bkg_template_fail_id_and_TrackIso_pt_eta_mll->Fill(El_pT->at(n_el) / 1000., fabs(El_eta->at(n_el)), El_ZTandP_mll->at(n_el) / 1000., normalization * baseline_weight); 
             }
             // reverse calo and track isolation (baseline bkg template)
             if (calo_isolation > 0.15 &&
                 track_isolation > 0.08) {
                 //h_bkg_template_fail_id_and_CaloIso_and_TrackIso->Fill(El_ZTandP_mll->at(n_el) / 1000., normalization * El_SFwLooseAndBLayerLH->at(n_el));
-                //h_bkg_template_fail_id_and_CaloIso_and_TrackIso_pt_eta_mll->Fill(El_pT->at(n_el) / 1000., El_eta->at(n_el), El_ZTandP_mll->at(n_el) / 1000., normalization * El_SFwLooseAndBLayerLH->at(n_el));
+                //h_bkg_template_fail_id_and_CaloIso_and_TrackIso_pt_eta_mll->Fill(El_pT->at(n_el) / 1000., fabs(El_eta->at(n_el)), El_ZTandP_mll->at(n_el) / 1000., normalization * El_SFwLooseAndBLayerLH->at(n_el));
                 h_bkg_template_fail_id_and_CaloIso_and_TrackIso->Fill(El_ZTandP_mll->at(n_el) / 1000., normalization * baseline_weight);
                 h_bkg_template_fail_id_and_CaloIso_and_TrackIso_pt_eta_mll->Fill(El_pT->at(n_el) / 1000., fabs(El_eta->at(n_el)), El_ZTandP_mll->at(n_el) / 1000., normalization * baseline_weight);
             }
@@ -1224,7 +1224,7 @@ void ytRealLeptonsEfficiency_MC :: loop_over_electrons()
             if (calo_isolation > 0.20 &&
                 track_isolation > 0.15) {
                 //h_bkg_template_fail_id_and_CaloIso_and_TrackIso_tight->Fill(El_ZTandP_mll->at(n_el) / 1000., normalization * El_SFwLooseAndBLayerLH->at(n_el));
-                //h_bkg_template_fail_id_and_CaloIso_and_TrackIso_tight_pt_eta_mll->Fill(El_pT->at(n_el) / 1000., El_eta->at(n_el), El_ZTandP_mll->at(n_el) / 1000., normalization * El_SFwLooseAndBLayerLH->at(n_el));
+                //h_bkg_template_fail_id_and_CaloIso_and_TrackIso_tight_pt_eta_mll->Fill(El_pT->at(n_el) / 1000., fabs(El_eta->at(n_el)), El_ZTandP_mll->at(n_el) / 1000., normalization * El_SFwLooseAndBLayerLH->at(n_el));
                 h_bkg_template_fail_id_and_CaloIso_and_TrackIso_tight->Fill(El_ZTandP_mll->at(n_el) / 1000., normalization * baseline_weight);
                 h_bkg_template_fail_id_and_CaloIso_and_TrackIso_tight_pt_eta_mll->Fill(El_pT->at(n_el) / 1000., fabs(El_eta->at(n_el)), El_ZTandP_mll->at(n_el) / 1000., normalization * baseline_weight);
             }
@@ -1232,22 +1232,23 @@ void ytRealLeptonsEfficiency_MC :: loop_over_electrons()
         // reverse calo isolation
         if (calo_isolation > 0.20) {
             //h_bkg_template_fail_CaloIso_only->Fill(El_ZTandP_mll->at(n_el) / 1000., normalization * El_SFwLooseAndBLayerLH->at(n_el));
-            //h_bkg_template_fail_CaloIso_only_pt_eta_mll->Fill(El_pT->at(n_el) / 1000., El_eta->at(n_el), El_ZTandP_mll->at(n_el) / 1000., normalization * El_SFwLooseAndBLayerLH->at(n_el));
+            //h_bkg_template_fail_CaloIso_only_pt_eta_mll->Fill(El_pT->at(n_el) / 1000., fabs(El_eta->at(n_el)), El_ZTandP_mll->at(n_el) / 1000., normalization * El_SFwLooseAndBLayerLH->at(n_el));
             h_bkg_template_fail_CaloIso_only->Fill(El_ZTandP_mll->at(n_el) / 1000., normalization * baseline_weight);
             h_bkg_template_fail_CaloIso_only_pt_eta_mll->Fill(El_pT->at(n_el) / 1000., fabs(El_eta->at(n_el)), El_ZTandP_mll->at(n_el) / 1000., normalization * baseline_weight);
         }
         // reverse track isolation
         if (track_isolation > 0.15) {
             //h_bkg_template_fail_TrackIso_only->Fill(El_ZTandP_mll->at(n_el) / 1000., normalization * El_SFwLooseAndBLayerLH->at(n_el));
-            //h_bkg_template_fail_TrackIso_only_pt_eta_mll->Fill(El_pT->at(n_el) / 1000., El_eta->at(n_el), El_ZTandP_mll->at(n_el) / 1000., normalization * El_SFwLooseAndBLayerLH->at(n_el));
-            h_bkg_template_fail_TrackIso_only->Fill(El_ZTandP_mll->at(n_el) / 1000., normalization * baseline_weight); 
+            //h_bkg_template_fail_TrackIso_only_pt_eta_mll->Fill(El_pT->at(n_el) / 1000., fabs(El_eta->at(n_el)), El_ZTandP_mll->at(n_el) / 1000., normalization * El_SFwLooseAndBLayerLH->at(n_el));
+            h_bkg_template_fail_TrackIso_only->Fill(El_ZTandP_mll->at(n_el) / 1000., normalization * baseline_weight);
             h_bkg_template_fail_TrackIso_only_pt_eta_mll->Fill(El_pT->at(n_el) / 1000., fabs(El_eta->at(n_el)), El_ZTandP_mll->at(n_el) / 1000., normalization * baseline_weight);
         }
         // reverse calo and track isolation only (variation1 bkg template)
         if (calo_isolation > 0.06 &&
             track_isolation > 0.06) {
             //h_bkg_template_fail_CaloIso_and_TrackIso->Fill(El_ZTandP_mll->at(n_el) / 1000., normalization * El_SFwLooseAndBLayerLH->at(n_el));
-            //h_bkg_template_fail_CaloIso_and_TrackIso_pt_eta_mll->Fill(El_pT->at(n_el) / 1000., El_eta->at(n_el), El_ZTandP_mll->at(n_el) / 1000., normalization * El_SFwLooseAndBLayerLH->at(n_el));
+            //h_bkg_template_fail_CaloIso_and_TrackIso_pt_eta_mll->Fill(El_pT->at(n_el) / 1000., fabs(El_eta->at(n_el)), El_ZTandP_mll->at(n_el) / 1000., normalization * El_SFwLooseAndBLayerLH->at(n_el));
+>>>>>>> ouhep05
             h_bkg_template_fail_CaloIso_and_TrackIso->Fill(El_ZTandP_mll->at(n_el) / 1000., normalization * baseline_weight);
             h_bkg_template_fail_CaloIso_and_TrackIso_pt_eta_mll->Fill(El_pT->at(n_el) / 1000., fabs(El_eta->at(n_el)), El_ZTandP_mll->at(n_el) / 1000., normalization * baseline_weight);
         }
@@ -1396,7 +1397,7 @@ void ytRealLeptonsEfficiency_MC :: loop_over_muons()
         
         if (!truth_match) {
             //h_bkg_template_fail_truth->Fill(Mu_ZTandP_mll->at(n_mu) / 1000., normalization * Mu_SFw->at(n_mu));
-            //h_bkg_template_fail_truth_pt_eta_mll->Fill(Mu_pT->at(n_mu) / 1000., Mu_eta->at(n_mu), Mu_ZTandP_mll->at(n_mu) / 1000., normalization * Mu_SFw->at(n_mu));
+            //h_bkg_template_fail_truth_pt_eta_mll->Fill(Mu_pT->at(n_mu) / 1000., fabs(Mu_eta->at(n_mu)), Mu_ZTandP_mll->at(n_mu) / 1000., normalization * Mu_SFw->at(n_mu));
             h_bkg_template_fail_truth->Fill(Mu_ZTandP_mll->at(n_mu) / 1000., normalization * baseline_weight);
             h_bkg_template_fail_truth_pt_eta_mll->Fill(Mu_pT->at(n_mu) / 1000., fabs(Mu_eta->at(n_mu)), Mu_ZTandP_mll->at(n_mu) / 1000., normalization * baseline_weight);
         }
@@ -1440,22 +1441,22 @@ void ytRealLeptonsEfficiency_MC :: loop_over_muons()
         // reverse calo isolation
         if (calo_isolation > 0.20) {
             //h_bkg_template_fail_CaloIso_only->Fill(Mu_ZTandP_mll->at(n_mu) / 1000., normalization * Mu_SFw->at(n_mu));
-            //h_bkg_template_fail_CaloIso_only_pt_eta_mll->Fill(Mu_pT->at(n_mu) / 1000., Mu_eta->at(n_mu), Mu_ZTandP_mll->at(n_mu) / 1000., normalization * Mu_SFw->at(n_mu));
+            //h_bkg_template_fail_CaloIso_only_pt_eta_mll->Fill(Mu_pT->at(n_mu) / 1000., fabs(Mu_eta->at(n_mu)), Mu_ZTandP_mll->at(n_mu) / 1000., normalization * Mu_SFw->at(n_mu));
             h_bkg_template_fail_CaloIso_only->Fill(Mu_ZTandP_mll->at(n_mu) / 1000., normalization * baseline_weight);
             h_bkg_template_fail_CaloIso_only_pt_eta_mll->Fill(Mu_pT->at(n_mu) / 1000., fabs(Mu_eta->at(n_mu)), Mu_ZTandP_mll->at(n_mu) / 1000., normalization * baseline_weight);
         }
         // reverse track isolation
         if (track_isolation > 0.15) {
             //h_bkg_template_fail_TrackIso_only->Fill(Mu_ZTandP_mll->at(n_mu) / 1000., normalization * Mu_SFw->at(n_mu));
-            //h_bkg_template_fail_TrackIso_only_pt_eta_mll->Fill(Mu_pT->at(n_mu) / 1000., Mu_eta->at(n_mu), Mu_ZTandP_mll->at(n_mu) / 1000., normalization * Mu_SFw->at(n_mu));
+            //h_bkg_template_fail_TrackIso_only_pt_eta_mll->Fill(Mu_pT->at(n_mu) / 1000., fabs(Mu_eta->at(n_mu)), Mu_ZTandP_mll->at(n_mu) / 1000., normalization * Mu_SFw->at(n_mu));
             h_bkg_template_fail_TrackIso_only->Fill(Mu_ZTandP_mll->at(n_mu) / 1000., normalization * baseline_weight);
             h_bkg_template_fail_TrackIso_only_pt_eta_mll->Fill(Mu_pT->at(n_mu) / 1000., fabs(Mu_eta->at(n_mu)), Mu_ZTandP_mll->at(n_mu) / 1000., normalization * baseline_weight);
         }
         // reverse calo and track isolation only (variation1 bkg template)
-        if (calo_isolation > 0.20 &&
-            track_isolation > 0.15) {
+        if (calo_isolation > 0.06 &&
+            track_isolation > 0.06) {
             //h_bkg_template_fail_CaloIso_and_TrackIso->Fill(Mu_ZTandP_mll->at(n_mu) / 1000., normalization * Mu_SFw->at(n_mu));
-            //h_bkg_template_fail_CaloIso_and_TrackIso_pt_eta_mll->Fill(Mu_pT->at(n_mu) / 1000., Mu_eta->at(n_mu), Mu_ZTandP_mll->at(n_mu) / 1000., normalization * Mu_SFw->at(n_mu));
+            //h_bkg_template_fail_CaloIso_and_TrackIso_pt_eta_mll->Fill(Mu_pT->at(n_mu) / 1000., fabs(Mu_eta->at(n_mu)), Mu_ZTandP_mll->at(n_mu) / 1000., normalization * Mu_SFw->at(n_mu));
             h_bkg_template_fail_CaloIso_and_TrackIso->Fill(Mu_ZTandP_mll->at(n_mu) / 1000., normalization * baseline_weight);
             h_bkg_template_fail_CaloIso_and_TrackIso_pt_eta_mll->Fill(Mu_pT->at(n_mu) / 1000., fabs(Mu_eta->at(n_mu)), Mu_ZTandP_mll->at(n_mu) / 1000., normalization * baseline_weight);
         }
@@ -1463,10 +1464,10 @@ void ytRealLeptonsEfficiency_MC :: loop_over_muons()
         // mll window
 /*
         h_baseline_mll->Fill(Mu_ZTandP_mll->at(n_mu) / 1000., normalization * Mu_SFw->at(n_mu));
-        h_baseline_pt_eta_mll->Fill(Mu_pT->at(n_mu) / 1000., Mu_eta->at(n_mu), Mu_ZTandP_mll->at(n_mu) / 1000., normalization * Mu_SFw->at(n_mu));
+        h_baseline_pt_eta_mll->Fill(Mu_pT->at(n_mu) / 1000., fabs(Mu_eta->at(n_mu)), Mu_ZTandP_mll->at(n_mu) / 1000., normalization * Mu_SFw->at(n_mu));
         if (Mu_isSignal->at(n_mu)) {
             h_signal_mll->Fill(Mu_ZTandP_mll->at(n_mu) / 1000., normalization * Mu_SFw->at(n_mu) * Mu_IsoSFw->at(n_mu));
-            h_signal_pt_eta_mll->Fill(Mu_pT->at(n_mu) / 1000., Mu_eta->at(n_mu), Mu_ZTandP_mll->at(n_mu) / 1000., normalization * Mu_SFw->at(n_mu) * Mu_IsoSFw->at(n_mu));
+            h_signal_pt_eta_mll->Fill(Mu_pT->at(n_mu) / 1000., fabs(Mu_eta->at(n_mu)), Mu_ZTandP_mll->at(n_mu) / 1000., normalization * Mu_SFw->at(n_mu) * Mu_IsoSFw->at(n_mu));
         }
 */
         h_baseline_mll->Fill(Mu_ZTandP_mll->at(n_mu) / 1000., normalization * baseline_weight);
@@ -1474,6 +1475,9 @@ void ytRealLeptonsEfficiency_MC :: loop_over_muons()
         if (Mu_isSignal->at(n_mu)) {
             h_signal_mll->Fill(Mu_ZTandP_mll->at(n_mu) / 1000., normalization * signal_weight);
             h_signal_pt_eta_mll->Fill(Mu_pT->at(n_mu) / 1000., fabs(Mu_eta->at(n_mu)), Mu_ZTandP_mll->at(n_mu) / 1000., normalization * signal_weight);
+        }
+
+        if (Mu_isSignal->at(n_mu)) {
         }
 
         if (process == "Zmumu") {
@@ -1498,7 +1502,6 @@ void ytRealLeptonsEfficiency_MC :: loop_over_muons()
         // Define weight
         double baseline_weight = 1.0;
         double signal_weight = 1.0;
-
         baseline_weight = normalization * Mu_tag_trigger_SF->at(n_mu) * Mu_SFw->at(n_mu);
         signal_weight = normalization * Mu_tag_trigger_SF->at(n_mu) * Mu_SFw->at(n_mu) * Mu_IsoSFw->at(n_mu);
 */

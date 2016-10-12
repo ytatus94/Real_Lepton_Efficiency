@@ -60,6 +60,14 @@ int main( int argc, char* argv[] ) {
 			process = "Zee_TandP_truth_match";
 		else if (strcmp(key, "Zmumu_TandP_truth_match") == 0)
 			process = "Zmumu_TandP_truth_match";
+        else if (strcmp(key, "Zee_Sherpa") == 0)
+            process = "Zee_Sherpa";
+        else if (strcmp(key, "Zmumu_Sherpa") == 0)
+            process = "Zmumu_Sherpa";
+        else if (strcmp(key, "Zee_Sherpa_truth_match") == 0)
+            process = "Zee_Sherpa_truth_match";
+        else if (strcmp(key, "Zmumu_Sherpa_truth_match") == 0)
+            process = "Zmumu_Sherpa_truth_match";
 		// Choose the lepton type.
 		else if (strcmp(key, "electron") == 0)
 			lepton_type = "electron";
@@ -94,8 +102,10 @@ int main( int argc, char* argv[] ) {
 
 	if (isMC) {
 		if (process == "Zee" || process == "Zmumu" ||
-			process == "Zee_truth_match" || process == "Zmumu_truth_match" ||
-			process == "Zee_TandP_truth_match" || process == "Zmumu_TandP_truth_match")
+            process == "Zee_truth_match" || process == "Zmumu_truth_match" ||
+            process == "Zee_TandP_truth_match" || process == "Zmumu_TandP_truth_match" ||
+			process == "Zee_Sherpa" || process == "Zmumu_Sherpa" ||
+			process == "Zee_Sherpa_truth_match" || process == "Zmumu_Sherpa_truth_match")
 			submitDir = "submitDir_MC_" + process;
 		else if (process == "ttbar" || process == "GG_ttn1")
 			submitDir = "submitDir_MC_" + process + "_" + lepton_type;
@@ -127,6 +137,14 @@ int main( int argc, char* argv[] ) {
 				 process == "Zmumu_truth_match" ||
 				 process == "Zmumu_TandP_truth_match") {
 			SH::ScanDir().filePattern("MC_probes_Zmumu.root").scan(sh, inputFilePath);
+		}
+		else if (process == "Zee_Sherpa" ||
+				 process == "Zee_Sherpa_truth_match") {
+			SH::ScanDir().filePattern("MC_probes_Zee_Sherpa.root").scan(sh, inputFilePath);
+		}
+		else if (process == "Zmumu_Sherpa" ||
+				 process == "Zmumu_Sherpa_truth_match") {
+			SH::ScanDir().filePattern("MC_probes_Zmumu_Sherpa.root").scan(sh, inputFilePath);
 		}
 		else if (process == "ttbar") {
 			SH::ScanDir().filePattern("MC_probes_ttbar.root").scan(sh, inputFilePath);
@@ -161,12 +179,16 @@ int main( int argc, char* argv[] ) {
 		alg->set_isData(false);
 		alg->set_trigger("single_lepton_trigger");
 		if (process == "Zee" ||
-			process == "Zee_truth_match" ||
-			process == "Zee_TandP_truth_match")
+            process == "Zee_truth_match" ||
+            process == "Zee_TandP_truth_match" ||
+			process == "Zee_Sherpa" ||
+			process == "Zee_Sherpa_truth_match")
 			alg->set_lepton("electron");
 		else if (process == "Zmumu" ||
-				 process == "Zmumu_truth_match" ||
-				 process == "Zmumu_TandP_truth_match")
+                 process == "Zmumu_truth_match" ||
+                 process == "Zmumu_TandP_truth_match" ||
+				 process == "Zmumu_Sherpa" ||
+				 process == "Zmumu_Sherpatruth_match")
 			alg->set_lepton("muon");
 		else if (process == "ttbar" || process == "GG_ttn1")
 			alg->set_lepton(lepton_type);

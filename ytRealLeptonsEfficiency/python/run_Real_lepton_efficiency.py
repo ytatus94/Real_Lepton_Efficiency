@@ -3,7 +3,6 @@ import os
 
 print "1.) Skim data and MC"
 print "2.) Calculate real lepton efficiency"
-print "3.) Do dackground subtraction"
 print "What you want to do?"
 do_job = raw_input()
 
@@ -88,6 +87,4 @@ elif int(do_job) == 2:
   elif int(rle_job) == 12:
     print "Run isMC GG_ttn1 muon"
     os.system("Run isMC GG_ttn1 muon")
-elif int(do_job) == 3:
-  print "Do dackground subtraction"
 
