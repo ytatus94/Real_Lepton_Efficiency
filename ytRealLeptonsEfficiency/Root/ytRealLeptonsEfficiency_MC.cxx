@@ -1400,6 +1400,7 @@ void ytRealLeptonsEfficiency_MC :: loop_over_muons()
             h_bkg_template_fail_truth->Fill(Mu_ZTandP_mll->at(n_mu) / 1000., normalization * baseline_weight);
             h_bkg_template_fail_truth_pt_eta_mll->Fill(Mu_pT->at(n_mu) / 1000., fabs(Mu_eta->at(n_mu)), Mu_ZTandP_mll->at(n_mu) / 1000., normalization * baseline_weight);
         }
+/*
         if (!Mu_isMediumLH->at(n_mu)) { // Background template requires the electron object fails the MediumLLH
             //h_bkg_template_fail_id_only->Fill(Mu_ZTandP_mll->at(n_mu) / 1000., normalization * Mu_SFw->at(n_mu));
             //h_bkg_template_fail_id_only_pt_eta_mll->Fill(Mu_pT->at(n_mu) / 1000., Mu_eta->at(n_mu), Mu_ZTandP_mll->at(n_mu) / 1000., normalization * Mu_SFw->at(n_mu));
@@ -1436,7 +1437,7 @@ void ytRealLeptonsEfficiency_MC :: loop_over_muons()
                 h_bkg_template_fail_id_and_CaloIso_and_TrackIso_tight_pt_eta_mll->Fill(Mu_pT->at(n_mu) / 1000., fabs(Mu_eta->at(n_mu)), Mu_ZTandP_mll->at(n_mu) / 1000., normalization * baseline_weight);
             }
         }
-
+*/
         // reverse calo isolation
         if (calo_isolation > 0.20) {
             //h_bkg_template_fail_CaloIso_only->Fill(Mu_ZTandP_mll->at(n_mu) / 1000., normalization * Mu_SFw->at(n_mu));
