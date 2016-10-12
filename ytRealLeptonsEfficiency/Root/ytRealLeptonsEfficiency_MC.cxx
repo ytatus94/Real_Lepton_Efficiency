@@ -1188,66 +1188,84 @@ void ytRealLeptonsEfficiency_MC :: loop_over_electrons()
         double track_isolation = El_ptvarcone20->at(n_el) / El_pT->at(n_el);
 
         if (!truth_match) {
-            h_bkg_template_fail_truth->Fill(El_ZTandP_mll->at(n_el) / 1000., normalization * El_SFwLooseAndBLayerLH->at(n_el));
-            h_bkg_template_fail_truth_pt_eta_mll->Fill(El_pT->at(n_el) / 1000., El_eta->at(n_el), El_ZTandP_mll->at(n_el) / 1000., normalization * El_SFwLooseAndBLayerLH->at(n_el));
+            //h_bkg_template_fail_truth->Fill(El_ZTandP_mll->at(n_el) / 1000., normalization * El_SFwLooseAndBLayerLH->at(n_el));
+            //h_bkg_template_fail_truth_pt_eta_mll->Fill(El_pT->at(n_el) / 1000., El_eta->at(n_el), El_ZTandP_mll->at(n_el) / 1000., normalization * El_SFwLooseAndBLayerLH->at(n_el));
+            h_bkg_template_fail_truth->Fill(El_ZTandP_mll->at(n_el) / 1000., normalization * baseline_weight); 
+            h_bkg_template_fail_truth_pt_eta_mll->Fill(El_pT->at(n_el) / 1000., fabs(El_eta->at(n_el)), El_ZTandP_mll->at(n_el) / 1000., normalization * baseline_weight);
         }
         if (!El_isMediumLH->at(n_el)) { // Background template requires the electron object fails the MediumLLH
-            h_bkg_template_fail_id_only->Fill(El_ZTandP_mll->at(n_el) / 1000., normalization * El_SFwLooseAndBLayerLH->at(n_el));
-            h_bkg_template_fail_id_only_pt_eta_mll->Fill(El_pT->at(n_el) / 1000., El_eta->at(n_el), El_ZTandP_mll->at(n_el) / 1000., normalization * El_SFwLooseAndBLayerLH->at(n_el));
+            //h_bkg_template_fail_id_only->Fill(El_ZTandP_mll->at(n_el) / 1000., normalization * El_SFwLooseAndBLayerLH->at(n_el));
+            //h_bkg_template_fail_id_only_pt_eta_mll->Fill(El_pT->at(n_el) / 1000., El_eta->at(n_el), El_ZTandP_mll->at(n_el) / 1000., normalization * El_SFwLooseAndBLayerLH->at(n_el));
+            h_bkg_template_fail_id_only->Fill(El_ZTandP_mll->at(n_el) / 1000., normalization * baseline_weight);
+            h_bkg_template_fail_id_only_pt_eta_mll->Fill(El_pT->at(n_el) / 1000., fabs(El_eta->at(n_el)), El_ZTandP_mll->at(n_el) / 1000., normalization * baseline_weight);
             // reverse calo isolation
             if (calo_isolation > 0.10) {
-                h_bkg_template_fail_id_and_CaloIso->Fill(El_ZTandP_mll->at(n_el) / 1000., normalization * El_SFwLooseAndBLayerLH->at(n_el));
-                h_bkg_template_fail_id_and_CaloIso_pt_eta_mll->Fill(El_pT->at(n_el) / 1000., El_eta->at(n_el), El_ZTandP_mll->at(n_el) / 1000., normalization * El_SFwLooseAndBLayerLH->at(n_el));
+                //h_bkg_template_fail_id_and_CaloIso->Fill(El_ZTandP_mll->at(n_el) / 1000., normalization * El_SFwLooseAndBLayerLH->at(n_el));
+                //h_bkg_template_fail_id_and_CaloIso_pt_eta_mll->Fill(El_pT->at(n_el) / 1000., El_eta->at(n_el), El_ZTandP_mll->at(n_el) / 1000., normalization * El_SFwLooseAndBLayerLH->at(n_el));
+                h_bkg_template_fail_id_and_CaloIso->Fill(El_ZTandP_mll->at(n_el) / 1000., normalization * baseline_weight);
+                h_bkg_template_fail_id_and_CaloIso_pt_eta_mll->Fill(El_pT->at(n_el) / 1000., fabs(El_eta->at(n_el)), El_ZTandP_mll->at(n_el) / 1000., normalization * baseline_weight);
             }
             // reverse track isolation
             if (track_isolation > 0.06) {
-                h_bkg_template_fail_id_and_TrackIso->Fill(El_ZTandP_mll->at(n_el) / 1000., normalization * El_SFwLooseAndBLayerLH->at(n_el));
-                h_bkg_template_fail_id_and_TrackIso_pt_eta_mll->Fill(El_pT->at(n_el) / 1000., El_eta->at(n_el), El_ZTandP_mll->at(n_el) / 1000., normalization * El_SFwLooseAndBLayerLH->at(n_el));
+                //h_bkg_template_fail_id_and_TrackIso->Fill(El_ZTandP_mll->at(n_el) / 1000., normalization * El_SFwLooseAndBLayerLH->at(n_el));
+                //h_bkg_template_fail_id_and_TrackIso_pt_eta_mll->Fill(El_pT->at(n_el) / 1000., El_eta->at(n_el), El_ZTandP_mll->at(n_el) / 1000., normalization * El_SFwLooseAndBLayerLH->at(n_el));
+                h_bkg_template_fail_id_and_TrackIso->Fill(El_ZTandP_mll->at(n_el) / 1000., normalization * baseline_weight);
+                h_bkg_template_fail_id_and_TrackIso_pt_eta_mll->Fill(El_pT->at(n_el) / 1000., fabs(El_eta->at(n_el)), El_ZTandP_mll->at(n_el) / 1000., normalization * baseline_weight);
             }
             // reverse calo and track isolation (baseline bkg template)
             if (calo_isolation > 0.15 &&
                 track_isolation > 0.08) {
-                h_bkg_template_fail_id_and_CaloIso_and_TrackIso->Fill(El_ZTandP_mll->at(n_el) / 1000., normalization * El_SFwLooseAndBLayerLH->at(n_el));
-                h_bkg_template_fail_id_and_CaloIso_and_TrackIso_pt_eta_mll->Fill(El_pT->at(n_el) / 1000., El_eta->at(n_el), El_ZTandP_mll->at(n_el) / 1000., normalization * El_SFwLooseAndBLayerLH->at(n_el));
+                //h_bkg_template_fail_id_and_CaloIso_and_TrackIso->Fill(El_ZTandP_mll->at(n_el) / 1000., normalization * El_SFwLooseAndBLayerLH->at(n_el));
+                //h_bkg_template_fail_id_and_CaloIso_and_TrackIso_pt_eta_mll->Fill(El_pT->at(n_el) / 1000., El_eta->at(n_el), El_ZTandP_mll->at(n_el) / 1000., normalization * El_SFwLooseAndBLayerLH->at(n_el));
+                h_bkg_template_fail_id_and_CaloIso_and_TrackIso->Fill(El_ZTandP_mll->at(n_el) / 1000., normalization * baseline_weight);
+                h_bkg_template_fail_id_and_CaloIso_and_TrackIso_pt_eta_mll->Fill(El_pT->at(n_el) / 1000., fabs(El_eta->at(n_el)), El_ZTandP_mll->at(n_el) / 1000., normalization * baseline_weight);
             }
             // reverse calo and track isolation with tighter requirements (variation2 bkg template)
             if (calo_isolation > 0.20 &&
                 track_isolation > 0.15) {
-                h_bkg_template_fail_id_and_CaloIso_and_TrackIso_tight->Fill(El_ZTandP_mll->at(n_el) / 1000., normalization * El_SFwLooseAndBLayerLH->at(n_el));
-                h_bkg_template_fail_id_and_CaloIso_and_TrackIso_tight_pt_eta_mll->Fill(El_pT->at(n_el) / 1000., El_eta->at(n_el), El_ZTandP_mll->at(n_el) / 1000., normalization * El_SFwLooseAndBLayerLH->at(n_el));
+                //h_bkg_template_fail_id_and_CaloIso_and_TrackIso_tight->Fill(El_ZTandP_mll->at(n_el) / 1000., normalization * El_SFwLooseAndBLayerLH->at(n_el));
+                //h_bkg_template_fail_id_and_CaloIso_and_TrackIso_tight_pt_eta_mll->Fill(El_pT->at(n_el) / 1000., El_eta->at(n_el), El_ZTandP_mll->at(n_el) / 1000., normalization * El_SFwLooseAndBLayerLH->at(n_el));
+                h_bkg_template_fail_id_and_CaloIso_and_TrackIso_tight->Fill(El_ZTandP_mll->at(n_el) / 1000., normalization * baseline_weight);
+                h_bkg_template_fail_id_and_CaloIso_and_TrackIso_tight_pt_eta_mll->Fill(El_pT->at(n_el) / 1000., fabs(El_eta->at(n_el)), El_ZTandP_mll->at(n_el) / 1000., normalization * baseline_weight);
             }
         }
         // reverse calo isolation
         if (calo_isolation > 0.20) {
-            h_bkg_template_fail_CaloIso_only->Fill(El_ZTandP_mll->at(n_el) / 1000., normalization * El_SFwLooseAndBLayerLH->at(n_el));
-            h_bkg_template_fail_CaloIso_only_pt_eta_mll->Fill(El_pT->at(n_el) / 1000., El_eta->at(n_el), El_ZTandP_mll->at(n_el) / 1000., normalization * El_SFwLooseAndBLayerLH->at(n_el));
+            //h_bkg_template_fail_CaloIso_only->Fill(El_ZTandP_mll->at(n_el) / 1000., normalization * El_SFwLooseAndBLayerLH->at(n_el));
+            //h_bkg_template_fail_CaloIso_only_pt_eta_mll->Fill(El_pT->at(n_el) / 1000., El_eta->at(n_el), El_ZTandP_mll->at(n_el) / 1000., normalization * El_SFwLooseAndBLayerLH->at(n_el));
+            h_bkg_template_fail_CaloIso_only->Fill(El_ZTandP_mll->at(n_el) / 1000., normalization * baseline_weight);
+            h_bkg_template_fail_CaloIso_only_pt_eta_mll->Fill(El_pT->at(n_el) / 1000., fabs(El_eta->at(n_el)), El_ZTandP_mll->at(n_el) / 1000., normalization * baseline_weight);
         }
         // reverse track isolation
         if (track_isolation > 0.15) {
-            h_bkg_template_fail_TrackIso_only->Fill(El_ZTandP_mll->at(n_el) / 1000., normalization * El_SFwLooseAndBLayerLH->at(n_el));
-            h_bkg_template_fail_TrackIso_only_pt_eta_mll->Fill(El_pT->at(n_el) / 1000., El_eta->at(n_el), El_ZTandP_mll->at(n_el) / 1000., normalization * El_SFwLooseAndBLayerLH->at(n_el));
+            //h_bkg_template_fail_TrackIso_only->Fill(El_ZTandP_mll->at(n_el) / 1000., normalization * El_SFwLooseAndBLayerLH->at(n_el));
+            //h_bkg_template_fail_TrackIso_only_pt_eta_mll->Fill(El_pT->at(n_el) / 1000., El_eta->at(n_el), El_ZTandP_mll->at(n_el) / 1000., normalization * El_SFwLooseAndBLayerLH->at(n_el));
+            h_bkg_template_fail_TrackIso_only->Fill(El_ZTandP_mll->at(n_el) / 1000., normalization * baseline_weight); 
+            h_bkg_template_fail_TrackIso_only_pt_eta_mll->Fill(El_pT->at(n_el) / 1000., fabs(El_eta->at(n_el)), El_ZTandP_mll->at(n_el) / 1000., normalization * baseline_weight);
         }
         // reverse calo and track isolation only (variation1 bkg template)
         if (calo_isolation > 0.06 &&
             track_isolation > 0.06) {
-            h_bkg_template_fail_CaloIso_and_TrackIso->Fill(El_ZTandP_mll->at(n_el) / 1000., normalization * El_SFwLooseAndBLayerLH->at(n_el));
-            h_bkg_template_fail_CaloIso_and_TrackIso_pt_eta_mll->Fill(El_pT->at(n_el) / 1000., El_eta->at(n_el), El_ZTandP_mll->at(n_el) / 1000., normalization * El_SFwLooseAndBLayerLH->at(n_el));
+            //h_bkg_template_fail_CaloIso_and_TrackIso->Fill(El_ZTandP_mll->at(n_el) / 1000., normalization * El_SFwLooseAndBLayerLH->at(n_el));
+            //h_bkg_template_fail_CaloIso_and_TrackIso_pt_eta_mll->Fill(El_pT->at(n_el) / 1000., El_eta->at(n_el), El_ZTandP_mll->at(n_el) / 1000., normalization * El_SFwLooseAndBLayerLH->at(n_el));
+            h_bkg_template_fail_CaloIso_and_TrackIso->Fill(El_ZTandP_mll->at(n_el) / 1000., normalization * baseline_weight);
+            h_bkg_template_fail_CaloIso_and_TrackIso_pt_eta_mll->Fill(El_pT->at(n_el) / 1000., fabs(El_eta->at(n_el)), El_ZTandP_mll->at(n_el) / 1000., normalization * baseline_weight);
         }
 
         // mll window
 /*
         h_baseline_mll->Fill(El_ZTandP_mll->at(n_el) / 1000., normalization * El_SFwLooseAndBLayerLH->at(n_el));
-        h_baseline_pt_eta_mll->Fill(El_pT->at(n_el) / 1000., El_eta->at(n_el), El_ZTandP_mll->at(n_el) / 1000., normalization * El_SFwLooseAndBLayerLH->at(n_el));
+        h_baseline_pt_eta_mll->Fill(El_pT->at(n_el) / 1000., fabs(El_eta->at(n_el)), El_ZTandP_mll->at(n_el) / 1000., normalization * El_SFwLooseAndBLayerLH->at(n_el));
         if (El_isSignal->at(n_el)) {
             h_signal_mll->Fill(El_ZTandP_mll->at(n_el) / 1000., normalization * El_SFwMediumLH->at(n_el) * El_IsoSFwMediumLH->at(n_el));
-            h_signal_pt_eta_mll->Fill(El_pT->at(n_el) / 1000., El_eta->at(n_el), El_ZTandP_mll->at(n_el) / 1000., normalization * El_SFwMediumLH->at(n_el) * El_IsoSFwMediumLH->at(n_el));
+            h_signal_pt_eta_mll->Fill(El_pT->at(n_el) / 1000., fabs(El_eta->at(n_el)), El_ZTandP_mll->at(n_el) / 1000., normalization * El_SFwMediumLH->at(n_el) * El_IsoSFwMediumLH->at(n_el));
         }
 */
         h_baseline_mll->Fill(El_ZTandP_mll->at(n_el) / 1000., normalization * baseline_weight);
-        h_baseline_pt_eta_mll->Fill(El_pT->at(n_el) / 1000., El_eta->at(n_el), El_ZTandP_mll->at(n_el) / 1000., normalization * baseline_weight);
+        h_baseline_pt_eta_mll->Fill(El_pT->at(n_el) / 1000., fabs(El_eta->at(n_el)), El_ZTandP_mll->at(n_el) / 1000., normalization * baseline_weight);
         if (El_isSignal->at(n_el)) {
             h_signal_mll->Fill(El_ZTandP_mll->at(n_el) / 1000., normalization * signal_weight);
-            h_signal_pt_eta_mll->Fill(El_pT->at(n_el) / 1000., El_eta->at(n_el), El_ZTandP_mll->at(n_el) / 1000., normalization * signal_weight);
+            h_signal_pt_eta_mll->Fill(El_pT->at(n_el) / 1000., fabs(El_eta->at(n_el)), El_ZTandP_mll->at(n_el) / 1000., normalization * signal_weight);
         }
 
         if (process == "Zee") {
@@ -1272,78 +1290,78 @@ void ytRealLeptonsEfficiency_MC :: loop_over_electrons()
         // Define weight
         double baseline_weight = 1.0;
         double signal_weight = 1.0;
-*/
+
         baseline_weight = normalization * El_tag_trigger_SF->at(n_el) * El_SFwLooseAndBLayerLH->at(n_el);
         signal_weight = normalization * El_tag_trigger_SF->at(n_el) * El_SFwMediumLH->at(n_el) * El_IsoSFwMediumLH->at(n_el);
-
+*/
         // 1-dim histograms
         //h_baseline_mll->Fill(El_ZTandP_mll->at(n_el) / 1000.);
-        h_baseline_pt->Fill(El_pT->at(n_el) / 1000., baseline_weight);
-        h_baseline_eta->Fill(El_eta->at(n_el), baseline_weight);
-        h_baseline_d0pvtx->Fill(El_d0pvtx->at(n_el), baseline_weight);
-        h_baseline_sigd0->Fill(El_sigd0->at(n_el), baseline_weight);
-        h_baseline_d0err->Fill(El_d0pvtx->at(n_el) / El_sigd0->at(n_el), baseline_weight);
-        h_baseline_z0sinTheta->Fill(El_z0sinTheta->at(n_el), baseline_weight);
-        h_baseline_ptvarcone20->Fill(El_ptvarcone20->at(n_el) / 1000., baseline_weight);
-        h_baseline_ptvarcone30->Fill(El_ptvarcone30->at(n_el) / 1000., baseline_weight);
-        h_baseline_topoetcone20->Fill(El_topoetcone20->at(n_el) / 1000., baseline_weight);
-        h_baseline_nJets->Fill(NJet, baseline_weight);
-        h_baseline_dRjet->Fill(El_DR_closest_Jet->at(n_el), baseline_weight);
-        h_baseline_Etmiss->Fill(Etmiss_TST_Et / 1000., baseline_weight);
-        h_baseline_meff->Fill(meff / 1000., baseline_weight);
+        h_baseline_pt->Fill(El_pT->at(n_el) / 1000., normalization * baseline_weight);
+        h_baseline_eta->Fill(fabs(El_eta->at(n_el)), normalization * baseline_weight);
+        h_baseline_d0pvtx->Fill(El_d0pvtx->at(n_el), normalization * baseline_weight);
+        h_baseline_sigd0->Fill(El_sigd0->at(n_el), normalization * baseline_weight);
+        h_baseline_d0err->Fill(El_d0pvtx->at(n_el) / El_sigd0->at(n_el), normalization * baseline_weight);
+        h_baseline_z0sinTheta->Fill(El_z0sinTheta->at(n_el), normalization * baseline_weight);
+        h_baseline_ptvarcone20->Fill(El_ptvarcone20->at(n_el) / 1000., normalization * baseline_weight);
+        h_baseline_ptvarcone30->Fill(El_ptvarcone30->at(n_el) / 1000., normalization * baseline_weight);
+        h_baseline_topoetcone20->Fill(El_topoetcone20->at(n_el) / 1000., normalization * baseline_weight);
+        h_baseline_nJets->Fill(NJet, normalization * baseline_weight);
+        h_baseline_dRjet->Fill(El_DR_closest_Jet->at(n_el), normalization * baseline_weight);
+        h_baseline_Etmiss->Fill(Etmiss_TST_Et / 1000., normalization * baseline_weight);
+        h_baseline_meff->Fill(meff / 1000., normalization * baseline_weight);
         // 2-dim histograms
-        h_baseline_pt_eta->Fill(El_pT->at(n_el) / 1000., El_eta->at(n_el), baseline_weight);
-        h_baseline_pt_nJets->Fill(El_pT->at(n_el) / 1000., NJet, baseline_weight);
-        h_baseline_pt_dRjet->Fill(El_pT->at(n_el) / 1000., El_DR_closest_Jet->at(n_el), baseline_weight);
-        h_baseline_pt_Etmiss->Fill(El_pT->at(n_el) / 1000., Etmiss_TST_Et / 1000., baseline_weight);
-        h_baseline_pt_meff->Fill(El_pT->at(n_el) / 1000., meff / 1000., baseline_weight);
+        h_baseline_pt_eta->Fill(El_pT->at(n_el) / 1000., fabs(El_eta->at(n_el)), normalization * baseline_weight);
+        h_baseline_pt_nJets->Fill(El_pT->at(n_el) / 1000., NJet, normalization * baseline_weight);
+        h_baseline_pt_dRjet->Fill(El_pT->at(n_el) / 1000., El_DR_closest_Jet->at(n_el), normalization * baseline_weight);
+        h_baseline_pt_Etmiss->Fill(El_pT->at(n_el) / 1000., Etmiss_TST_Et / 1000., normalization * baseline_weight);
+        h_baseline_pt_meff->Fill(El_pT->at(n_el) / 1000., meff / 1000., normalization * baseline_weight);
         // 3-dim histograms
         //h_baseline_pt_eta_mll->Fill(El_pT->at(n_el) / 1000., El_eta->at(n_el), El_ZTandP_mll->at(n_el) / 1000., baseline_weight);
         // Apply MediumLLH
         if (El_isMediumLH->at(n_el)) {
-            h_baseline_LooseAndBLayerLLH_to_MediumLLH_cut->Fill(El_pT->at(n_el) / 1000., baseline_weight);
+            h_baseline_LooseAndBLayerLLH_to_MediumLLH_cut->Fill(El_pT->at(n_el) / 1000., normalization * baseline_weight);
         }
         // Apply topoetcone20/pt < 0.06
         if ((El_topoetcone20->at(n_el) /  El_pT->at(n_el)) < 0.06) {
-            h_baseline_CaloIso_cut->Fill(El_pT->at(n_el) / 1000., baseline_weight);
+            h_baseline_CaloIso_cut->Fill(El_pT->at(n_el) / 1000., normalization * baseline_weight);
         }
         // Apply ptvarcone20/pt < 0.06
         if ((El_ptvarcone20->at(n_el) / El_pT->at(n_el)) < 0.06) {
-            h_baseline_TrackIso_cut->Fill(El_pT->at(n_el) / 1000., baseline_weight);
+            h_baseline_TrackIso_cut->Fill(El_pT->at(n_el) / 1000., normalization * baseline_weight);
         }
         // Apply topoetcone20/pt < 0.06 && ptvarcone20/pt < 0.06 at the same time
         if ((El_topoetcone20->at(n_el) /  El_pT->at(n_el)) < 0.06 &&
             (El_ptvarcone20->at(n_el) / El_pT->at(n_el)) < 0.06) {
-            h_baseline_Iso_cut->Fill(El_pT->at(n_el) / 1000., baseline_weight);
+            h_baseline_Iso_cut->Fill(El_pT->at(n_el) / 1000., normalization * baseline_weight);
         }
         // Apply |z0*sin(theta)| < 0.5
         if (fabs(El_z0sinTheta->at(n_el)) < 0.5) {
-            h_baseline_z0_cut->Fill(El_pT->at(n_el) / 1000., baseline_weight);
+            h_baseline_z0_cut->Fill(El_pT->at(n_el) / 1000., normalization * baseline_weight);
         }
 
         // All the electrons here are signal electrons
         if (El_isSignal->at(n_el)) {
             // 1-dim histograms
             //h_signal_mll->Fill(El_ZTandP_mll->at(n_el) / 1000.);
-            h_signal_pt->Fill(El_pT->at(n_el) / 1000., signal_weight);
-            h_signal_eta->Fill(El_eta->at(n_el), signal_weight);
-            h_signal_d0pvtx->Fill(El_d0pvtx->at(n_el), signal_weight);
-            h_signal_sigd0->Fill(El_sigd0->at(n_el), signal_weight);
-            h_signal_d0err->Fill(El_d0pvtx->at(n_el) / El_sigd0->at(n_el), signal_weight);
-            h_signal_z0sinTheta->Fill(El_z0sinTheta->at(n_el), signal_weight);
-            h_signal_ptvarcone20->Fill(El_ptvarcone20->at(n_el) / 1000., signal_weight);
-            h_signal_ptvarcone30->Fill(El_ptvarcone30->at(n_el) / 1000., signal_weight);
-            h_signal_topoetcone20->Fill(El_topoetcone20->at(n_el) / 1000., signal_weight);
-            h_signal_nJets->Fill(NJet, signal_weight);
-            h_signal_dRjet->Fill(El_DR_closest_Jet->at(n_el), signal_weight);
-            h_signal_Etmiss->Fill(Etmiss_TST_Et / 1000., signal_weight);
-            h_signal_meff->Fill(meff / 1000., signal_weight);
+            h_signal_pt->Fill(El_pT->at(n_el) / 1000., normalization * signal_weight);
+            h_signal_eta->Fill(fabs(El_eta->at(n_el)), normalization * signal_weight);
+            h_signal_d0pvtx->Fill(El_d0pvtx->at(n_el), normalization * signal_weight);
+            h_signal_sigd0->Fill(El_sigd0->at(n_el), normalization * signal_weight);
+            h_signal_d0err->Fill(El_d0pvtx->at(n_el) / El_sigd0->at(n_el), normalization * signal_weight);
+            h_signal_z0sinTheta->Fill(El_z0sinTheta->at(n_el), normalization * signal_weight);
+            h_signal_ptvarcone20->Fill(El_ptvarcone20->at(n_el) / 1000., normalization * signal_weight);
+            h_signal_ptvarcone30->Fill(El_ptvarcone30->at(n_el) / 1000., normalization * signal_weight);
+            h_signal_topoetcone20->Fill(El_topoetcone20->at(n_el) / 1000., normalization * signal_weight);
+            h_signal_nJets->Fill(NJet, normalization * signal_weight);
+            h_signal_dRjet->Fill(El_DR_closest_Jet->at(n_el), normalization * signal_weight);
+            h_signal_Etmiss->Fill(Etmiss_TST_Et / 1000., normalization * signal_weight);
+            h_signal_meff->Fill(meff / 1000., normalization * signal_weight);
             // 2-dim histograms
-            h_signal_pt_eta->Fill(El_pT->at(n_el) / 1000., El_eta->at(n_el), signal_weight);
-            h_signal_pt_nJets->Fill(El_pT->at(n_el) / 1000., NJet, signal_weight);
-            h_signal_pt_dRjet->Fill(El_pT->at(n_el) / 1000., El_DR_closest_Jet->at(n_el), signal_weight);
-            h_signal_pt_Etmiss->Fill(El_pT->at(n_el) / 1000.,Etmiss_TST_Et / 1000., signal_weight);
-            h_signal_pt_meff->Fill(El_pT->at(n_el) / 1000., meff / 1000., signal_weight);
+            h_signal_pt_eta->Fill(El_pT->at(n_el) / 1000., fabs(El_eta->at(n_el)), normalization * signal_weight);
+            h_signal_pt_nJets->Fill(El_pT->at(n_el) / 1000., NJet, normalization * signal_weight);
+            h_signal_pt_dRjet->Fill(El_pT->at(n_el) / 1000., El_DR_closest_Jet->at(n_el), normalization * signal_weight);
+            h_signal_pt_Etmiss->Fill(El_pT->at(n_el) / 1000.,Etmiss_TST_Et / 1000., normalization * signal_weight);
+            h_signal_pt_meff->Fill(El_pT->at(n_el) / 1000., meff / 1000., normalization * signal_weight);
             // 3-dim histograms
             //h_signal_pt_eta_mll->Fill(El_pT->at(n_el) / 1000., El_eta->at(n_el), El_ZTandP_mll->at(n_el) / 1000., signal_weight);
         }
@@ -1377,52 +1395,69 @@ void ytRealLeptonsEfficiency_MC :: loop_over_muons()
         double track_isolation = Mu_ptvarcone20->at(n_mu) / Mu_pT->at(n_mu);
         
         if (!truth_match) {
-            h_bkg_template_fail_truth->Fill(Mu_ZTandP_mll->at(n_mu) / 1000., normalization * Mu_SFw->at(n_mu));
-            h_bkg_template_fail_truth_pt_eta_mll->Fill(Mu_pT->at(n_mu) / 1000., Mu_eta->at(n_mu), Mu_ZTandP_mll->at(n_mu) / 1000., normalization * Mu_SFw->at(n_mu));
+            //h_bkg_template_fail_truth->Fill(Mu_ZTandP_mll->at(n_mu) / 1000., normalization * Mu_SFw->at(n_mu));
+            //h_bkg_template_fail_truth_pt_eta_mll->Fill(Mu_pT->at(n_mu) / 1000., Mu_eta->at(n_mu), Mu_ZTandP_mll->at(n_mu) / 1000., normalization * Mu_SFw->at(n_mu));
+            h_bkg_template_fail_truth->Fill(Mu_ZTandP_mll->at(n_mu) / 1000., normalization * baseline_weight);
+            h_bkg_template_fail_truth_pt_eta_mll->Fill(Mu_pT->at(n_mu) / 1000., fabs(Mu_eta->at(n_mu)), Mu_ZTandP_mll->at(n_mu) / 1000., normalization * baseline_weight);
         }
-/*
         if (!Mu_isMediumLH->at(n_mu)) { // Background template requires the electron object fails the MediumLLH
-            h_bkg_template_fail_id_only->Fill(Mu_ZTandP_mll->at(n_mu) / 1000., normalization * Mu_SFw->at(n_mu));
-            h_bkg_template_fail_id_only_pt_eta_mll->Fill(Mu_pT->at(n_mu) / 1000., Mu_eta->at(n_mu), Mu_ZTandP_mll->at(n_mu) / 1000., normalization * Mu_SFw->at(n_mu));
+            //h_bkg_template_fail_id_only->Fill(Mu_ZTandP_mll->at(n_mu) / 1000., normalization * Mu_SFw->at(n_mu));
+            //h_bkg_template_fail_id_only_pt_eta_mll->Fill(Mu_pT->at(n_mu) / 1000., Mu_eta->at(n_mu), Mu_ZTandP_mll->at(n_mu) / 1000., normalization * Mu_SFw->at(n_mu));
+            h_bkg_template_fail_id_only->Fill(Mu_ZTandP_mll->at(n_mu) / 1000., normalization * baseline_weight);
+            h_bkg_template_fail_id_only_pt_eta_mll->Fill(Mu_pT->at(n_mu) / 1000., fabs(Mu_eta->at(n_mu)), Mu_ZTandP_mll->at(n_mu) / 1000., normalization * baseline_weight);
             // reverse calo isolation
             if (calo_isolation > 0.10) {
-                h_bkg_template_fail_id_and_CaloIso->Fill(Mu_ZTandP_mll->at(n_mu) / 1000., normalization * Mu_SFw->at(n_mu));
-                h_bkg_template_fail_id_and_CaloIso_pt_eta_mll->Fill(Mu_pT->at(n_mu) / 1000., Mu_eta->at(n_mu), Mu_ZTandP_mll->at(n_mu) / 1000., normalization * Mu_SFw->at(n_mu));
+                //h_bkg_template_fail_id_and_CaloIso->Fill(Mu_ZTandP_mll->at(n_mu) / 1000., normalization * Mu_SFw->at(n_mu));
+                //h_bkg_template_fail_id_and_CaloIso_pt_eta_mll->Fill(Mu_pT->at(n_mu) / 1000., Mu_eta->at(n_mu), Mu_ZTandP_mll->at(n_mu) / 1000., normalization * Mu_SFw->at(n_mu));
+                h_bkg_template_fail_id_and_CaloIso->Fill(Mu_ZTandP_mll->at(n_mu) / 1000., normalization * baseline_weight);
+                h_bkg_template_fail_id_and_CaloIso_pt_eta_mll->Fill(Mu_pT->at(n_mu) / 1000., fabs(Mu_eta->at(n_mu)), Mu_ZTandP_mll->at(n_mu) / 1000., normalization * baseline_weight);
             }
             // reverse track isolation
             if (track_isolation > 0.06) {
-                h_bkg_template_fail_id_and_TrackIso->Fill(Mu_ZTandP_mll->at(n_mu) / 1000., normalization * Mu_SFw->at(n_mu));
-                h_bkg_template_fail_id_and_TrackIso_pt_eta_mll->Fill(Mu_pT->at(n_mu) / 1000., Mu_eta->at(n_mu), Mu_ZTandP_mll->at(n_mu) / 1000., normalization * Mu_SFw->at(n_mu));
+                //h_bkg_template_fail_id_and_TrackIso->Fill(Mu_ZTandP_mll->at(n_mu) / 1000., normalization * Mu_SFw->at(n_mu));
+                //h_bkg_template_fail_id_and_TrackIso_pt_eta_mll->Fill(Mu_pT->at(n_mu) / 1000., Mu_eta->at(n_mu), Mu_ZTandP_mll->at(n_mu) / 1000., normalization * Mu_SFw->at(n_mu));
+                h_bkg_template_fail_id_and_TrackIso->Fill(Mu_ZTandP_mll->at(n_mu) / 1000., normalization * baseline_weight);
+                h_bkg_template_fail_id_and_TrackIso_pt_eta_mll->Fill(Mu_pT->at(n_mu) / 1000., fabs(Mu_eta->at(n_mu)), Mu_ZTandP_mll->at(n_mu) / 1000., normalization * baseline_weight);
             }
             // reverse calo and track isolation (baseline bkg template)
             if (calo_isolation > 0.15 &&
                 track_isolation > 0.08) {
-                h_bkg_template_fail_id_and_CaloIso_and_TrackIso->Fill(Mu_ZTandP_mll->at(n_mu) / 1000., normalization * Mu_SFw->at(n_mu));
-                h_bkg_template_fail_id_and_CaloIso_and_TrackIso_pt_eta_mll->Fill(Mu_pT->at(n_mu) / 1000., Mu_eta->at(n_mu), Mu_ZTandP_mll->at(n_mu) / 1000., normalization * Mu_SFw->at(n_mu));
+                //h_bkg_template_fail_id_and_CaloIso_and_TrackIso->Fill(Mu_ZTandP_mll->at(n_mu) / 1000., normalization * Mu_SFw->at(n_mu));
+                //h_bkg_template_fail_id_and_CaloIso_and_TrackIso_pt_eta_mll->Fill(Mu_pT->at(n_mu) / 1000., Mu_eta->at(n_mu), Mu_ZTandP_mll->at(n_mu) / 1000., normalization * Mu_SFw->at(n_mu));
+                h_bkg_template_fail_id_and_CaloIso_and_TrackIso->Fill(Mu_ZTandP_mll->at(n_mu) / 1000., normalization * baseline_weight);
+                h_bkg_template_fail_id_and_CaloIso_and_TrackIso_pt_eta_mll->Fill(Mu_pT->at(n_mu) / 1000., fabs(Mu_eta->at(n_mu)), Mu_ZTandP_mll->at(n_mu) / 1000., normalization * baseline_weight);
             }
             // reverse calo and track isolation with tighter requirements (variation2 bkg template)
             if (calo_isolation > 0.20 &&
                 track_isolation > 0.15) {
-                h_bkg_template_fail_id_and_CaloIso_and_TrackIso_tight->Fill(Mu_ZTandP_mll->at(n_mu) / 1000., normalization * Mu_SFw->at(n_mu));
-                h_bkg_template_fail_id_and_CaloIso_and_TrackIso_tight_pt_eta_mll->Fill(Mu_pT->at(n_mu) / 1000., Mu_eta->at(n_mu), Mu_ZTandP_mll->at(n_mu) / 1000., normalization * Mu_SFw->at(n_mu));
+                //h_bkg_template_fail_id_and_CaloIso_and_TrackIso_tight->Fill(Mu_ZTandP_mll->at(n_mu) / 1000., normalization * Mu_SFw->at(n_mu));
+                //h_bkg_template_fail_id_and_CaloIso_and_TrackIso_tight_pt_eta_mll->Fill(Mu_pT->at(n_mu) / 1000., Mu_eta->at(n_mu), Mu_ZTandP_mll->at(n_mu) / 1000., normalization * Mu_SFw->at(n_mu));
+                h_bkg_template_fail_id_and_CaloIso_and_TrackIso_tight->Fill(Mu_ZTandP_mll->at(n_mu) / 1000., normalization * baseline_weight);
+                h_bkg_template_fail_id_and_CaloIso_and_TrackIso_tight_pt_eta_mll->Fill(Mu_pT->at(n_mu) / 1000., fabs(Mu_eta->at(n_mu)), Mu_ZTandP_mll->at(n_mu) / 1000., normalization * baseline_weight);
             }
         }
-*/
+
         // reverse calo isolation
         if (calo_isolation > 0.20) {
-            h_bkg_template_fail_CaloIso_only->Fill(Mu_ZTandP_mll->at(n_mu) / 1000., normalization * Mu_SFw->at(n_mu));
-            h_bkg_template_fail_CaloIso_only_pt_eta_mll->Fill(Mu_pT->at(n_mu) / 1000., Mu_eta->at(n_mu), Mu_ZTandP_mll->at(n_mu) / 1000., normalization * Mu_SFw->at(n_mu));
+            //h_bkg_template_fail_CaloIso_only->Fill(Mu_ZTandP_mll->at(n_mu) / 1000., normalization * Mu_SFw->at(n_mu));
+            //h_bkg_template_fail_CaloIso_only_pt_eta_mll->Fill(Mu_pT->at(n_mu) / 1000., Mu_eta->at(n_mu), Mu_ZTandP_mll->at(n_mu) / 1000., normalization * Mu_SFw->at(n_mu));
+            h_bkg_template_fail_CaloIso_only->Fill(Mu_ZTandP_mll->at(n_mu) / 1000., normalization * baseline_weight);
+            h_bkg_template_fail_CaloIso_only_pt_eta_mll->Fill(Mu_pT->at(n_mu) / 1000., fabs(Mu_eta->at(n_mu)), Mu_ZTandP_mll->at(n_mu) / 1000., normalization * baseline_weight);
         }
         // reverse track isolation
         if (track_isolation > 0.15) {
-            h_bkg_template_fail_TrackIso_only->Fill(Mu_ZTandP_mll->at(n_mu) / 1000., normalization * Mu_SFw->at(n_mu));
-            h_bkg_template_fail_TrackIso_only_pt_eta_mll->Fill(Mu_pT->at(n_mu) / 1000., Mu_eta->at(n_mu), Mu_ZTandP_mll->at(n_mu) / 1000., normalization * Mu_SFw->at(n_mu));
+            //h_bkg_template_fail_TrackIso_only->Fill(Mu_ZTandP_mll->at(n_mu) / 1000., normalization * Mu_SFw->at(n_mu));
+            //h_bkg_template_fail_TrackIso_only_pt_eta_mll->Fill(Mu_pT->at(n_mu) / 1000., Mu_eta->at(n_mu), Mu_ZTandP_mll->at(n_mu) / 1000., normalization * Mu_SFw->at(n_mu));
+            h_bkg_template_fail_TrackIso_only->Fill(Mu_ZTandP_mll->at(n_mu) / 1000., normalization * baseline_weight);
+            h_bkg_template_fail_TrackIso_only_pt_eta_mll->Fill(Mu_pT->at(n_mu) / 1000., fabs(Mu_eta->at(n_mu)), Mu_ZTandP_mll->at(n_mu) / 1000., normalization * baseline_weight);
         }
         // reverse calo and track isolation only (variation1 bkg template)
         if (calo_isolation > 0.20 &&
             track_isolation > 0.15) {
-            h_bkg_template_fail_CaloIso_and_TrackIso->Fill(Mu_ZTandP_mll->at(n_mu) / 1000., normalization * Mu_SFw->at(n_mu));
-            h_bkg_template_fail_CaloIso_and_TrackIso_pt_eta_mll->Fill(Mu_pT->at(n_mu) / 1000., Mu_eta->at(n_mu), Mu_ZTandP_mll->at(n_mu) / 1000., normalization * Mu_SFw->at(n_mu));
+            //h_bkg_template_fail_CaloIso_and_TrackIso->Fill(Mu_ZTandP_mll->at(n_mu) / 1000., normalization * Mu_SFw->at(n_mu));
+            //h_bkg_template_fail_CaloIso_and_TrackIso_pt_eta_mll->Fill(Mu_pT->at(n_mu) / 1000., Mu_eta->at(n_mu), Mu_ZTandP_mll->at(n_mu) / 1000., normalization * Mu_SFw->at(n_mu));
+            h_bkg_template_fail_CaloIso_and_TrackIso->Fill(Mu_ZTandP_mll->at(n_mu) / 1000., normalization * baseline_weight);
+            h_bkg_template_fail_CaloIso_and_TrackIso_pt_eta_mll->Fill(Mu_pT->at(n_mu) / 1000., fabs(Mu_eta->at(n_mu)), Mu_ZTandP_mll->at(n_mu) / 1000., normalization * baseline_weight);
         }
 
         // mll window
@@ -1435,10 +1470,10 @@ void ytRealLeptonsEfficiency_MC :: loop_over_muons()
         }
 */
         h_baseline_mll->Fill(Mu_ZTandP_mll->at(n_mu) / 1000., normalization * baseline_weight);
-        h_baseline_pt_eta_mll->Fill(Mu_pT->at(n_mu) / 1000., Mu_eta->at(n_mu), Mu_ZTandP_mll->at(n_mu) / 1000., normalization * baseline_weight);
+        h_baseline_pt_eta_mll->Fill(Mu_pT->at(n_mu) / 1000., fabs(Mu_eta->at(n_mu)), Mu_ZTandP_mll->at(n_mu) / 1000., normalization * baseline_weight);
         if (Mu_isSignal->at(n_mu)) {
             h_signal_mll->Fill(Mu_ZTandP_mll->at(n_mu) / 1000., normalization * signal_weight);
-            h_signal_pt_eta_mll->Fill(Mu_pT->at(n_mu) / 1000., Mu_eta->at(n_mu), Mu_ZTandP_mll->at(n_mu) / 1000., normalization * signal_weight);
+            h_signal_pt_eta_mll->Fill(Mu_pT->at(n_mu) / 1000., fabs(Mu_eta->at(n_mu)), Mu_ZTandP_mll->at(n_mu) / 1000., normalization * signal_weight);
         }
 
         if (process == "Zmumu") {
@@ -1459,73 +1494,73 @@ void ytRealLeptonsEfficiency_MC :: loop_over_muons()
             if (!truth_match)
                 continue;
         }
-
+/*
         // Define weight
         double baseline_weight = 1.0;
         double signal_weight = 1.0;
 
         baseline_weight = normalization * Mu_tag_trigger_SF->at(n_mu) * Mu_SFw->at(n_mu);
         signal_weight = normalization * Mu_tag_trigger_SF->at(n_mu) * Mu_SFw->at(n_mu) * Mu_IsoSFw->at(n_mu);
-
+*/
         // 1-dim histograms
         //h_baseline_mll->Fill(Mu_ZTandP_mll->at(n_mu) / 1000.);
-        h_baseline_pt->Fill(Mu_pT->at(n_mu) / 1000., baseline_weight);
-        h_baseline_eta->Fill(Mu_eta->at(n_mu), baseline_weight);
-        h_baseline_d0pvtx->Fill(Mu_d0pvtx->at(n_mu), baseline_weight);
-        h_baseline_sigd0->Fill(Mu_sigd0->at(n_mu), baseline_weight);
-        h_baseline_d0err->Fill(Mu_d0pvtx->at(n_mu) / Mu_sigd0->at(n_mu), baseline_weight);
-        h_baseline_z0sinTheta->Fill(Mu_z0sinTheta->at(n_mu), baseline_weight);
-        h_baseline_ptvarcone20->Fill(Mu_ptvarcone20->at(n_mu) / 1000., baseline_weight);
-        h_baseline_ptvarcone30->Fill(Mu_ptvarcone30->at(n_mu) / 1000., baseline_weight);
-        h_baseline_topoetcone20->Fill(Mu_topoetcone20->at(n_mu) / 1000., baseline_weight);
-        h_baseline_nJets->Fill(NJet, baseline_weight);
-        h_baseline_dRjet->Fill(Mu_DR_closest_Jet->at(n_mu), baseline_weight);
-        h_baseline_Etmiss->Fill(Etmiss_TST_Et / 1000., baseline_weight);
-        h_baseline_meff->Fill(meff / 1000., baseline_weight);
+        h_baseline_pt->Fill(Mu_pT->at(n_mu) / 1000., normalization * baseline_weight);
+        h_baseline_eta->Fill(fabs(Mu_eta->at(n_mu)), normalization * baseline_weight);
+        h_baseline_d0pvtx->Fill(Mu_d0pvtx->at(n_mu), normalization * baseline_weight);
+        h_baseline_sigd0->Fill(Mu_sigd0->at(n_mu), normalization * baseline_weight);
+        h_baseline_d0err->Fill(Mu_d0pvtx->at(n_mu) / Mu_sigd0->at(n_mu), normalization * baseline_weight);
+        h_baseline_z0sinTheta->Fill(Mu_z0sinTheta->at(n_mu), normalization * baseline_weight);
+        h_baseline_ptvarcone20->Fill(Mu_ptvarcone20->at(n_mu) / 1000., normalization * baseline_weight);
+        h_baseline_ptvarcone30->Fill(Mu_ptvarcone30->at(n_mu) / 1000., normalization * baseline_weight);
+        h_baseline_topoetcone20->Fill(Mu_topoetcone20->at(n_mu) / 1000., normalization * baseline_weight);
+        h_baseline_nJets->Fill(NJet, normalization * baseline_weight);
+        h_baseline_dRjet->Fill(Mu_DR_closest_Jet->at(n_mu), normalization * baseline_weight);
+        h_baseline_Etmiss->Fill(Etmiss_TST_Et / 1000., normalization * baseline_weight);
+        h_baseline_meff->Fill(meff / 1000., normalization * baseline_weight);
         // 2-dim histograms
-        h_baseline_pt_eta->Fill(Mu_pT->at(n_mu) / 1000., Mu_eta->at(n_mu), baseline_weight);
-        h_baseline_pt_nJets->Fill(Mu_pT->at(n_mu) / 1000., NJet, baseline_weight);
-        h_baseline_pt_dRjet->Fill(Mu_pT->at(n_mu) / 1000., Mu_DR_closest_Jet->at(n_mu), baseline_weight);
-        h_baseline_pt_Etmiss->Fill(Mu_pT->at(n_mu) / 1000.,Etmiss_TST_Et / 1000., baseline_weight);
-        h_baseline_pt_meff->Fill(Mu_pT->at(n_mu) / 1000., meff / 1000., baseline_weight);
+        h_baseline_pt_eta->Fill(Mu_pT->at(n_mu) / 1000., fabs(Mu_eta->at(n_mu)), normalization * baseline_weight);
+        h_baseline_pt_nJets->Fill(Mu_pT->at(n_mu) / 1000., NJet, normalization * baseline_weight);
+        h_baseline_pt_dRjet->Fill(Mu_pT->at(n_mu) / 1000., Mu_DR_closest_Jet->at(n_mu), normalization * baseline_weight);
+        h_baseline_pt_Etmiss->Fill(Mu_pT->at(n_mu) / 1000.,Etmiss_TST_Et / 1000., normalization * baseline_weight);
+        h_baseline_pt_meff->Fill(Mu_pT->at(n_mu) / 1000., meff / 1000., normalization * baseline_weight);
         // 3-dim histograms
-        //h_baseline_pt_eta_mll->Fill(Mu_pT->at(n_mu) / 1000., Mu_eta->at(n_mu), Mu_ZTandP_mll->at(n_mu) / 1000., baseline_weight);
+        //h_baseline_pt_eta_mll->Fill(Mu_pT->at(n_mu) / 1000., Mu_eta->at(n_mu), Mu_ZTandP_mll->at(n_mu) / 1000., normalization * baseline_weight);
         // Apply ptvarcone30/pt < 0.06
         if ((Mu_ptvarcone30->at(n_mu) / Mu_pT->at(n_mu)) < 0.06) {
-            h_baseline_TrackIso_cut->Fill(Mu_pT->at(n_mu) / 1000., baseline_weight);
+            h_baseline_TrackIso_cut->Fill(Mu_pT->at(n_mu) / 1000., normalization * baseline_weight);
         }
         // Apply |z0*sin(theta)| < 0.5
         if (fabs(Mu_z0sinTheta->at(n_mu)) < 0.5) {
-            h_baseline_z0_cut->Fill(Mu_pT->at(n_mu) / 1000., baseline_weight);
+            h_baseline_z0_cut->Fill(Mu_pT->at(n_mu) / 1000., normalization * baseline_weight);
         }
         // Apply |d0sig| < 3
         if (fabs(Mu_sigd0->at(n_mu)) < 3) {
-            h_baseline_sigd0_cut->Fill(Mu_pT->at(n_mu) / 1000., baseline_weight);
+            h_baseline_sigd0_cut->Fill(Mu_pT->at(n_mu) / 1000., normalization * baseline_weight);
         }
 
         // All the muons here are signal muons
         if (Mu_isSignal->at(n_mu)) {
             // 1-dim histograms
-            h_signal_mll->Fill(Mu_ZTandP_mll->at(n_mu) / 1000., signal_weight);
-            h_signal_pt->Fill(Mu_pT->at(n_mu) / 1000., signal_weight);
-            h_signal_eta->Fill(Mu_eta->at(n_mu), signal_weight);
-            h_signal_d0pvtx->Fill(Mu_d0pvtx->at(n_mu), signal_weight);
-            h_signal_sigd0->Fill(Mu_sigd0->at(n_mu), signal_weight);
-            h_signal_d0err->Fill(Mu_d0pvtx->at(n_mu) / Mu_sigd0->at(n_mu), signal_weight);
-            h_signal_z0sinTheta->Fill(Mu_z0sinTheta->at(n_mu), signal_weight);
-            h_signal_ptvarcone20->Fill(Mu_ptvarcone20->at(n_mu) / 1000., signal_weight);
-            h_signal_ptvarcone30->Fill(Mu_ptvarcone30->at(n_mu) / 1000., signal_weight);
-            h_signal_topoetcone20->Fill(Mu_topoetcone20->at(n_mu) / 1000., signal_weight);
-            h_signal_nJets->Fill(NJet, signal_weight);
-            h_signal_dRjet->Fill(Mu_DR_closest_Jet->at(n_mu), signal_weight);
-            h_signal_Etmiss->Fill(Etmiss_TST_Et / 1000., signal_weight);
-            h_signal_meff->Fill(meff / 1000., signal_weight);
+            h_signal_mll->Fill(Mu_ZTandP_mll->at(n_mu) / 1000., normalization * signal_weight);
+            h_signal_pt->Fill(Mu_pT->at(n_mu) / 1000., normalization * signal_weight);
+            h_signal_eta->Fill(fabs(Mu_eta->at(n_mu)), normalization * signal_weight);
+            h_signal_d0pvtx->Fill(Mu_d0pvtx->at(n_mu), normalization * signal_weight);
+            h_signal_sigd0->Fill(Mu_sigd0->at(n_mu), normalization * signal_weight);
+            h_signal_d0err->Fill(Mu_d0pvtx->at(n_mu) / Mu_sigd0->at(n_mu), normalization * signal_weight);
+            h_signal_z0sinTheta->Fill(Mu_z0sinTheta->at(n_mu), normalization * signal_weight);
+            h_signal_ptvarcone20->Fill(Mu_ptvarcone20->at(n_mu) / 1000., normalization * signal_weight);
+            h_signal_ptvarcone30->Fill(Mu_ptvarcone30->at(n_mu) / 1000., normalization * signal_weight);
+            h_signal_topoetcone20->Fill(Mu_topoetcone20->at(n_mu) / 1000., normalization * signal_weight);
+            h_signal_nJets->Fill(NJet, normalization * signal_weight);
+            h_signal_dRjet->Fill(Mu_DR_closest_Jet->at(n_mu), normalization * signal_weight);
+            h_signal_Etmiss->Fill(Etmiss_TST_Et / 1000., normalization * signal_weight);
+            h_signal_meff->Fill(meff / 1000., normalization * signal_weight);
             // 2-dim histograms
-            h_signal_pt_eta->Fill(Mu_pT->at(n_mu) / 1000., Mu_eta->at(n_mu), signal_weight);
-            h_signal_pt_nJets->Fill(Mu_pT->at(n_mu) / 1000., NJet, signal_weight);
-            h_signal_pt_dRjet->Fill(Mu_pT->at(n_mu) / 1000., Mu_DR_closest_Jet->at(n_mu), signal_weight);
-            h_signal_pt_Etmiss->Fill(Mu_pT->at(n_mu) / 1000.,Etmiss_TST_Et / 1000., signal_weight);
-            h_signal_pt_meff->Fill(Mu_pT->at(n_mu) / 1000., meff / 1000., signal_weight);
+            h_signal_pt_eta->Fill(Mu_pT->at(n_mu) / 1000., fabs(Mu_eta->at(n_mu)), normalization * signal_weight);
+            h_signal_pt_nJets->Fill(Mu_pT->at(n_mu) / 1000., NJet, normalization * signal_weight);
+            h_signal_pt_dRjet->Fill(Mu_pT->at(n_mu) / 1000., Mu_DR_closest_Jet->at(n_mu), normalization * signal_weight);
+            h_signal_pt_Etmiss->Fill(Mu_pT->at(n_mu) / 1000.,Etmiss_TST_Et / 1000., normalization * signal_weight);
+            h_signal_pt_meff->Fill(Mu_pT->at(n_mu) / 1000., meff / 1000., normalization * signal_weight);
             // 3-dim histograms
             //h_signal_pt_eta_mll->Fill(Mu_pT->at(n_mu) / 1000., Mu_eta->at(n_mu), Mu_ZTandP_mll->at(n_mu) / 1000., signal_weight);
         }
