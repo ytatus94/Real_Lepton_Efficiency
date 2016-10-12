@@ -1488,7 +1488,7 @@ void yt_make_muon_real_efficiency_plot(TString filename)
     ratio_1->SetYTitle("Muon Real Efficiency");
     ratio_1->SetStats(kFALSE);
     ratio_1->SetMaximum(1.1);
-    ratio_1->SetMinimum(0.4);
+    ratio_1->SetMinimum(0.5);
     ratio_1->SetTitle("");
     ratio_1->Draw();
 
