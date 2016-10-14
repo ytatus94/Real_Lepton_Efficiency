@@ -418,7 +418,9 @@ void ytBackground_subtraction(TString template_type = "baseline", // baseline, t
     // When 10 GeV < pT < 15 GeV and 0 < eta < 0.8, I get a negative norm value because MC baseline in the tail
     // has more events than data estimated bkg in the tail. So I have to use 100 < mll < 120 tail region to
     // calculate the norm
-	if (norm < 0) {
+    // If I use template2 and 10 GeV < pT < 15 GeV and 0.8 < eta < 1.37, the norm is very large. So I also use the
+    // 100 < mll < 120 tail retion to calculate the norm.
+	if (norm < 0 || norm > 40) {
         int special_tail_low_bin = data_baseline_mll->FindBin(60. + 0.01);
         int special_tail_up_bin = data_baseline_mll->FindBin(70. - 0.01);
 		double a = data_baseline_mll->Integral(special_tail_low_bin, special_tail_up_bin);
@@ -628,21 +630,25 @@ void ytBackground_subtraction(TString template_type = "baseline", // baseline, t
     }
     else if (eta_bin_low == 0 && eta_bin_up == -1) {
         TH3F *data_baseline_mll_3dim = (TH3F *)data_file->Get("h_baseline_pt_eta_mll");
-        TString bin_low = TString::Format("%d", static_cast<int>(data_baseline_mll_3dim->GetXaxis()->GetBinLowEdge(pt_bin_low)));
-        TString bin_up = TString::Format("%d", static_cast<int>(data_baseline_mll_3dim->GetXaxis()->GetBinUpEdge(pt_bin_up)));
+        TString bin_low_pt = TString::Format("%d", static_cast<int>(data_baseline_mll_3dim->GetXaxis()->GetBinLowEdge(pt_bin_low)));
+        TString bin_up_pt = TString::Format("%d", static_cast<int>(data_baseline_mll_3dim->GetXaxis()->GetBinUpEdge(pt_bin_up)));
+        TString bin_low_mll = TString::Format("%d", static_cast<int>(mll_window_low));
+        TString bin_up_mll = TString::Format("%d", static_cast<int>(mll_window_up));
         if (truth_match)
-            pdf_filename = pdf_filename + "_pt" + bin_low + "_" + bin_up + "_truth.pdf";
+            pdf_filename = pdf_filename + "_pt" + bin_low_pt + "_" + bin_up_pt + "_truth.pdf";
         else
-            pdf_filename = pdf_filename + "_pt" + bin_low + "_" + bin_up + ".pdf";
+            pdf_filename = pdf_filename + "_pt" + bin_low_pt + "_" + bin_up_pt + ".pdf";
     }
     else if (pt_bin_low == 0 && pt_bin_up == -1) {
         TH3F *data_baseline_mll_3dim = (TH3F *)data_file->Get("h_baseline_pt_eta_mll");
-        TString bin_low = TString::Format("%d", static_cast<int>(data_baseline_mll_3dim->GetYaxis()->GetBinLowEdge(eta_bin_low)*100.));
-        TString bin_up = TString::Format("%d", static_cast<int>(data_baseline_mll_3dim->GetYaxis()->GetBinUpEdge(eta_bin_up)*100.));
+        TString bin_low_eta = TString::Format("%d", static_cast<int>(data_baseline_mll_3dim->GetYaxis()->GetBinLowEdge(eta_bin_low)*100.));
+        TString bin_up_eta = TString::Format("%d", static_cast<int>(data_baseline_mll_3dim->GetYaxis()->GetBinUpEdge(eta_bin_up)*100.));
+        TString bin_low_mll = TString::Format("%d", static_cast<int>(mll_window_low));
+        TString bin_up_mll = TString::Format("%d", static_cast<int>(mll_window_up));
         if (truth_match)
-            pdf_filename = pdf_filename + "_eta" + bin_low + "_" + bin_up + "_truth.pdf";
+            pdf_filename = pdf_filename + "_eta" + bin_low_eta + "_" + bin_up_eta + "_truth.pdf";
         else
-            pdf_filename = pdf_filename + "_eta" + bin_low + "_" + bin_up + ".pdf";
+            pdf_filename = pdf_filename + "_eta" + bin_low_eta + "_" + bin_up_eta + ".pdf";
     }
     else {
         TH3F *data_baseline_mll_3dim = (TH3F *)data_file->Get("h_baseline_pt_eta_mll");
@@ -650,10 +656,12 @@ void ytBackground_subtraction(TString template_type = "baseline", // baseline, t
         TString bin_up_pt = TString::Format("%d", static_cast<int>(data_baseline_mll_3dim->GetXaxis()->GetBinUpEdge(pt_bin_up)));
         TString bin_low_eta = TString::Format("%d", static_cast<int>(data_baseline_mll_3dim->GetYaxis()->GetBinLowEdge(eta_bin_low)*100.));
         TString bin_up_eta = TString::Format("%d", static_cast<int>(data_baseline_mll_3dim->GetYaxis()->GetBinUpEdge(eta_bin_up)*100.));
+        TString bin_low_mll = TString::Format("%d", static_cast<int>(mll_window_low));
+        TString bin_up_mll = TString::Format("%d", static_cast<int>(mll_window_up));
         if (truth_match)
-            pdf_filename = pdf_filename + "_pt" + bin_low_pt + "_" + bin_up_pt + "_eta" + bin_low_eta + "_" + bin_up_eta + "_truth.pdf";
+            pdf_filename = pdf_filename + "_mll" + bin_low_mll + "_" + bin_up_mll + "_pt" + bin_low_pt + "_" + bin_up_pt + "_eta" + bin_low_eta + "_" + bin_up_eta + "_truth.pdf";
         else
-            pdf_filename = pdf_filename + "_pt" + bin_low_pt + "_" + bin_up_pt + "_eta" + bin_low_eta + "_" + bin_up_eta + ".pdf";
+            pdf_filename = pdf_filename + "_mll" + bin_low_mll + "_" + bin_up_mll + "_pt" + bin_low_pt + "_" + bin_up_pt + "_eta" + bin_low_eta + "_" + bin_up_eta + ".pdf";
     }
 
     c1->SaveAs(pdf_filename);
