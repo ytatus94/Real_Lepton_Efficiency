@@ -73,7 +73,10 @@ def calculate_real_lepton_efficiencies_with_systematics(filename1, filename2, fi
                     uncertainties.append(line[line.find("+-")+3: len(line)-1])
 
     #print str(central_values[0]) + " +- " + str(uncertainties[0]) + ", " + str(central_values[1]) + " +- " + str(uncertainties[1]) + ", " + str(central_values[2]) + " +- " + str(uncertainties[2])
-    systematics = (float(central_values[1]) - float(central_values[0]))**2 + (float(central_values[2]) - float(central_values[0]))**2
+    #systematics = (float(central_values[1]) - float(central_values[0]))**2 + (float(central_values[2]) - float(central_values[0]))**2
+    systematics1 = float(central_values[1]) - float(central_values[0])
+    systematics2 = float(central_values[2]) - float(central_values[0])
+    systematics = max(abs(systematics1), abs(systematics2))
     print "Real lepton efficiency = " + central_values[0] + " $pm$ " + uncertainties[0] + " (stat) $pm$ " + str(systematics) + " (syst)"
 
 
@@ -103,7 +106,7 @@ def variate_template():
                         else:
                             command1 = 'root -q -b \'../scripts/ytBackground_subtraction.C("' + template + '","range_baseline",true,60,120,80,100,' + str(pt_range_index) + ',' + str(pt_range_index) + ',' + str(eta_range_low) + ',' + str(eta_range_up) + ')\' > ' + output_filename
                     #print command1
-                    #os.system(command1)
+                    os.system(command1)
 
     print "Variate templates:"
     for pt_range in pt_ranges:
