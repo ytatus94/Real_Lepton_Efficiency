@@ -12,3 +12,5 @@ Thumbs.db
 *.root
 # Plots #
 *.pdf
+# logs
+*.txt
