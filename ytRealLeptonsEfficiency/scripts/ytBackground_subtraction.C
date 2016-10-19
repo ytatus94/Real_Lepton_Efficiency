@@ -76,7 +76,7 @@ void ytBackground_subtraction(TString template_type = "baseline", // baseline, t
 
     cout << "Current template = " << template_type << endl;
 
-    TString path = "/Users/ytshen/Desktop/skim/Results/1006/";
+    TString path = "/Users/ytshen/Desktop/skim/Results/1015/";
     TFile *data_file = TFile::Open(path + "submitDir_Data_electron/hist-0929_80mll100.root");
     TFile *mc_file;
     if (!truth_match)  // T&P

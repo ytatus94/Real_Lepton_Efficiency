@@ -2,6 +2,15 @@
 This is the new real lepton efficiency framework.
 
 
+### v26.
+1. Add `h_baseline_pt_dRjet_mll` and `h_signal_pt_dRjet_mll` into `ytRealLeptonsEfficiency_Data` and `ytRealLeptonsEfficiency_MC`.
+2. Change the input file path in `Run.cxx`, `ytPlots.C`, and `ytBackground_subtraction.C`
+3. Fix the Zmumu legend in `yt_deltaR_and_NJets_distribution()` in `ytPlots.C`
+4. Fix the typo in `run_muon_efficiency.py`
+5. Change the directory path in `run_making_plots.py`
+
+
+
 ### v25. Add new script to calculate the muon systematics.
 1. `run_muon_efficiency.py`
 

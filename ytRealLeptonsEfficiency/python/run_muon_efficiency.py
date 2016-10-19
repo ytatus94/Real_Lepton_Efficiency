@@ -13,7 +13,7 @@ def calculate_real_muon_efficiency(mll_window_low = 80.,
     debug = False
     verbose = False
 
-    path = "/Users/ytshen/Desktop/skim/Results/1006/"
+    path = "/Users/ytshen/Desktop/skim/Results/1015/"
     data_file = ROOT.TFile.Open(path + "submitDir_Data_muon/hist-0929_80mll100.root")
 
     if debug is True:
@@ -118,20 +118,21 @@ def variate_mll_windows():
                 if eta_range_index < len(mu_eta_ranges) - 1:
                     eta = eta_str(eta_range, mu_eta_ranges[mu_eta_ranges.index(eta_range) + 1])
                     #print "muon_variation" + mll_str(80, 100) + pT + eta
-                    central_value_0, uncertaint_0 = calculate_real_muon_efficiency(80, 100, pt_range_index, pt_range_index, eta_range_index + 1, eta_range_index + 1)
-                    #print central_value_0, uncertaint_0
+                    central_value_0, uncertainty_0 = calculate_real_muon_efficiency(80, 100, pt_range_index, pt_range_index, eta_range_index + 1, eta_range_index + 1)
+                    #print central_value_0, uncertainty_0
                     
                     #print "muon_variation" + mll_str(75, 85) + pT + eta
-                    central_value_1, uncertaint_1 = calculate_real_muon_efficiency(75, 105, pt_range_index, pt_range_index, eta_range_index + 1, eta_range_index + 1)
-                    #print central_value_1, uncertaint_1
+                    central_value_1, uncertainty_1 = calculate_real_muon_efficiency(75, 105, pt_range_index, pt_range_index, eta_range_index + 1, eta_range_index + 1)
+                    #print central_value_1, uncertainty_1
                     
                     #print "muon_variation" + mll_str(85, 95) + pT + eta
-                    central_value_2, uncertaint_2 = calculate_real_muon_efficiency(85, 95, pt_range_index, pt_range_index, eta_range_index + 1, eta_range_index + 1)
-                    #print central_value_2, uncertaint_2
+                    central_value_2, uncertainty_2 = calculate_real_muon_efficiency(85, 95, pt_range_index, pt_range_index, eta_range_index + 1, eta_range_index + 1)
+                    #print central_value_2, uncertainty_2
 
                     systematics = math.sqrt((central_value_1 - central_value_0)**2 + (central_value_2 - central_value_0)**2)
+                    total_uncertainty = math.sqrt(uncertainty_0**2 + systematics**2)
                     print str(pt_range) + " GeV < pT < " + str(pt_ranges[pt_range_index]) + " GeV, ",
                     print str(eta_range) + " < eta < " + str(mu_eta_ranges[eta_range_index + 1]) + " ", 
-                    print "Real lepton efficiency = " + str(central_value_0) + " $pm$ " + str(uncertaint_0) + " (stat) $pm$ " + str(systematics) + " (syst)"
+                    print "Real lepton efficiency = " + str(central_value_0) + " $pm$ " + str(total_uncertainty) + " (tot) : " + str(uncertainty_0) + " (stat) $pm$ " + str(systematics) + " (syst)"
 
 variate_mll_windows()

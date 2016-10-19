@@ -3,6 +3,7 @@ import os, ROOT
 
 #cwd = os.getcwd()
 #print cwd
+print "NOTE!!! Fix the input path before running."
 ROOT.gROOT.LoadMacro("../scripts/ytPlots.C")
 
 #ROOT.gROOT.ProcessLine("yt_baseline_mll_plots()")
@@ -35,10 +36,10 @@ ROOT.gROOT.ProcessLine("yt_signal_mll_ratio_plots(11,11,true,false)")
 ROOT.gROOT.ProcessLine("yt_signal_mll_ratio_plots(12,12,true,false)")
 ROOT.gROOT.ProcessLine("yt_signal_mll_ratio_plots(13,13,true,false)")
 
-ROOT.gROOT.ProcessLine("yt_make_cut_efficiency_plot(\"~/Desktop/skim/Results/1006/submitDir_Data_electron/hist-0929_80mll100.root\",\"electron\")")
-ROOT.gROOT.ProcessLine("yt_make_cut_efficiency_plot(\"~/Desktop/skim/Results/1006/submitDir_Data_muon/hist-0929_80mll100.root\",\"muon\")")
-ROOT.gROOT.ProcessLine("yt_make_electron_real_efficiency_plot(\"~/Desktop/skim/Results/1006/submitDir_Data_electron/hist-0929_80mll100.root\")")
-ROOT.gROOT.ProcessLine("yt_make_muon_real_efficiency_plot(\"~/Desktop/skim/Results/1006/submitDir_Data_muon/hist-0929_80mll100.root\")")
+ROOT.gROOT.ProcessLine("yt_make_cut_efficiency_plot(\"~/Desktop/skim/Results/1015/submitDir_Data_electron/hist-0929_80mll100.root\",\"electron\")")
+ROOT.gROOT.ProcessLine("yt_make_cut_efficiency_plot(\"~/Desktop/skim/Results/1015/submitDir_Data_muon/hist-0929_80mll100.root\",\"muon\")")
+ROOT.gROOT.ProcessLine("yt_make_electron_real_efficiency_plot(\"~/Desktop/skim/Results/1015/submitDir_Data_electron/hist-0929_80mll100.root\")")
+ROOT.gROOT.ProcessLine("yt_make_muon_real_efficiency_plot(\"~/Desktop/skim/Results/1015/submitDir_Data_muon/hist-0929_80mll100.root\")")
 ROOT.gROOT.ProcessLine("yt_make_real_efficiency_plots(true,true,true)")
 ROOT.gROOT.ProcessLine("yt_truth_match_TandP_comparison(\"electron\", \"pt\",true)")
 ROOT.gROOT.ProcessLine("yt_truth_match_TandP_comparison(\"electron\", \"eta\",true)")
