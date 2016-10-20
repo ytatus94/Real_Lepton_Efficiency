@@ -17,6 +17,8 @@
 #include <sstream>
 using namespace std;
 
+TString path = "/Users/ytshen/Desktop/skim/Results/1015/";
+
 //
 // Mll plots
 //
@@ -27,7 +29,7 @@ using namespace std;
 // Set truth_match = true to turn on truth match on the plot.
 void yt_mll_plots()
 {
-    TString path = "/Users/ytshen/Desktop/skim/Results/1006/";
+    //TString path = "/Users/ytshen/Desktop/skim/Results/1015/";
 
     TFile *data_elec = TFile::Open(path + "submitDir_Data_electron/hist-0929_80mll100.root");
     TFile *data_muon = TFile::Open(path + "submitDir_Data_muon/hist-0929_80mll100.root");
@@ -128,7 +130,7 @@ void yt_baseline_mll_plots(int pt_bin_low = 0, int pt_bin_up = -1, bool truth_ma
 
     bool debug = false;
 
-    TString path = "/Users/ytshen/Desktop/skim/Results/1006/";
+    //TString path = "/Users/ytshen/Desktop/skim/Results/1015/";
 
     TFile *data_elec = TFile::Open(path + "submitDir_Data_electron/hist-0929_80mll100.root");
     TFile *data_muon = TFile::Open(path + "submitDir_Data_muon/hist-0929_80mll100.root");
@@ -331,7 +333,7 @@ void yt_baseline_mll_ratio_plots(int pt_bin_low = 0, int pt_bin_up = -1, bool tr
 
     bool debug = false;
 
-    TString path = "/Users/ytshen/Desktop/skim/Results/1006/";
+    //TString path = "/Users/ytshen/Desktop/skim/Results/1015/";
 
     TFile *data_elec = TFile::Open(path + "submitDir_Data_electron/hist-0929_80mll100.root");
     TFile *data_muon = TFile::Open(path + "submitDir_Data_muon/hist-0929_80mll100.root");
@@ -689,7 +691,7 @@ void yt_signal_mll_plots(int pt_bin_low = 0, int pt_bin_up = -1, bool truth_matc
 
     bool debug = false;
 
-    TString path = "/Users/ytshen/Desktop/skim/Results/1006/";
+    //TString path = "/Users/ytshen/Desktop/skim/Results/1015/";
 
     TFile *data_elec = TFile::Open(path + "submitDir_Data_electron/hist-0929_80mll100.root");
     TFile *data_muon = TFile::Open(path + "submitDir_Data_muon/hist-0929_80mll100.root");
@@ -892,7 +894,7 @@ void yt_signal_mll_ratio_plots(int pt_bin_low = 0, int pt_bin_up = -1, bool trut
     
     bool debug = false;
     
-    TString path = "/Users/ytshen/Desktop/skim/Results/1006/";
+    //TString path = "/Users/ytshen/Desktop/skim/Results/1015/";
     
     TFile *data_elec = TFile::Open(path + "submitDir_Data_electron/hist-0929_80mll100.root");
     TFile *data_muon = TFile::Open(path + "submitDir_Data_muon/hist-0929_80mll100.root");
@@ -1530,7 +1532,7 @@ void yt_make_muon_real_efficiency_plot(TString filename)
 
 void yt_make_real_efficiency_plots(bool truth_match = false, bool ttbar = false, bool Gtt = false)
 {
-	TString path = "/Users/ytshen/Desktop/skim/Results/1006/";
+	//TString path = "/Users/ytshen/Desktop/skim/Results/1015/";
 
     TFile *data_elec = TFile::Open(path + "submitDir_Data_electron/hist-0929_80mll100.root");
     TFile *data_muon = TFile::Open(path + "submitDir_Data_muon/hist-0929_80mll100.root");
@@ -2008,7 +2010,7 @@ void yt_make_real_efficiency_plots(bool truth_match = false, bool ttbar = false,
 // x: pt, eta, dRjet
 void yt_truth_match_TandP_comparison(TString lepton, TString x, bool TandP_truth_match = false)
 {
-    TString path = "/Users/ytshen/Desktop/skim/Results/1006/";
+    //TString path = "/Users/ytshen/Desktop/skim/Results/1015/";
 
     TFile *TandP_file;
     TFile *truth_match_file;
@@ -2196,7 +2198,7 @@ void yt_truth_match_TandP_comparison(TString lepton, TString x, bool TandP_truth
 
 void yt_background_subtraction_illustration()
 {
-    TString path = "/Users/ytshen/Desktop/skim/Results/1006/";
+    //TString path = "/Users/ytshen/Desktop/skim/Results/1015/";
 
     TFile *data_elec = TFile::Open(path + "submitDir_Data_electron/hist-0929_80mll100.root");
     TH3F *data_elec_baseline_pt_eta_mll = (TH3F *)data_elec->Get("h_baseline_pt_eta_mll");
@@ -2241,7 +2243,7 @@ void yt_background_subtraction_illustration()
 
 void yt_background_template_mll_plot(int pt_bin_low = 0, int pt_bin_up = -1, int eta_bin_low = 0, int eta_bin_up = -1)
 {
-    TString path = "/Users/ytshen/Desktop/skim/Results/1006/";
+    //TString path = "/Users/ytshen/Desktop/skim/Results/1015/";
 
     TFile *data_elec = TFile::Open(path + "submitDir_Data_electron/hist-0929_80mll100.root");
 
@@ -2335,7 +2337,7 @@ void yt_background_template_mll_plot(int pt_bin_low = 0, int pt_bin_up = -1, int
 
 void yt_kinematics_distribution()
 {
-    TString path = "/Users/ytshen/Desktop/skim/Results/1006/";
+    //TString path = "/Users/ytshen/Desktop/skim/Results/1015/";
 
     TFile *data_elec = TFile::Open(path + "submitDir_Data_electron/hist-0929_80mll100.root");
     TFile *data_muon = TFile::Open(path + "submitDir_Data_muon/hist-0929_80mll100.root");
@@ -2598,7 +2600,7 @@ void yt_kinematics_distribution()
 
 void yt_deltaR_and_NJets_distribution()
 {
-    TString path = "/Users/ytshen/Desktop/skim/Results/1006/";
+    ////TString path = "/Users/ytshen/Desktop/skim/Results/1015/";
 
     TFile *data_elec = TFile::Open(path + "submitDir_Data_electron/hist-0929_80mll100.root");
     TFile *data_muon = TFile::Open(path + "submitDir_Data_muon/hist-0929_80mll100.root");
@@ -2771,13 +2773,13 @@ void yt_deltaR_and_NJets_distribution()
     h_baseline_dRjet_Gtt_muon->SetLineColor(kOrange);
     h_baseline_dRjet_Gtt_muon->Draw("E1,same");
 
-    TLegend *leg2 = new TLegend(0.6, 0.5, 0.9, 0.9);
+    TLegend *leg2 = new TLegend(0.5, 0.5, 0.9, 0.9);
     leg2->SetBorderSize(0);
     leg2->SetFillColor(0);
     leg2->SetFillStyle(0);
     leg2->AddEntry(h_baseline_dRjet_data_muon, "Data");
-    leg2->AddEntry(h_baseline_dRjet_TandP_muon, "Z #rightarrow ee T&P MC");
-    leg2->AddEntry(h_baseline_dRjet_truth_match_muon, "Z #rightarrow ee truth matched MC");
+    leg2->AddEntry(h_baseline_dRjet_TandP_muon, "Z #rightarrow #mu#mu T&P MC");
+    leg2->AddEntry(h_baseline_dRjet_truth_match_muon, "Z #rightarrow #mu#mu truth matched MC");
     leg2->AddEntry(h_baseline_dRjet_ttbar_muon, "ttbar MC");
     leg2->AddEntry(h_baseline_dRjet_Gtt_muon, "Gtt MC");
     leg2->Draw("same");
@@ -2850,8 +2852,8 @@ void yt_deltaR_and_NJets_distribution()
     leg4->SetFillColor(0);
     leg4->SetFillStyle(0);
     leg4->AddEntry(h_baseline_nJets_data_muon, "Data");
-    leg4->AddEntry(h_baseline_nJets_TandP_muon, "Z #rightarrow ee T&P MC");
-    leg4->AddEntry(h_baseline_nJets_truth_match_muon, "Z #rightarrow ee truth matched MC");
+    leg4->AddEntry(h_baseline_nJets_TandP_muon, "Z #rightarrow #mu#mu T&P MC");
+    leg4->AddEntry(h_baseline_nJets_truth_match_muon, "Z #rightarrow #mu#mu truth matched MC");
     leg4->AddEntry(h_baseline_nJets_ttbar_muon, "ttbar MC");
     leg4->AddEntry(h_baseline_nJets_Gtt_muon, "Gtt MC");
     leg4->Draw("same");
