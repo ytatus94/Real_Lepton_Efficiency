@@ -542,6 +542,7 @@ public:
 
 	// 3-dim histograms
 	TH3F *h_baseline_pt_eta_mll; //! x: pt, y: eta, z: mll
+	TH3F *h_baseline_pt_eta_dRjet; //! x: pt, y: eta, z: dRjet
 	TH3F *h_baseline_pt_dRjet_mll; //! x: pt, y: dRjet, z: mll
 
 	// Signal histograms
@@ -570,6 +571,7 @@ public:
 
 	// 3-dim histograms
 	TH3F *h_signal_pt_eta_mll; //! x: pt, y: eta, z: mll
+	TH3F *h_signal_pt_eta_dRjet; //! x: pt, y: eta, z: dRjet
 	TH3F *h_signal_pt_dRjet_mll; //! x: pt, y: dRjet, z: mll
 
 	// Cut efficiency histograms

@@ -276,12 +276,15 @@ EL::StatusCode ytRealLeptonsEfficiency_MC :: histInitialize ()
 
     // 3-dim histograms
     h_baseline_pt_eta_mll 	= new TH3F("h_baseline_pt_eta_mll", "Baseline 3-dim;p_{T} [GeV];#eta;M_{ll} [GeV]", n_pt_bins, &m_pt_bins[0], n_eta_bins, &m_eta_bins[0], n_mll_bins, &m_mll_bins[0]);
+    h_baseline_pt_eta_dRjet	= new TH3F("h_baseline_pt_eta_dRjet", "Baseline 3-dim;p_{T} [GeV];#eta;#Delta R(#ell, jet)", n_pt_bins, &m_pt_bins[0], n_eta_bins, &m_eta_bins[0], n_deltaR_bins, &m_deltaR_bins[0]);
     h_baseline_pt_dRjet_mll = new TH3F("h_baseline_pt_dRjet_mll", "Baseline 3-dim;p_{T} [GeV];#Delta R(#ell, jet);M_{ll} [GeV]", n_pt_bins, &m_pt_bins[0], n_deltaR_bins, &m_deltaR_bins[0], n_mll_bins, &m_mll_bins[0]);
 
     h_baseline_pt_eta_mll->Sumw2();
+    h_baseline_pt_eta_dRjet->Sumw2();
     h_baseline_pt_dRjet_mll->Sumw2();
 
     wk()->addOutput(h_baseline_pt_eta_mll);
+    wk()->addOutput(h_baseline_pt_eta_dRjet);
     wk()->addOutput(h_baseline_pt_dRjet_mll);
 
     // Signal histograms
@@ -376,12 +379,15 @@ EL::StatusCode ytRealLeptonsEfficiency_MC :: histInitialize ()
 
     // 3-dim histograms
     h_signal_pt_eta_mll	= new TH3F("h_signal_pt_eta_mll", "Signal 3-dim;p_{T} [GeV];#eta;M_{ll} [GeV]", n_pt_bins, &m_pt_bins[0], n_eta_bins, &m_eta_bins[0], n_mll_bins, &m_mll_bins[0]);
+    h_signal_pt_eta_dRjet = new TH3F("h_signal_pt_eta_dRjet", "Signal 3-dim;p_{T} [GeV];#eta;#Delta R(#ell, jet)", n_pt_bins, &m_pt_bins[0], n_eta_bins, &m_eta_bins[0], n_deltaR_bins, &m_deltaR_bins[0]);
     h_signal_pt_dRjet_mll = new TH3F("h_signal_pt_dRjet_mll", "Signal 3-dim;p_{T} [GeV];#Delta R(#ell, jet);M_{ll} [GeV]", n_pt_bins, &m_pt_bins[0], n_deltaR_bins, &m_deltaR_bins[0], n_mll_bins, &m_mll_bins[0]);
     
     h_signal_pt_eta_mll->Sumw2();
+    h_signal_pt_eta_dRjet->Sumw2();
     h_signal_pt_dRjet_mll->Sumw2();
 
     wk()->addOutput(h_signal_pt_eta_mll);
+    wk()->addOutput(h_signal_pt_eta_dRjet);
     wk()->addOutput(h_signal_pt_dRjet_mll);
 
     // Cut efficiency histograms
@@ -1323,6 +1329,7 @@ void ytRealLeptonsEfficiency_MC :: loop_over_electrons()
         h_baseline_pt_meff->Fill(El_pT->at(n_el) / 1000., meff / 1000., normalization * baseline_weight);
         // 3-dim histograms
         //h_baseline_pt_eta_mll->Fill(El_pT->at(n_el) / 1000., El_eta->at(n_el), El_ZTandP_mll->at(n_el) / 1000., normalization * baseline_weight);
+        h_baseline_pt_eta_dRjet->Fill(El_pT->at(n_el) / 1000., fabs(El_eta->at(n_el)), El_DR_closest_Jet->at(n_el), normalization * baseline_weight);
         h_baseline_pt_dRjet_mll->Fill(El_pT->at(n_el) / 1000., El_DR_closest_Jet->at(n_el), El_ZTandP_mll->at(n_el) / 1000., normalization * baseline_weight);
         // Apply MediumLLH
         if (El_isMediumLH->at(n_el)) {
@@ -1371,6 +1378,7 @@ void ytRealLeptonsEfficiency_MC :: loop_over_electrons()
             h_signal_pt_meff->Fill(El_pT->at(n_el) / 1000., meff / 1000., normalization * signal_weight);
             // 3-dim histograms
             //h_signal_pt_eta_mll->Fill(El_pT->at(n_el) / 1000., El_eta->at(n_el), El_ZTandP_mll->at(n_el) / 1000., normalization * signal_weight);
+            h_signal_pt_eta_dRjet->Fill(El_pT->at(n_el) / 1000., fabs(El_eta->at(n_el)), El_DR_closest_Jet->at(n_el), normalization * signal_weight);
             h_signal_pt_dRjet_mll->Fill(El_pT->at(n_el) / 1000., El_DR_closest_Jet->at(n_el), El_ZTandP_mll->at(n_el) / 1000., normalization * signal_weight);
         }
     }
@@ -1533,6 +1541,7 @@ void ytRealLeptonsEfficiency_MC :: loop_over_muons()
         h_baseline_pt_meff->Fill(Mu_pT->at(n_mu) / 1000., meff / 1000., normalization * baseline_weight);
         // 3-dim histograms
         //h_baseline_pt_eta_mll->Fill(Mu_pT->at(n_mu) / 1000., Mu_eta->at(n_mu), Mu_ZTandP_mll->at(n_mu) / 1000., normalization * baseline_weight);
+        h_baseline_pt_eta_dRjet->Fill(Mu_pT->at(n_mu) / 1000., fabs(Mu_eta->at(n_mu)), Mu_DR_closest_Jet->at(n_mu), normalization * baseline_weight);
         h_baseline_pt_dRjet_mll->Fill(Mu_pT->at(n_mu) / 1000., Mu_DR_closest_Jet->at(n_mu), Mu_ZTandP_mll->at(n_mu) / 1000., normalization * baseline_weight);
         // Apply ptvarcone30/pt < 0.06
         if ((Mu_ptvarcone30->at(n_mu) / Mu_pT->at(n_mu)) < 0.06) {
@@ -1572,6 +1581,7 @@ void ytRealLeptonsEfficiency_MC :: loop_over_muons()
             h_signal_pt_meff->Fill(Mu_pT->at(n_mu) / 1000., meff / 1000., normalization * signal_weight);
             // 3-dim histograms
             //h_signal_pt_eta_mll->Fill(Mu_pT->at(n_mu) / 1000., Mu_eta->at(n_mu), Mu_ZTandP_mll->at(n_mu) / 1000., signal_weight);
+            h_signal_pt_eta_mll->Fill(Mu_pT->at(n_mu) / 1000., fabs(Mu_eta->at(n_mu)), Mu_DR_closest_Jet->at(n_mu), normalization * signal_weight);
             h_signal_pt_dRjet_mll->Fill(Mu_pT->at(n_mu) / 1000., Mu_DR_closest_Jet->at(n_mu), Mu_ZTandP_mll->at(n_mu) / 1000., normalization * signal_weight);
         }
     }
