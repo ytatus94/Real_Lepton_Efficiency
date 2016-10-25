@@ -2,6 +2,10 @@
 This is the new real lepton efficiency framework.
 
 
+### v28. Move files
+1. Move `compare_error_propagation.C`, `fitExclude.C`, and `run_bkg_subtraction.sh` from scripts/ to misc/.
+2. Add two functions in `ytPlots.C` to study how the Gtt_electron cuts affect the efficiency.
+
 ### v27. Commit the README.md and ytPlots.C
 1. Didn't commit `README.md` and `ytPlots.C` in v26 so commit them in v27.
 

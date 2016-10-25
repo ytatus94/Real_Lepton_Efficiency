@@ -48,8 +48,17 @@ ROOT.gROOT.ProcessLine("yt_truth_match_TandP_comparison(\"muon\", \"pt\",true)")
 ROOT.gROOT.ProcessLine("yt_truth_match_TandP_comparison(\"muon\", \"eta\",true)")
 ROOT.gROOT.ProcessLine("yt_truth_match_TandP_comparison(\"muon\", \"dRjet\",true)")
 
+ROOT.gROOT.ProcessLine("yt_Gtt_electron_real_efficiency_individual_cut_study()")
+ROOT.gROOT.ProcessLine("yt_Gtt_electron_real_efficiency_combine_cuts_study()")
+
 ROOT.gROOT.ProcessLine("yt_background_subtraction_illustration()")
 ROOT.gROOT.ProcessLine("yt_background_template_mll_plot(1,1)")
 ROOT.gROOT.ProcessLine("yt_background_template_mll_plot(2,2)")
 ROOT.gROOT.ProcessLine("yt_kinematics_distribution()")
 ROOT.gROOT.ProcessLine("yt_deltaR_and_NJets_distribution()")
+
+os.system("root -q -b '../scripts/ytRelative_difference_of_effyciency.C(10, 20)'")
+os.system("root -q -b '../scripts/ytRelative_difference_of_effyciency.C(20, 30)'")
+os.system("root -q -b '../scripts/ytRelative_difference_of_effyciency.C(30, 50)'")
+os.system("root -q -b '../scripts/ytRelative_difference_of_effyciency.C(50, 80)'")
+os.system("root -q -b '../scripts/ytRelative_difference_of_effyciency.C(80, 200)'")
