@@ -1136,7 +1136,7 @@ void ytRealLeptonsEfficiency_Data :: loop_over_electrons()
             h_signal_pt_meff->Fill(El_pT->at(n_el) / 1000., meff / 1000.);
             // 3-dim histograms
             //h_signal_pt_eta_mll->Fill(El_pT->at(n_el) / 1000., fabs(El_eta->at(n_el)), El_ZTandP_mll->at(n_el) / 1000.);
-            h_signal_pt_eta_mll->Fill(El_pT->at(n_el) / 1000., fabs(El_eta->at(n_el)), El_DR_closest_Jet->at(n_el));
+            h_signal_pt_eta_dRjet->Fill(El_pT->at(n_el) / 1000., fabs(El_eta->at(n_el)), El_DR_closest_Jet->at(n_el));
             h_signal_pt_dRjet_mll->Fill(El_pT->at(n_el) / 1000., El_DR_closest_Jet->at(n_el), El_ZTandP_mll->at(n_el) / 1000.);
         }
     }

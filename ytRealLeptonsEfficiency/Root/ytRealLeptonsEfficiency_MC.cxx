@@ -1581,7 +1581,7 @@ void ytRealLeptonsEfficiency_MC :: loop_over_muons()
             h_signal_pt_meff->Fill(Mu_pT->at(n_mu) / 1000., meff / 1000., normalization * signal_weight);
             // 3-dim histograms
             //h_signal_pt_eta_mll->Fill(Mu_pT->at(n_mu) / 1000., Mu_eta->at(n_mu), Mu_ZTandP_mll->at(n_mu) / 1000., signal_weight);
-            h_signal_pt_eta_mll->Fill(Mu_pT->at(n_mu) / 1000., fabs(Mu_eta->at(n_mu)), Mu_DR_closest_Jet->at(n_mu), normalization * signal_weight);
+            h_signal_pt_eta_dRjet->Fill(Mu_pT->at(n_mu) / 1000., fabs(Mu_eta->at(n_mu)), Mu_DR_closest_Jet->at(n_mu), normalization * signal_weight);
             h_signal_pt_dRjet_mll->Fill(Mu_pT->at(n_mu) / 1000., Mu_DR_closest_Jet->at(n_mu), Mu_ZTandP_mll->at(n_mu) / 1000., normalization * signal_weight);
         }
     }

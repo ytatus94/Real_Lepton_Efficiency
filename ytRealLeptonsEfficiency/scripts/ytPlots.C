@@ -17,7 +17,7 @@
 #include <sstream>
 using namespace std;
 
-TString path = "/Users/ytshen/Desktop/skim/Results/1015/";
+TString path = "/Users/ytshen/Desktop/skim/Results/1026/";
 
 //
 // Mll plots
@@ -2118,7 +2118,7 @@ void yt_Gtt_electron_real_efficiency_individual_cut_study()
     leg->AddEntry("h_Gtt_elec_Medium_only_dRjet", "Gtt MC (Medium only)");
     leg->AddEntry("h_Gtt_elec_track_iso_only_dRjet", "Gtt MC (Track iso only)");
     leg->AddEntry("h_Gtt_elec_calo_iso_only_dRjet", "Gtt MC (Calo iso only)");
-    leg->AddEntry("h_Gtt_elec_z0_only_dRjet", "Gtt MC (z_{0} cut only)");
+    leg->AddEntry("h_Gtt_elec_z0_only_dRjet", "Gtt MC (z0 cut only)");
     leg->AddEntry("h_Gtt_elec_eta_only_dRjet", "Gtt MC (#eta cut only)");
     leg->Draw();
 
@@ -2220,8 +2220,237 @@ void yt_Gtt_electron_real_efficiency_combine_cuts_study()
     Gtt_electron_real_efficiency_study->SaveAs("real_efficiency_Gtt_elec_combine_cuts_study.pdf", "pdf");
 }
 
+void yt_Gtt_electron_real_efficiency_comparison()
+{
+    TFile *Gtt_elec = TFile::Open(path + "submitDir_MC_GG_ttn1_electron/hist-0929_80mll100.root");
 
+    TH3F *h_Gtt_elec_baseline_pt_eta_dRjet = (TH3F *)Gtt_elec->Get("h_baseline_pt_eta_dRjet");
+    TH3F *h_Gtt_elec_signal_pt_eta_dRjet = (TH3F *)Gtt_elec->Get("h_signal_pt_eta_dRjet");
 
+    // For electron case, we only use |eta| < 2.0 to calculate the efficiency
+    int eta_low_bin = h_Gtt_elec_baseline_pt_eta_dRjet->GetYaxis()->FindBin(0+0.01);
+    int eta_up_bin = h_Gtt_elec_baseline_pt_eta_dRjet->GetYaxis()->FindBin(2-0.01);
+    
+    TH1F *h_Gtt_elec_baseline_pt = (TH1F *)h_Gtt_elec_baseline_pt_eta_dRjet->ProjectionX("", eta_low_bin, eta_up_bin)->Clone();
+    TH1F *h_Gtt_elec_baseline_eta = (TH1F *)h_Gtt_elec_baseline_pt_eta_dRjet->ProjectionY("")->Clone();
+    TH1F *h_Gtt_elec_baseline_dRjet = (TH1F *)h_Gtt_elec_baseline_pt_eta_dRjet->ProjectionZ("", 0, -1, eta_low_bin, eta_up_bin)->Clone();
+
+    TH1F *h_Gtt_elec_signal_pt = (TH1F *)h_Gtt_elec_signal_pt_eta_dRjet->ProjectionX("", eta_low_bin, eta_up_bin)->Clone();
+    TH1F *h_Gtt_elec_signal_eta = (TH1F *)h_Gtt_elec_signal_pt_eta_dRjet->ProjectionY("")->Clone();
+    TH1F *h_Gtt_elec_signal_dRjet = (TH1F *)h_Gtt_elec_signal_pt_eta_dRjet->ProjectionZ("", 0, -1, eta_low_bin, eta_up_bin)->Clone();
+
+    TH1F *h_Gtt_eff_pt = (TH1F *)h_Gtt_elec_signal_pt->Clone();
+    TH1F *h_Gtt_eff_eta = (TH1F *)h_Gtt_elec_signal_eta->Clone();
+    TH1F *h_Gtt_eff_dRjet = (TH1F *)h_Gtt_elec_signal_dRjet->Clone();
+
+    h_Gtt_eff_pt->Reset();
+    h_Gtt_eff_eta->Reset();
+    h_Gtt_eff_dRjet->Reset();
+
+    h_Gtt_eff_pt->SetName("h_Gtt_eff_pt");
+    h_Gtt_eff_eta->SetName("h_Gtt_eff_eta");
+    h_Gtt_eff_dRjet->SetName("h_Gtt_eff_dRjet");
+
+    h_Gtt_eff_pt->Divide(h_Gtt_elec_signal_pt, h_Gtt_elec_baseline_pt, 1, 1, "B");
+    h_Gtt_eff_eta->Divide(h_Gtt_elec_signal_eta, h_Gtt_elec_baseline_eta, 1, 1, "B");
+    h_Gtt_eff_dRjet->Divide(h_Gtt_elec_signal_dRjet, h_Gtt_elec_baseline_dRjet, 1, 1, "B");
+
+    TH1F *h_Gtt_elec_eff_pt = (TH1F *)Gtt_elec->Get("h_eff_pt");
+    TH1F *h_Gtt_elec_eff_eta = (TH1F *)Gtt_elec->Get("h_eff_eta");
+    TH1F *h_Gtt_elec_eff_dRjet = (TH1F *)Gtt_elec->Get("h_eff_dRjet");
+
+    h_Gtt_elec_eff_pt->SetName("h_Gtt_elec_eff_pt");
+    h_Gtt_elec_eff_eta->SetName("h_Gtt_elec_eff_eta");
+    h_Gtt_elec_eff_dRjet->SetName("h_Gtt_elec_eff_dRjet");
+
+    TCanvas *real_efficiency = new TCanvas("real_efficiency_plot", "Real Efficiency", 1200, 400);
+    real_efficiency->Divide(3, 1);
+
+    real_efficiency->cd(1);
+    h_Gtt_elec_eff_pt->SetMarkerColor(kOrange);
+    h_Gtt_elec_eff_pt->SetMarkerStyle(kFullCross);
+    h_Gtt_elec_eff_pt->SetLineColor(kOrange);
+    h_Gtt_elec_eff_pt->SetMaximum(1.1);
+    h_Gtt_elec_eff_pt->SetMinimum(0);
+    h_Gtt_elec_eff_pt->SetTitle("");
+    h_Gtt_elec_eff_pt->SetXTitle("p_{T} [GeV]");
+    h_Gtt_elec_eff_pt->SetYTitle("Real electron efficiency");
+    h_Gtt_elec_eff_pt->SetStats(kFALSE);
+    h_Gtt_elec_eff_pt->Draw();
+
+    h_Gtt_eff_pt->SetMarkerColor(kOrange+3);
+    h_Gtt_eff_pt->SetMarkerStyle(kOpenStar);
+    h_Gtt_eff_pt->SetLineColor(kOrange+3);
+    h_Gtt_eff_pt->Draw("same");
+
+    TLegend *leg1 = new TLegend(0.3, 0.2, 0.7, 0.5);
+    leg1->SetBorderSize(0);
+    leg1->SetFillColor(0);
+    leg1->SetTextSize(0.04);
+    leg1->AddEntry("h_Gtt_elec_eff_pt", "Gtt MC");
+    leg1->AddEntry("h_Gtt_eff_pt", "Gtt MC (0 < |#eta| < 2.0)");
+    leg1->Draw();
+
+    real_efficiency->cd(2);
+    h_Gtt_elec_eff_eta->SetMarkerColor(kOrange);
+    h_Gtt_elec_eff_eta->SetMarkerStyle(kFullCross);
+    h_Gtt_elec_eff_eta->SetLineColor(kOrange);
+    h_Gtt_elec_eff_eta->SetMaximum(1.1);
+    h_Gtt_elec_eff_eta->SetMinimum(0);
+    h_Gtt_elec_eff_eta->GetXaxis()->SetRangeUser(0, 2.0);
+    h_Gtt_elec_eff_eta->SetTitle("");
+    h_Gtt_elec_eff_eta->SetXTitle("|#eta|");
+    h_Gtt_elec_eff_eta->SetYTitle("Real electron efficiency");
+    h_Gtt_elec_eff_eta->SetStats(kFALSE);
+    h_Gtt_elec_eff_eta->Draw();
+
+    h_Gtt_eff_eta->SetMarkerColor(kOrange+3);
+    h_Gtt_eff_eta->SetMarkerStyle(kOpenStar);
+    h_Gtt_eff_eta->SetLineColor(kOrange+3);
+    h_Gtt_eff_eta->Draw("same");
+
+    TLegend *leg2 = new TLegend(0.3, 0.2, 0.7, 0.5);
+    leg2->SetBorderSize(0);
+    leg2->SetFillColor(0);
+    leg2->SetTextSize(0.04);
+    leg2->AddEntry("h_Gtt_elec_eff_eta", "Gtt MC");
+    leg2->AddEntry("h_Gtt_eff_eta", "Gtt MC (0 < |#eta| < 2.0)");
+    leg2->Draw();
+
+    real_efficiency->cd(3);
+    h_Gtt_elec_eff_dRjet->SetMarkerColor(kOrange);
+    h_Gtt_elec_eff_dRjet->SetMarkerStyle(kFullCross);
+    h_Gtt_elec_eff_dRjet->SetLineColor(kOrange);
+    h_Gtt_elec_eff_dRjet->SetMaximum(1.1);
+    h_Gtt_elec_eff_dRjet->SetMinimum(0);
+    h_Gtt_elec_eff_dRjet->SetTitle("");
+    h_Gtt_elec_eff_dRjet->SetXTitle("#Delta R(e, jet)");
+    h_Gtt_elec_eff_dRjet->SetYTitle("Real electron efficiency");
+    h_Gtt_elec_eff_dRjet->SetStats(kFALSE);
+    h_Gtt_elec_eff_dRjet->Draw();
+
+    h_Gtt_eff_dRjet->SetMarkerColor(kOrange+3);
+    h_Gtt_eff_dRjet->SetMarkerStyle(kOpenStar);
+    h_Gtt_eff_dRjet->SetLineColor(kOrange+3);
+    h_Gtt_eff_dRjet->Draw("same");
+
+    TLegend *leg3 = new TLegend(0.3, 0.2, 0.7, 0.5);
+    leg3->SetBorderSize(0);
+    leg3->SetFillColor(0);
+    leg3->SetTextSize(0.04);
+    leg3->AddEntry("h_Gtt_elec_eff_dRjet", "Gtt MC");
+    leg3->AddEntry("h_Gtt_eff_dRjet", "Gtt MC (0 < |#eta| < 2.0)");
+    leg3->Draw();
+
+    real_efficiency->SaveAs("real_efficiency_Gtt_elec_comparison.pdf", "pdf");
+}
+
+void yt_real_efficiency_vs_dR_electron()
+{
+    TFile *data_elec = TFile::Open(path + "submitDir_Data_electron/hist-0929_80mll100.root");
+    TFile *Zee_TandP = TFile::Open(path + "submitDir_MC_Zee/hist-0929_80mll100.root");
+    TFile *Zee_truth = TFile::Open(path + "submitDir_MC_Zee_truth_match/hist-0929_80mll100.root");
+	TFile *ttbar_elec = TFile::Open(path + "submitDir_MC_ttbar_electron/hist-0929_80mll100.root");
+	TFile *Gtt_elec = TFile::Open(path + "submitDir_MC_GG_ttn1_electron/hist-0929_80mll100.root");
+
+    TH3F *h_elec_baseline_pt_eta_dRjet = (TH3F *)data_elec->Get("h_baseline_pt_eta_dRjet");
+    TH3F *h_Zee_pt_baseline_eta_dRjet = (TH3F *)Zee_TandP->Get("h_baseline_pt_eta_dRjet");
+    TH3F *h_Zee_truth_baseline_pt_eta_dRjet = (TH3F *)Zee_truth->Get("h_baseline_pt_eta_dRjet");
+	TH3F *h_ttbar_elec_baseline_pt_eta_dRjet = (TH3F *)ttbar_elec->Get("h_baseline_pt_eta_dRjet");
+	TH3F *h_Gtt_elec_baseline_pt_eta_dRjet = (TH3F *)Gtt_elec->Get("h_baseline_pt_eta_dRjet");
+
+    TH3F *h_elec_signal_pt_eta_dRjet = (TH3F *)data_elec->Get("h_signal_pt_eta_dRjet");
+    TH3F *h_Zee_pt_signal_eta_dRjet = (TH3F *)Zee_TandP->Get("h_signal_pt_eta_dRjet");
+    TH3F *h_Zee_truth_signal_pt_eta_dRjet = (TH3F *)Zee_truth->Get("h_signal_pt_eta_dRjet");
+	TH3F *h_ttbar_elec_signal_pt_eta_dRjet = (TH3F *)ttbar_elec->Get("h_signal_pt_eta_dRjet");
+	TH3F *h_Gtt_elec_signal_pt_eta_dRjet = (TH3F *)Gtt_elec->Get("h_signal_pt_eta_dRjet");
+
+	// For electron case, we only use |eta| < 2.0 to calculate the efficiency
+	int eta_low_bin = h_elec_baseline_pt_eta_dRjet->GetYaxis()->FindBin(0+0.01);
+	int eta_up_bin = h_elec_baseline_pt_eta_dRjet->GetYaxis()->FindBin(2-0.01);
+
+	TH1F *h_elec_baseline_dRjet = (TH1F *)h_elec_baseline_pt_eta_dRjet->ProjectionZ("", 0, -1, eta_low_bin, eta_up_bin)->Clone();
+	TH1F *h_Zee_baseline_dRjet = (TH1F *)h_Zee_pt_baseline_eta_dRjet->ProjectionZ("", 0, -1, eta_low_bin, eta_up_bin)->Clone();
+	TH1F *h_Zee_truthbaseline_dRjet = (TH1F *)h_Zee_truth_baseline_pt_eta_dRjet->ProjectionZ("", 0, -1, eta_low_bin, eta_up_bin)->Clone();
+	TH1F *h_ttbar_elec_baseline_dRjet = (TH1F *)h_ttbar_elec_baseline_pt_eta_dRjet->ProjectionZ("", 0, -1, eta_low_bin, eta_up_bin)->Clone();
+	TH1F *h_Gtt_elec_baseline_dRjet = (TH1F *)h_Gtt_elec_baseline_pt_eta_dRjet->ProjectionZ("", 0, -1, eta_low_bin, eta_up_bin)->Clone();
+
+	TH1F *h_elec_signal_dRjet = (TH1F *)h_elec_signal_pt_eta_dRjet->ProjectionZ("", 0, -1, eta_low_bin, eta_up_bin)->Clone();
+	TH1F *h_Zee_signal_dRjet = (TH1F *)h_Zee_pt_signal_eta_dRjet->ProjectionZ("", 0, -1, eta_low_bin, eta_up_bin)->Clone();
+	TH1F *h_Zee_truth_signal_dRjet = (TH1F *)h_Zee_truth_signal_pt_eta_dRjet->ProjectionZ("", 0, -1, eta_low_bin, eta_up_bin)->Clone();
+	TH1F *h_ttbar_elec_signal_dRjet = (TH1F *)h_ttbar_elec_signal_pt_eta_dRjet->ProjectionZ("", 0, -1, eta_low_bin, eta_up_bin)->Clone();
+	TH1F *h_Gtt_elec_signal_dRjet = (TH1F *)h_Gtt_elec_signal_pt_eta_dRjet->ProjectionZ("", 0, -1, eta_low_bin, eta_up_bin)->Clone();
+
+	TH1F *h_elec_eff_dRjet = (TH1F *)h_elec_signal_dRjet->Clone();
+	TH1F *h_Zee_eff_dRjet = (TH1F *)h_Zee_signal_dRjet->Clone();
+	TH1F *h_Zee_truth_eff_dRjet = (TH1F *)h_Zee_truth_signal_dRjet->Clone();
+	TH1F *h_ttbar_elec_eff_dRjet = (TH1F *)h_ttbar_elec_signal_dRjet->Clone();
+	TH1F *h_Gtt_elec_eff_dRjet = (TH1F *)h_Gtt_elec_signal_dRjet->Clone();
+
+	h_elec_eff_dRjet->Reset();
+	h_Zee_eff_dRjet->Reset();
+	h_Zee_truth_eff_dRjet->Reset();
+	h_ttbar_elec_eff_dRjet->Reset();
+	h_Gtt_elec_eff_dRjet->Reset();
+
+    h_elec_eff_dRjet->SetName("h_elec_eff_dRjet");
+    h_Zee_eff_dRjet->SetName("h_Zee_eff_dRjet");
+    h_Zee_truth_eff_dRjet->SetName("h_Zee_truth_eff_dRjet");
+    h_ttbar_elec_eff_dRjet->SetName("h_ttbar_elec_eff_dRjet");
+    h_Gtt_elec_eff_dRjet->SetName("h_Gtt_elec_eff_dRjet");
+
+	h_elec_eff_dRjet->Divide(h_elec_signal_dRjet, h_elec_baseline_dRjet, 1, 1, "B");
+    h_Zee_eff_dRjet->Divide(h_Zee_signal_dRjet, h_Zee_baseline_dRjet, 1, 1, "B");
+    h_Zee_truth_eff_dRjet->Divide(h_Zee_truth_signal_dRjet, h_Zee_truthbaseline_dRjet, 1, 1, "B");
+    h_ttbar_elec_eff_dRjet->Divide(h_ttbar_elec_signal_dRjet, h_ttbar_elec_baseline_dRjet, 1, 1, "B");
+    h_Gtt_elec_eff_dRjet->Divide(h_Gtt_elec_signal_dRjet, h_Gtt_elec_baseline_dRjet, 1, 1, "B");
+
+    TCanvas *real_efficiency_elec = new TCanvas("real_efficiency_plot", "Real Efficiency", 600, 600);
+
+    h_elec_eff_dRjet->SetMarkerColor(kBlack);
+    h_elec_eff_dRjet->SetMarkerStyle(kFullCircle);
+    h_elec_eff_dRjet->SetLineColor(kBlack);
+    h_elec_eff_dRjet->SetMaximum(1.1);
+    h_elec_eff_dRjet->SetMinimum(0);
+    h_elec_eff_dRjet->SetTitle("");
+    h_elec_eff_dRjet->SetXTitle("#Delta R(e, jet)");
+    h_elec_eff_dRjet->SetYTitle("Real electron efficiency");
+    h_elec_eff_dRjet->SetStats(kFALSE);
+    h_elec_eff_dRjet->Draw();
+
+    h_Zee_eff_dRjet->SetMarkerColor(kRed);
+    h_Zee_eff_dRjet->SetMarkerStyle(kFullSquare);
+    h_Zee_eff_dRjet->SetLineColor(kRed);
+    h_Zee_eff_dRjet->Draw("same");
+
+    h_Zee_truth_eff_dRjet->SetMarkerColor(kBlue);
+    h_Zee_truth_eff_dRjet->SetMarkerStyle(kFullTriangleUp);
+    h_Zee_truth_eff_dRjet->SetLineColor(kBlue);
+    h_Zee_truth_eff_dRjet->Draw("same");
+    
+    h_ttbar_elec_eff_dRjet->SetMarkerColor(kMagenta);
+    h_ttbar_elec_eff_dRjet->SetMarkerStyle(kFullDiamond);
+    h_ttbar_elec_eff_dRjet->SetLineColor(kMagenta);
+    h_ttbar_elec_eff_dRjet->Draw("same");
+
+    h_Gtt_elec_eff_dRjet->SetMarkerColor(kOrange);
+    h_Gtt_elec_eff_dRjet->SetMarkerStyle(kFullCross);
+    h_Gtt_elec_eff_dRjet->SetLineColor(kOrange);
+    h_Gtt_elec_eff_dRjet->Draw("same");
+
+    TLegend *leg1 = new TLegend(0.3, 0.2, 0.7, 0.5);
+    leg1->SetBorderSize(0);
+    leg1->SetFillColor(0);
+    leg1->SetTextSize(0.04);
+    leg1->AddEntry("h_elec_eff_dRjet", "Data");
+    leg1->AddEntry("h_Zee_eff_dRjet", "Z #rightarrow ee T&P MC");
+    leg1->AddEntry("h_Zee_truth_eff_dRjet", "Z #rightarrow ee truth matched MC");
+    leg1->AddEntry("h_ttbar_elec_eff_dRjet", "ttbar MC");
+    leg1->AddEntry("h_Gtt_elec_eff_dRjet", "Gtt MC (0 < |#eta| < 2.0)");
+    leg1->Draw();
+
+    real_efficiency_elec->SaveAs("real_efficiency_vs_dR_elec.pdf", "pdf");
+}
 
 
 // lepton = electron, muon
@@ -2829,7 +3058,7 @@ void yt_kinematics_distribution()
 
 void yt_deltaR_and_NJets_distribution()
 {
-    ////TString path = "/Users/ytshen/Desktop/skim/Results/1015/";
+    //TString path = "/Users/ytshen/Desktop/skim/Results/1015/";
 
     TFile *data_elec = TFile::Open(path + "submitDir_Data_electron/hist-0929_80mll100.root");
     TFile *data_muon = TFile::Open(path + "submitDir_Data_muon/hist-0929_80mll100.root");

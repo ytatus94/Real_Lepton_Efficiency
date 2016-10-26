@@ -26,7 +26,7 @@ def eta_str(eta_low, eta_up):
     return "_eta" + str(int(eta_low * 100)) + str(int(eta_up * 100))
 
 
-def calculate_real_lepton_efficiencies_with_systematics(filename1, filename2, filename3):
+def calculate_real_electron_efficiencies_with_systematics(filename1, filename2, filename3):
     "Calculate the real lepton efficiencies from files and make a table for calculating systematics."
     central_values = []
     uncertainties = []
@@ -123,7 +123,7 @@ def variate_template():
                 file2 = "template1_range_baseline_mll80100" + pT + eta + ".txt"
                 file3 = "template2_range_baseline_mll80100" + pT + eta + ".txt"
                 print str(pt_range) + " GeV < pT < " + str(pt_ranges[pt_range_index]) + " GeV, " + str(eta_low) + " < eta < " + str(eta_up),
-                calculate_real_lepton_efficiencies_with_systematics(file1, file2, file3)
+                calculate_real_electron_efficiencies_with_systematics(file1, file2, file3)
 
 
 def variate_fitting_range():
@@ -163,7 +163,7 @@ def variate_fitting_range():
                 file2 = "baseline_template_range1_mll80100" + pT + eta + ".txt"
                 file3 = "baseline_template_range2_mll80100" + pT + eta + ".txt"
                 print str(pt_range) + " GeV < pT < " + str(pt_ranges[pt_range_index]) + " GeV, " + str(eta_low) + " < eta < " + str(eta_up),
-                calculate_real_lepton_efficiencies_with_systematics(file1, file2, file3)
+                calculate_real_electron_efficiencies_with_systematics(file1, file2, file3)
 
 
 def variate_mll_window():
@@ -204,7 +204,7 @@ def variate_mll_window():
                 file2 = "baseline_template_range_baseline_mll75105" + pT + eta + ".txt"
                 file3 = "baseline_template_range_baseline_mll8595" + pT + eta + ".txt"
                 print str(pt_range) + " GeV < pT < " + str(pt_ranges[pt_range_index]) + " GeV, " + str(eta_low) + " < eta < " + str(eta_up),
-                calculate_real_lepton_efficiencies_with_systematics(file1, file2, file3)
+                calculate_real_electron_efficiencies_with_systematics(file1, file2, file3)
 
 
 
