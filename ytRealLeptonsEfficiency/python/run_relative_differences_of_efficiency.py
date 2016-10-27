@@ -8,11 +8,11 @@ import os, ROOT, math, array
 #os.system("root -q -b '../scripts/ytRelative_difference_of_efficiency.C(80, 200)' > relative_difference_of_efficiency_pt80200.txt")
 
 # 0 < |eta| < 2 for electron
-#os.system("root -q -b '../scripts/ytRelative_difference_of_efficiency.C(10, 20, true)' > relative_difference_of_efficiency_pt1020_eta020.txt")
-#os.system("root -q -b '../scripts/ytRelative_difference_of_efficiency.C(20, 30, true)' > relative_difference_of_efficiency_pt2030_eta020.txt")
-#os.system("root -q -b '../scripts/ytRelative_difference_of_efficiency.C(30, 50, true)' > relative_difference_of_efficiency_pt3050_eta020.txt")
-#os.system("root -q -b '../scripts/ytRelative_difference_of_efficiency.C(50, 80, true)' > relative_difference_of_efficiency_pt5080_eta020.txt")
-#os.system("root -q -b '../scripts/ytRelative_difference_of_efficiency.C(80, 200, true)' > relative_difference_of_efficiency_pt80200_eta020.txt")
+#os.system("root -q -b '../scripts/ytRelative_difference_of_efficiency.C(10, 20, true, true)' > ../scripts/relative_difference_of_efficiency_pt1020_eta020.txt")
+#os.system("root -q -b '../scripts/ytRelative_difference_of_efficiency.C(20, 30, true, true)' > ../scripts/relative_difference_of_efficiency_pt2030_eta020.txt")
+#os.system("root -q -b '../scripts/ytRelative_difference_of_efficiency.C(30, 50, true, true)' > ../scripts/relative_difference_of_efficiency_pt3050_eta020.txt")
+#os.system("root -q -b '../scripts/ytRelative_difference_of_efficiency.C(50, 80, true, true)' > ../scripts/relative_difference_of_efficiency_pt5080_eta020.txt")
+#os.system("root -q -b '../scripts/ytRelative_difference_of_efficiency.C(80, 200, true, true)' > ../scripts/relative_difference_of_efficiency_pt80200_eta020.txt")
 
 dR_bin1 = []
 dR_bin2 = []
@@ -45,23 +45,23 @@ for filename in filelist:
         lines = fopen.readlines()
         for line in lines:
             if "bin=1:" in line: 
-                dR_bin1.append(float(line[line.find(":")+2: line.find("$pm$")-1]))
-                dR_bin1_err.append(float(line[line.find("$pm$")+5: len(line)-1]))
+                dR_bin1.append(float(line[line.find(":")+2: line.find("$pm$")-1]) * 100.)
+                dR_bin1_err.append(float(line[line.find("$pm$")+5: len(line)-1]) * 100.)
             elif "bin=2:" in line:
-                dR_bin2.append(float(line[line.find(":")+2: line.find("$pm$")-1]))
-                dR_bin2_err.append(float(line[line.find("$pm$")+5: len(line)-1]))
+                dR_bin2.append(float(line[line.find(":")+2: line.find("$pm$")-1]) * 100.)
+                dR_bin2_err.append(float(line[line.find("$pm$")+5: len(line)-1]) * 100.)
             elif "bin=3:" in line:
-                dR_bin3.append(float(line[line.find(":")+2: line.find("$pm$")-1]))
-                dR_bin3_err.append(float(line[line.find("$pm$")+5: len(line)-1]))
+                dR_bin3.append(float(line[line.find(":")+2: line.find("$pm$")-1]) * 100.)
+                dR_bin3_err.append(float(line[line.find("$pm$")+5: len(line)-1]) * 100.)
             elif "bin=4:" in line:
-                dR_bin4.append(float(line[line.find(":")+2: line.find("$pm$")-1]))
-                dR_bin4_err.append(float(line[line.find("$pm$")+5: len(line)-1]))
+                dR_bin4.append(float(line[line.find(":")+2: line.find("$pm$")-1]) * 100.)
+                dR_bin4_err.append(float(line[line.find("$pm$")+5: len(line)-1]) * 100.)
             elif "bin=5:" in line:
-                dR_bin5.append(float(line[line.find(":")+2: line.find("$pm$")-1]))
-                dR_bin5_err.append(float(line[line.find("$pm$")+5: len(line)-1]))
+                dR_bin5.append(float(line[line.find(":")+2: line.find("$pm$")-1]) * 100.)
+                dR_bin5_err.append(float(line[line.find("$pm$")+5: len(line)-1]) * 100.)
             elif "bin=6:" in line:
-                dR_bin6.append(float(line[line.find(":")+2: line.find("$pm$")-1]))
-                dR_bin6_err.append(float(line[line.find("$pm$")+5: len(line)-1]))
+                dR_bin6.append(float(line[line.find(":")+2: line.find("$pm$")-1]) * 100.)
+                dR_bin6_err.append(float(line[line.find("$pm$")+5: len(line)-1]) * 100.)
 
 ttbar_elec_dR_bin1 = dR_bin1[0::4]
 ttbar_elec_dR_bin2 = dR_bin2[0::4]
@@ -197,8 +197,8 @@ def make_plot(canvas_name, y, y_err):
     mg.Add(gr6)
     mg.Draw("AP")
     mg.GetXaxis().SetTitle("p_{T} [GeV]")
-    mg.GetYaxis().SetTitle("Relative differences of efficiency")
-    mg.SetMaximum(1.)
+    mg.GetYaxis().SetTitle("Relative differences of efficiency (%)")
+    mg.SetMaximum(99.)
     mg.SetMinimum(0.)
 
     leg = ROOT.TLegend(0.6, 0.6, 0.9, 0.9)

@@ -2,6 +2,16 @@
 This is the new real lepton efficiency framework.
 
 
+### v31. Rebin
+1. Add the rebin histograms in `ytRelative_difference_of_efficiency.C`
+2. Change the y-axis to percentage in `run_relative_differences_of_efficiency.py`
+
+### v30. Correct typo
+1. Correct typo in `ytRealLeptonsEfficiency_Data` and `ytRealLeptonsEfficiency_MC`.
+2. Change function names in `run_elec_systematics.py`
+3. Add two scripts for calculating the relative differeice of efficiencies `ytRelative_difference_of_efficiency.C` and `run_relative_differences_of_efficiency.py`.
+4. Add new function in `ytPlots.C`
+
 ### v29. Add 3 dim histogram pt_eta_dRjet
 1. And new 3 dim histograms pt_eta_dRjet for baseline and signal in `ytRealLeptonsEfficiency_Data` and `ytRealLeptonsEfficiency_MC`.
 
