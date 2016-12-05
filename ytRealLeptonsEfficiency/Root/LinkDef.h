@@ -20,4 +20,3 @@
 #pragma link C++ class ytRealLeptonsEfficiency_MC+;
 #pragma link C++ class ytRealLeptonsEfficiency_Data+;
 #endif
-

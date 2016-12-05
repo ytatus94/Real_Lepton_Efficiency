@@ -912,7 +912,7 @@ public:
     void debug_sum_of_weight_print();
 
     // this is needed to distribute the algorithm to the workers
-	ClassDef(ytEventSelection, 1);
+    ClassDef(ytEventSelection, 1);
 };
 
 #endif

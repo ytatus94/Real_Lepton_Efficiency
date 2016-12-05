@@ -27,84 +27,84 @@ float boosted_mass = 1000.; // unit: GeV
 
 int main( int argc, char* argv[] ) {
 
-	bool isMC = false;
-	bool isData = false;
+    bool isMC = false;
+    bool isData = false;
 
-	string process;
+    string process;
 
-	bool isBoosted = true; // default use boosted Gtt
+    bool isBoosted = true; // default use boosted Gtt
 
-	bool use_Condor = false;
-	bool use_Grid = false;
-	bool use_PROOF = false;
+    bool use_Condor = false;
+    bool use_Grid = false;
+    bool use_PROOF = false;
 
-	for (int i = 1; i < argc; i++) {
-		const char *key = argv[i];
-		// Check MC or data.
-		if (strcmp(key, "isMC") == 0)
-			isMC = true;
-		else if (strcmp(key, "isData") == 0)
-			isData = true;
-		// Choose samples to run.
-		else if (strcmp(key, "4topSM") == 0)
-			process = "4topSM";
-		else if (strcmp(key, "Zee") == 0)
-			process = "Zee";
-		else if (strcmp(key, "Zmumu") == 0)
-			process = "Zmumu";
-		else if (strcmp(key, "ttbar") == 0)
-			process = "ttbar";
-		else if (strcmp(key, "GG_ttn1") == 0)
-			process = "GG_ttn1";
-		// Run boosted or compressed for GG_ttn1?
-		else if (strcmp(key, "compressed") == 0)
-			isBoosted = false;
-		// Specify the driver to run.
-		else if (strcmp(key, "Condor") == 0)
-			use_Condor = true;
-		else if (strcmp(key, "Grid") == 0)
-			use_Grid = true;
-		else if (strcmp(key, "PROOF") == 0)
-			use_PROOF = true;
-	}
+    for (int i = 1; i < argc; i++) {
+        const char *key = argv[i];
+        // Check MC or data.
+        if (strcmp(key, "isMC") == 0)
+            isMC = true;
+        else if (strcmp(key, "isData") == 0)
+            isData = true;
+        // Choose samples to run.
+        else if (strcmp(key, "4topSM") == 0)
+            process = "4topSM";
+        else if (strcmp(key, "Zee") == 0)
+            process = "Zee";
+        else if (strcmp(key, "Zmumu") == 0)
+            process = "Zmumu";
+        else if (strcmp(key, "ttbar") == 0)
+            process = "ttbar";
+        else if (strcmp(key, "GG_ttn1") == 0)
+            process = "GG_ttn1";
+        // Run boosted or compressed for GG_ttn1?
+        else if (strcmp(key, "compressed") == 0)
+            isBoosted = false;
+        // Specify the driver to run.
+        else if (strcmp(key, "Condor") == 0)
+            use_Condor = true;
+        else if (strcmp(key, "Grid") == 0)
+            use_Grid = true;
+        else if (strcmp(key, "PROOF") == 0)
+            use_PROOF = true;
+    }
 
-	printf("isMC = %s, isData = %s\n", isMC ? "true" : "false", isData ? "true" : "false");
+    printf("isMC = %s, isData = %s\n", isMC ? "true" : "false", isData ? "true" : "false");
 
-	if (use_Condor) {
-		printf("Submit jobs to CondorDriver...\n");
-	}
-	else if (use_Grid) {
-		printf("Submit jobs to PrunDriver...\n");
-	}
-	else if (use_PROOF) {
-		printf("Submit jobs to ProofDriver...\n");
-	}
-	else {
-		printf("Submit jobs to DirectDriver...\n");
-	}
+    if (use_Condor) {
+        printf("Submit jobs to CondorDriver...\n");
+    }
+    else if (use_Grid) {
+        printf("Submit jobs to PrunDriver...\n");
+    }
+    else if (use_PROOF) {
+        printf("Submit jobs to ProofDriver...\n");
+    }
+    else {
+        printf("Submit jobs to DirectDriver...\n");
+    }
 
-	if (isMC && !process.empty())
-		cout << "process = " << process << endl;
+    if (isMC && !process.empty())
+        cout << "process = " << process << endl;
 
-	string submitDir;
-	if (isMC)
-		submitDir = "skimmed_MC_" + process;
-	else if (isData)
-		submitDir = "skimmed_Data";
+    string submitDir;
+    if (isMC)
+        submitDir = "skimmed_MC_" + process;
+    else if (isData)
+        submitDir = "skimmed_Data";
 
-	// Construct the samples to run on:
-	SH::SampleHandler sh;
+    // Construct the samples to run on:
+    SH::SampleHandler sh;
 
-	// use SampleHandler to scan all of the subdirectories of a directory for particular MC single file:
-	const char* inputFilePath;
+    // use SampleHandler to scan all of the subdirectories of a directory for particular MC single file:
+    const char* inputFilePath;
 
-	const double luminosity = 13.2; // unit: 1/fb, Ximo: the lumi is 13.2 for the ichep analysis
-	// cross section, k factor, and filter efficiency are obtained from
-	// https://svnweb.cern.ch/trac/atlasphys-susy/browser/Physics/SUSY/Analyses/SameSignLeptonsJets/trunk/Data/ss3l_xsect.txt
-	double cross_section = 1.;
-	double k_factor = 1.;
-	double filter_efficiency = 1.;
-	double derivation_stat_weights = 1.;
+    const double luminosity = 13.2; // unit: 1/fb, Ximo: the lumi is 13.2 for the ichep analysis
+    // cross section, k factor, and filter efficiency are obtained from
+    // https://svnweb.cern.ch/trac/atlasphys-susy/browser/Physics/SUSY/Analyses/SameSignLeptonsJets/trunk/Data/ss3l_xsect.txt
+    double cross_section = 1.;
+    double k_factor = 1.;
+    double filter_efficiency = 1.;
+    double derivation_stat_weights = 1.;
 
 	if (isMC) {
 		cout << "Read MC files..." << endl;
