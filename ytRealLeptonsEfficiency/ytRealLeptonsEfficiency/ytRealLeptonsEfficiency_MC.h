@@ -630,8 +630,8 @@ public:
     TH1F *h_mll; //!
     TH1F *h_zPV; //!
 
-    // Baseline histogram
-    // 1-dim histogram
+    // Baseline histograms
+    // 1-dim histograms
     TH1F *h_baseline_mll; //!
     TH1F *h_baseline_pt; //!
     TH1F *h_baseline_eta; //!
@@ -658,9 +658,9 @@ public:
     TH1F *h_baseline_z0_cut; //!
     TH1F *h_baseline_sigd0_cut; //!
 
-    // 2-dim histogra
-    TH2F *h_baseline_pt_eta; //! x: pt, y: e
-    TH2F *h_baseline_pt_nJets; //! x: pt, y: nJet
+    // 2-dim histograms
+    TH2F *h_baseline_pt_eta; //! x: pt, y: eta
+    TH2F *h_baseline_pt_nJets; //! x: pt, y: nJets
     TH2F *h_baseline_pt_dRjet; //! x: pt, y: dRjet
     TH2F *h_baseline_pt_Etmiss; //! x: pt, y: Etmiss
     TH2F *h_baseline_pt_meff; //! x: pt, y: meff
@@ -669,7 +669,7 @@ public:
     TH2F *h_baseline_pt_dR_truth_Cjet; //! x: pt, y: dRjet
     TH2F *h_baseline_pt_dR_truth_Lightjet; //! x: pt, y: dRjet
 
-    // 3-dim histogra
+    // 3-dim histograms
     TH3F *h_baseline_pt_eta_mll; //! x: pt, y: eta, z: mll
     TH3F *h_baseline_pt_eta_dRjet; //! x: pt, y: eta, z: dRjet
     TH3F *h_baseline_pt_dRjet_mll; //! x: pt, y: dRjet, z: mll
@@ -742,6 +742,7 @@ public:
     TH3F *h_bkg_template_fail_CaloIso_and_TrackIso_pt_eta_mll; //! x: pt, y: eta, z: mll
 
     // Real lepton efficiency histograms
+    // 1-dim histograms
     TH1F *h_eff_pt; //!
     TH1F *h_eff_eta; //!
     TH1F *h_eff_nJets; //!
