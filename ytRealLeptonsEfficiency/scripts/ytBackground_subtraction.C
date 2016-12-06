@@ -19,31 +19,31 @@ using namespace std;
 // Using a exponential function to fit: baseline: [60, 80]U[100, 120]
 Double_t fit_exp_base(double *x, double *par)
 {
-	if (x[0] > 80. && x[0] < 100.) {
-		TF1::RejectPoint();
-		return 0;
-	}
-	return par[0]*TMath::Exp(-par[1]*(x[0]-60.));
+    if (x[0] > 80. && x[0] < 100.) {
+        TF1::RejectPoint();
+        return 0;
+    }
+    return par[0]*TMath::Exp(-par[1]*(x[0]-60.));
 }
 
 // Using a exponential function to fit: range1: [60, 70]U[100, 120]
 Double_t fit_exp_var1(double *x, double *par)
 {
-	if (x[0] > 70. && x[0] < 100.) {
-		TF1::RejectPoint();
-		return 0;
-	}
-	return par[0]*TMath::Exp(-par[1]*(x[0]-60.));
+    if (x[0] > 70. && x[0] < 100.) {
+        TF1::RejectPoint();
+        return 0;
+    }
+    return par[0]*TMath::Exp(-par[1]*(x[0]-60.));
 }
 
 // Using a exponential function to fit: range2: [65, 75]U[100, 120]
 Double_t fit_exp_var2(double *x, double *par)
 {
-	if (x[0] > 75. && x[0] < 100.) {
-		TF1::RejectPoint();
-		return 0;
-	}
-	return par[0]*TMath::Exp(-par[1]*(x[0]-60.));
+    if (x[0] > 75. && x[0] < 100.) {
+        TF1::RejectPoint();
+        return 0;
+    }
+    return par[0]*TMath::Exp(-par[1]*(x[0]-60.));
 }
 
 // Because we exclude the Z mass peak in the fitting function, we need to define a new function including Z mass peak.

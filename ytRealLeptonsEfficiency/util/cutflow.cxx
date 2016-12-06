@@ -27,30 +27,30 @@ float boosted_mass = 1000.; // unit: GeV
 
 int main( int argc, char* argv[] ) {
 
-	// Take the submit directory from the input if provided:
-	//std::string submitDir = "submitDir";
-	std::string submitDir;
-	//if( argc > 1 ) submitDir = argv[ 1 ];
+    // Take the submit directory from the input if provided:
+    //std::string submitDir = "submitDir";
+    std::string submitDir;
+    //if( argc > 1 ) submitDir = argv[ 1 ];
 
-	bool isMC = false;
-	bool isData = false;
-	bool skim = false;
-	string process;
-	bool isBoosted = true; // default use boosted Gtt
-	bool use_Condor = false;
-	bool use_Grid = false;
-	bool use_PROOF = false;
+    bool isMC = false;
+    bool isData = false;
+    bool skim = false;
+    string process;
+    bool isBoosted = true; // default use boosted Gtt
+    bool use_Condor = false;
+    bool use_Grid = false;
+    bool use_PROOF = false;
 
-	for (int i = 1; i < argc; i++) {
-		const char *key = argv[i];
-		// Check MC or data.
-		if (strcmp(key, "isMC") == 0)
+    for (int i = 1; i < argc; i++) {
+        const char *key = argv[i];
+        // Check MC or data.
+        if (strcmp(key, "isMC") == 0)
             isMC = true;
         else if (strcmp(key, "isData") == 0)
             isData = true;
         // Doing skim?
         else if (strcmp(key, "skim") == 0)
-        	skim = true;
+            skim = true;
         // Choose samples to run.
         else if (strcmp(key, "4topSM") == 0)
             process = "4topSM";
@@ -63,40 +63,40 @@ int main( int argc, char* argv[] ) {
         else if (strcmp(key, "GG_ttn1") == 0)
             process = "GG_ttn1";
         // Run boosted or compressed for GG_ttn1?
-		else if (strcmp(key, "compressed") == 0)
-			isBoosted = false;
-		// Specify the driver to run.
-		else if (strcmp(key, "Condor") == 0)
-			use_Condor = true;
-		else if (strcmp(key, "Grid") == 0)
-			use_Grid = true;
-		else if (strcmp(key, "PROOF") == 0)
-			use_PROOF = true;
-	}	
+        else if (strcmp(key, "compressed") == 0)
+            isBoosted = false;
+        // Specify the driver to run.
+        else if (strcmp(key, "Condor") == 0)
+            use_Condor = true;
+        else if (strcmp(key, "Grid") == 0)
+            use_Grid = true;
+        else if (strcmp(key, "PROOF") == 0)
+            use_PROOF = true;
+    }   
 
-	printf("isMC = %s, isData = %s, skim = %s\n", isMC ? "true" : "false", isData ? "true" : "false", skim ? "true" : "false");
+    printf("isMC = %s, isData = %s, skim = %s\n", isMC ? "true" : "false", isData ? "true" : "false", skim ? "true" : "false");
 
-	if (isMC && !process.empty())
-		cout << "process = " << process << endl;
+    if (isMC && !process.empty())
+        cout << "process = " << process << endl;
 
-	if (isMC)
-		submitDir = "submitDir_" + process;
-	else if (isData)
-		submitDir = "submitDir_Data";
+    if (isMC)
+        submitDir = "submitDir_" + process;
+    else if (isData)
+        submitDir = "submitDir_Data";
 
-	// Construct the samples to run on:
-	SH::SampleHandler sh;
+    // Construct the samples to run on:
+    SH::SampleHandler sh;
 
-	// use SampleHandler to scan all of the subdirectories of a directory for particular MC single file:
-	const char* inputFilePath;
+    // use SampleHandler to scan all of the subdirectories of a directory for particular MC single file:
+    const char* inputFilePath;
 
     if (isMC) {
         cout << "Read MC files..." << endl;
         inputFilePath = "/UserDisk2/yushen/Ximo_ntuples/v44/MC"; // no slash (/) at the end.
         // For cutflow study
         if (process == "4topSM") {
-			//inputFilePath = "/UserDisk2/yushen/Ximo_ntuples/v44/MC/user.jpoveda.t0789_v44.410080.MadGraphPythia8EvtGen_A14NNPDF23_4topSM.DAOD_SUSY2.s2608_r7725_p2666_output.root";
-			//SH::ScanDir().filePattern("user.jpoveda.9048853._000001.output.root").scan(sh, inputFilePath);
+            //inputFilePath = "/UserDisk2/yushen/Ximo_ntuples/v44/MC/user.jpoveda.t0789_v44.410080.MadGraphPythia8EvtGen_A14NNPDF23_4topSM.DAOD_SUSY2.s2608_r7725_p2666_output.root";
+            //SH::ScanDir().filePattern("user.jpoveda.9048853._000001.output.root").scan(sh, inputFilePath);
             SH::ScanDir().samplePattern("user.jpoveda.t0789_v44.*4topSM*").scan(sh, inputFilePath); // Get all root files in this dataset
         }
         // For real lepton efficiency study
@@ -117,39 +117,39 @@ int main( int argc, char* argv[] ) {
             //SH::ScanDir().samplePattern("user.jpoveda.t0789_v44.*GG_ttn1_*.root").scan(sh, inputFilePath); // Get all root files in this dataset
 
             // First do an inclusive scan
-			SH::SampleHandler sh_gtt;
-			SH::ScanDir().samplePattern("user.jpoveda.t0789_v44.*GG_ttn1_*.root").scan(sh_gtt, inputFilePath); // Get all root files in this dataset	
+            SH::SampleHandler sh_gtt;
+            SH::ScanDir().samplePattern("user.jpoveda.t0789_v44.*GG_ttn1_*.root").scan(sh_gtt, inputFilePath); // Get all root files in this dataset    
 
-			for (auto & sample : sh_gtt) {
-				// Get the full path of root file: /path/data_set/root_file
-				// We only need to know the data_set name, so the index file of fileName uses 0 is enough.
-				string filename = sample->fileName(0);
-				//cout << filename << endl;
-				int pos_GG_ttn1 = filename.find("GG_ttn1");
-				string str("GG_ttn1_");
-				int length_GG_ttn1_ = str.length();
-				int begin_pos = pos_GG_ttn1 + length_GG_ttn1_;
-				int pos_DAOD = filename.find(".DAOD"); // includes the "."
-				int length_to_retrieve = pos_DAOD - begin_pos;
-				string mass_values = filename.substr(begin_pos, length_to_retrieve);
-				int length_mass_values = mass_values.length();
-				int pos_delimiter1 = mass_values.find("_");
-				float m1 = stof(mass_values.substr(0, pos_delimiter1));
-				int pos_delimiter2 = mass_values.find("_", pos_delimiter1 + 1);
-				//float m2 = stof(mass_values.substr(pos_delimiter1 + 1, pos_delimiter2 - (pos_delimiter1 + 1)));
-				float m3 = stof(mass_values.substr(pos_delimiter2 + 1, length_mass_values - (pos_delimiter2 + 1)));
-				float delta_mass = m1 - m3;
-				//cout << "delta_mass=" << delta_mass << endl;
-				// Then filter the samples
-				if (isBoosted && // Boosted region
-					delta_mass > boosted_mass) {
-					sh.add(sample);
-				}
-				else if (!isBoosted) { // Compressed region
-					cout << "What is the definition of compressed region?" << endl;
-					// To be implemented.
-				}
-			}
+            for (auto & sample : sh_gtt) {
+                // Get the full path of root file: /path/data_set/root_file
+                // We only need to know the data_set name, so the index file of fileName uses 0 is enough.
+                string filename = sample->fileName(0);
+                //cout << filename << endl;
+                int pos_GG_ttn1 = filename.find("GG_ttn1");
+                string str("GG_ttn1_");
+                int length_GG_ttn1_ = str.length();
+                int begin_pos = pos_GG_ttn1 + length_GG_ttn1_;
+                int pos_DAOD = filename.find(".DAOD"); // includes the "."
+                int length_to_retrieve = pos_DAOD - begin_pos;
+                string mass_values = filename.substr(begin_pos, length_to_retrieve);
+                int length_mass_values = mass_values.length();
+                int pos_delimiter1 = mass_values.find("_");
+                float m1 = stof(mass_values.substr(0, pos_delimiter1));
+                int pos_delimiter2 = mass_values.find("_", pos_delimiter1 + 1);
+                //float m2 = stof(mass_values.substr(pos_delimiter1 + 1, pos_delimiter2 - (pos_delimiter1 + 1)));
+                float m3 = stof(mass_values.substr(pos_delimiter2 + 1, length_mass_values - (pos_delimiter2 + 1)));
+                float delta_mass = m1 - m3;
+                //cout << "delta_mass=" << delta_mass << endl;
+                // Then filter the samples
+                if (isBoosted && // Boosted region
+                    delta_mass > boosted_mass) {
+                    sh.add(sample);
+                }
+                else if (!isBoosted) { // Compressed region
+                    cout << "What is the definition of compressed region?" << endl;
+                    // To be implemented.
+                }
+            }
         }
     }
     else if (isData) {
@@ -159,32 +159,32 @@ int main( int argc, char* argv[] ) {
         SH::ScanDir().samplePattern("user.jpoveda.t0789_v44.*.physics_Main.DAOD_SUSY2.*").scan(sh, inputFilePath); // Get all root files in this dataset
     }
 
-	// Set the name of the input TTree.
-	sh.setMetaString("nc_tree", "AnaNtup");
+    // Set the name of the input TTree.
+    sh.setMetaString("nc_tree", "AnaNtup");
 
-	// Print what we found:
-	sh.print();
+    // Print what we found:
+    sh.print();
 /*
-	for (unsigned int sample_itr = 0; sample_itr < sh.size(); sample_itr++) {
-		SH::Sample *sample = sh.at(sample_itr);
-		cout << sample << endl;
-		cout << sample->name() << endl;
-		cout << sample->numFiles() << endl;
-		cout << sample->fileName(0) << endl;
-		// retrieve the histogram
-		//TH1D *hist = (TH1D *)sample->readHist("DerivationStat_Weights");
-		TH1D *hist = (TH1D *)sample->readHist("DerivationStat_Weights");
-		cout << hist << endl;
-		//cout << hist->GetBinContent(1) << endl;
-	}
+    for (unsigned int sample_itr = 0; sample_itr < sh.size(); sample_itr++) {
+        SH::Sample *sample = sh.at(sample_itr);
+        cout << sample << endl;
+        cout << sample->name() << endl;
+        cout << sample->numFiles() << endl;
+        cout << sample->fileName(0) << endl;
+        // retrieve the histogram
+        //TH1D *hist = (TH1D *)sample->readHist("DerivationStat_Weights");
+        TH1D *hist = (TH1D *)sample->readHist("DerivationStat_Weights");
+        cout << hist << endl;
+        //cout << hist->GetBinContent(1) << endl;
+    }
 */
 
-	// Create an EventLoop job:
-	EL::Job job;
-	job.sampleHandler( sh );
-	//job.options()->setDouble (EL::Job::optMaxEvents, 50);
+    // Create an EventLoop job:
+    EL::Job job;
+    job.sampleHandler( sh );
+    //job.options()->setDouble (EL::Job::optMaxEvents, 50);
 
-	// Add our analysis to the job:
+    // Add our analysis to the job:
     ytEventSelection *alg = new ytEventSelection();
     alg->set_isMC(isMC);
     alg->set_isData(isData);
@@ -194,31 +194,31 @@ int main( int argc, char* argv[] ) {
     job.algsAdd( alg );
 
     if (use_Condor) {
-    	// Run the jobs using the Condor driver:
-    	EL::CondorDriver driver;
-    	// some commands for setting up root on the nodes
-    	driver.shellInit = "export ATLAS_LOCAL_ROOT_BASE=/cvmfs/atlas.cern.ch/repo/ATLASLocalRootBase ; source ${ATLAS_LOCAL_ROOT_BASE}/user/atlasLocalSetup.sh ; rcSetup Base,2.4.19";
-    	driver.submitOnly( job, submitDir );
+        // Run the jobs using the Condor driver:
+        EL::CondorDriver driver;
+        // some commands for setting up root on the nodes
+        driver.shellInit = "export ATLAS_LOCAL_ROOT_BASE=/cvmfs/atlas.cern.ch/repo/ATLASLocalRootBase ; source ${ATLAS_LOCAL_ROOT_BASE}/user/atlasLocalSetup.sh ; rcSetup Base,2.4.19";
+        driver.submitOnly( job, submitDir );
     }
 /*
     else if (use_Grid) {
-    	// Run the jobs using the Grid driver:
-    	EL::PrunDriver driver;
-    	// Specify how to name the grid output datasets
-    	// Note that %nickname% is populated when you do voms-proxy init, so this does not have to be replaced by hand
-    	driver.options()->setString("nc_outputSampleName", "user.%nickname%.%in:name[2]%.%in:name[3]%.%in:name[6]%.");
-    	driver.submitOnly( job, submitDir )
+        // Run the jobs using the Grid driver:
+        EL::PrunDriver driver;
+        // Specify how to name the grid output datasets
+        // Note that %nickname% is populated when you do voms-proxy init, so this does not have to be replaced by hand
+        driver.options()->setString("nc_outputSampleName", "user.%nickname%.%in:name[2]%.%in:name[3]%.%in:name[6]%.");
+        driver.submitOnly( job, submitDir )
     }
 */
     else if (use_PROOF) {
-    	EL::ProofDriver driver;
-    	driver.submit( job, submitDir );
+        EL::ProofDriver driver;
+        driver.submit( job, submitDir );
     }
     else {
-    	// Run the job using the local/direct driver:
-    	EL::DirectDriver driver;
-    	driver.submit( job, submitDir );
+        // Run the job using the local/direct driver:
+        EL::DirectDriver driver;
+        driver.submit( job, submitDir );
     }
 
-	return 0;
+    return 0;
 }
