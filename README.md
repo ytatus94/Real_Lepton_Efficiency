@@ -2,6 +2,14 @@
 This is the new real lepton efficiency framework.
 
 
+### v31-02. (combine branch) Add `ytRealLeptonsEfficiency` class
+* `ytRealLeptonsEfficiency` is used to replace `ytRealLeptonsEfficiency_Data` and `ytRealLeptonsEfficiency_MC`
+
+
+### v31-01. (combine branch) Correct typos 
+1. Correct typos in `ytRealLeptonsEfficiency_MC`.
+2. Change space in `ytEventSelection.cxx`
+
 ### v31. Rebin
 1. Add the rebin histograms in `ytRelative_difference_of_efficiency.C`
 2. Change the y-axis to percentage in `run_relative_differences_of_efficiency.py`
