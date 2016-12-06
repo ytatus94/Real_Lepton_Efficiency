@@ -298,8 +298,8 @@ public:
     vector<float>   *Mu_tag_trigger_SF; //!
     vector<bool>    *Jet_Jet_isSignal; //!
     vector<bool>    *Jet_bJet_isSignal; //!
-	Double_t		baseline_weight; //!
-	Double_t		signal_weight; //!
+    Double_t        baseline_weight; //!
+    Double_t        signal_weight; //!
     Bool_t          isSS2l_trigger; //!
     Double_t        normalization; //!
     Double_t        pileup_weight; //!
@@ -590,8 +590,8 @@ public:
     TBranch        *b_Mu_tag_trigger_SF; //!
     TBranch        *b_Jet_Jet_isSignal; //!
     TBranch        *b_Jet_bJet_isSignal; //!
-	TBranch        *b_baseline_weight; //!
-	TBranch        *b_signal_weight; //!
+    TBranch        *b_baseline_weight; //!
+    TBranch        *b_signal_weight; //!
     TBranch        *b_isSS2l_trigger; //!
     TBranch        *b_normalization; //!
     TBranch        *b_pileup_weight; //!
@@ -774,7 +774,7 @@ public:
     TH1F *ratio_3; //!
     TH1F *ratio_4; //!
 */
-	TCanvas *baseline_mll_plot; //!
+    TCanvas *baseline_mll_plot; //!
     TCanvas *cut_efficiency_plot; //!
     TCanvas *real_efficiency_plot; //!
     //TLine *line; //!

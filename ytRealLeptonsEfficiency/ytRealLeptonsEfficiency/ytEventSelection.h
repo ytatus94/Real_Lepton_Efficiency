@@ -26,44 +26,44 @@ template<> bool sort_descending_Pt(TLorentzVector tlv1, TLorentzVector tlv2); //
 
 class ytEventSelection : public EL::Algorithm
 {
-	// put your configuration variables here as public variables.
-	// that way they can be set directly from CINT and python.
+    // put your configuration variables here as public variables.
+    // that way they can be set directly from CINT and python.
 public:
-	// flags
+    // flags
     bool isMC;
     bool isData;
 
     // user defined variables
-    double				derivation_stat_weights; // sum of EventWeight
+    double              derivation_stat_weights; // sum of EventWeight
     TString             process; //!
 
-    yt_cutflows			*m_cutflow; //!
+    yt_cutflows         *m_cutflow; //!
 
-    vector<Electron>	vec_elec; //!
-    vector<Muon>		vec_muon; //!
-    vector<Lepton>		vec_lept; //!
-    vector<Jet>			vec_jets; //!
+    vector<Electron>    vec_elec; //!
+    vector<Muon>        vec_muon; //!
+    vector<Lepton>      vec_lept; //!
+    vector<Jet>         vec_jets; //!
 
-    vector<Electron>	vec_baseline_elec; //!
-    vector<Muon>		vec_baseline_muon; //!
-    vector<Lepton>		vec_baseline_lept; //!
-    vector<Jet>			vec_baseline_jets; //!
+    vector<Electron>    vec_baseline_elec; //!
+    vector<Muon>        vec_baseline_muon; //!
+    vector<Lepton>      vec_baseline_lept; //!
+    vector<Jet>         vec_baseline_jets; //!
 
-    vector<Electron> 	vec_OR_elec; //!
-    vector<Muon>     	vec_OR_muon; //!
-    vector<Lepton>   	vec_OR_lept; //!
-    vector<Jet>      	vec_OR_jets; //!
+    vector<Electron>    vec_OR_elec; //!
+    vector<Muon>        vec_OR_muon; //!
+    vector<Lepton>      vec_OR_lept; //!
+    vector<Jet>         vec_OR_jets; //!
 
-    vector<Jet>			vec_JVT_jets; //!
+    vector<Jet>         vec_JVT_jets; //!
 
-    vector<Electron> 	vec_signal_elec; //!
-    vector<Muon>     	vec_signal_muon; //!
-    vector<Lepton>   	vec_signal_lept; //!
-    vector<Jet>      	vec_signal_jets; //!
+    vector<Electron>    vec_signal_elec; //!
+    vector<Muon>        vec_signal_muon; //!
+    vector<Lepton>      vec_signal_lept; //!
+    vector<Jet>         vec_signal_jets; //!
 
-	// variables that don't get filled at submission time should be
-	// protected from being send from the submission node to the worker
-	// node (done by the //!)
+    // variables that don't get filled at submission time should be
+    // protected from being send from the submission node to the worker
+    // node (done by the //!)
 public:
     //
     // Tree and branches copy from TSelector
@@ -538,19 +538,19 @@ public:
     TBranch        *b_TruthPDGID1; //!
     TBranch        *b_TruthPDGID2; //!
 
-	// this is a standard constructor
-	ytEventSelection ();
+    // this is a standard constructor
+    ytEventSelection ();
 
-	// these are the functions inherited from Algorithm
-	virtual EL::StatusCode setupJob (EL::Job& job);
-	virtual EL::StatusCode fileExecute ();
-	virtual EL::StatusCode histInitialize ();
-	virtual EL::StatusCode changeInput (bool firstFile);
-	virtual EL::StatusCode initialize ();
-	virtual EL::StatusCode execute ();
-	virtual EL::StatusCode postExecute ();
-	virtual EL::StatusCode finalize ();
-	virtual EL::StatusCode histFinalize ();
+    // these are the functions inherited from Algorithm
+    virtual EL::StatusCode setupJob (EL::Job& job);
+    virtual EL::StatusCode fileExecute ();
+    virtual EL::StatusCode histInitialize ();
+    virtual EL::StatusCode changeInput (bool firstFile);
+    virtual EL::StatusCode initialize ();
+    virtual EL::StatusCode execute ();
+    virtual EL::StatusCode postExecute ();
+    virtual EL::StatusCode finalize ();
+    virtual EL::StatusCode histFinalize ();
 
     // user defined functions
     void fill_electrons(Int_t           NEl,
@@ -720,7 +720,7 @@ public:
     void set_derivation_stat_weights(double d) { derivation_stat_weights = d; }
 
     // this is needed to distribute the algorithm to the workers
-	ClassDef(ytEventSelection, 1);
+    ClassDef(ytEventSelection, 1);
 };
 
 #endif

@@ -10,97 +10,97 @@ ClassImp(ytEventSelection)
 
 ytEventSelection :: ytEventSelection ()
 {
-	// Here you put any code for the base initialization of variables,
-	// e.g. initialize all pointers to 0.  Note that you should only put
-	// the most basic initialization here, since this method will be
-	// called on both the submission and the worker node.  Most of your
-	// initialization code will go into histInitialize() and
-	// initialize().
+    // Here you put any code for the base initialization of variables,
+    // e.g. initialize all pointers to 0.  Note that you should only put
+    // the most basic initialization here, since this method will be
+    // called on both the submission and the worker node.  Most of your
+    // initialization code will go into histInitialize() and
+    // initialize().
 
-	//const char * function_name = "ytEventSelection()";
-	//Info(function_name, "Function calls");
+    //const char * function_name = "ytEventSelection()";
+    //Info(function_name, "Function calls");
 
-    m_cutflow	= new yt_cutflows;
+    m_cutflow   = new yt_cutflows;
 }
 
 
 
 EL::StatusCode ytEventSelection :: setupJob (EL::Job& job)
 {
-	// Here you put code that sets up the job on the submission object
-	// so that it is ready to work with your algorithm, e.g. you can
-	// request the D3PDReader service or add output files.  Any code you
-	// put here could instead also go into the submission script.  The
-	// sole advantage of putting it here is that it gets automatically
-	// activated/deactivated when you add/remove the algorithm from your
-	// job, which may or may not be of value to you.
+    // Here you put code that sets up the job on the submission object
+    // so that it is ready to work with your algorithm, e.g. you can
+    // request the D3PDReader service or add output files.  Any code you
+    // put here could instead also go into the submission script.  The
+    // sole advantage of putting it here is that it gets automatically
+    // activated/deactivated when you add/remove the algorithm from your
+    // job, which may or may not be of value to you.
 
-	//const char * function_name = "setupJob()";
-	//Info(function_name, "Function calls");
+    //const char * function_name = "setupJob()";
+    //Info(function_name, "Function calls");
 
-	return EL::StatusCode::SUCCESS;
+    return EL::StatusCode::SUCCESS;
 }
 
 
 
 EL::StatusCode ytEventSelection :: histInitialize ()
 {
-	// Here you do everything that needs to be done at the very
-	// beginning on each worker node, e.g. create histograms and output
-	// trees.  This method gets called before any input files are
-	// connected.
+    // Here you do everything that needs to be done at the very
+    // beginning on each worker node, e.g. create histograms and output
+    // trees.  This method gets called before any input files are
+    // connected.
 
-	//const char * function_name = "histInitialize()";
-	//Info(function_name, "Function calls");
+    //const char * function_name = "histInitialize()";
+    //Info(function_name, "Function calls");
 
-	return EL::StatusCode::SUCCESS;
+    return EL::StatusCode::SUCCESS;
 }
 
 
 
 EL::StatusCode ytEventSelection :: fileExecute ()
 {
-	// Here you do everything that needs to be done exactly once for every
-	// single file, e.g. collect a list of all lumi-blocks processed
+    // Here you do everything that needs to be done exactly once for every
+    // single file, e.g. collect a list of all lumi-blocks processed
 
-	//const char * function_name = "fileExecute()";
-	//Info(function_name, "Function calls");
+    //const char * function_name = "fileExecute()";
+    //Info(function_name, "Function calls");
 
-	TH1F *h1 = (TH1F *)wk()->inputFile()->Get("DerivationStat_Weights");
-	cout <<	"derivation_stat_weights=" << h1->GetBinContent(1) << endl;
+    TH1F *h1 = (TH1F *)wk()->inputFile()->Get("DerivationStat_Weights");
+    cout << "derivation_stat_weights=" << h1->GetBinContent(1) << endl;
 
-	return EL::StatusCode::SUCCESS;
+    return EL::StatusCode::SUCCESS;
 }
 
 
 
 EL::StatusCode ytEventSelection :: changeInput (bool firstFile)
 {
-	// Here you do everything you need to do when we change input files,
-	// e.g. resetting branch addresses on trees.  If you are using
-	// D3PDReader or a similar service this method is not needed.
+    // Here you do everything you need to do when we change input files,
+    // e.g. resetting branch addresses on trees.  If you are using
+    // D3PDReader or a similar service this method is not needed.
 
-	//const char * function_name = "changeInput()";
-	//Info(function_name, "Function calls");
+    //const char * function_name = "changeInput()";
+    //Info(function_name, "Function calls");
 
-	return EL::StatusCode::SUCCESS;
+    return EL::StatusCode::SUCCESS;
 }
 
 
 
 EL::StatusCode ytEventSelection :: initialize ()
 {
-	// Here you do everything that you need to do after the first input
-	// file has been connected and before the first event is processed,
-	// e.g. create additional histograms based on which variables are
-	// available in the input files.  You can also create all of your
-	// histograms and trees in here, but be aware that this method
-	// doesn't get called if no events are processed.  So any objects
-	// you create here won't be available in the output if you have no
-	// input events.
+    // Here you do everything that you need to do after the first input
+    // file has been connected and before the first event is processed,
+    // e.g. create additional histograms based on which variables are
+    // available in the input files.  You can also create all of your
+    // histograms and trees in here, but be aware that this method
+    // doesn't get called if no events are processed.  So any objects
+    // you create here won't be available in the output if you have no
+    // input events.
 
-	//const char * function_name = "initialize()";
-	//Info(function_name, "Function calls");
+    //const char * function_name = "initialize()";
+    //Info(function_name, "Function calls");
 
     // Set object pointer
     Mu_eta = 0;
@@ -473,22 +473,22 @@ EL::StatusCode ytEventSelection :: initialize ()
     fChain->SetBranchAddress("TruthPDGID1", &TruthPDGID1, &b_TruthPDGID1);
     fChain->SetBranchAddress("TruthPDGID2", &TruthPDGID2, &b_TruthPDGID2);
 
-	return EL::StatusCode::SUCCESS;
+    return EL::StatusCode::SUCCESS;
 }
 
 
 
 EL::StatusCode ytEventSelection :: execute ()
 {
-	// Here you do everything that needs to be done on every single
-	// events, e.g. read input variables, apply cuts, and fill
-	// histograms and trees.  This is where most of your actual analysis
-	// code will go.
+    // Here you do everything that needs to be done on every single
+    // events, e.g. read input variables, apply cuts, and fill
+    // histograms and trees.  This is where most of your actual analysis
+    // code will go.
 
-	//const char * function_name = "execute()";
-	//Info(function_name, "Function calls");
+    //const char * function_name = "execute()";
+    //Info(function_name, "Function calls");
 /*
-	wk()->tree()->GetEntry(wk()->treeEntry());
+    wk()->tree()->GetEntry(wk()->treeEntry());
 
     // Reset vectors
     vec_elec.clear();
@@ -514,138 +514,138 @@ EL::StatusCode ytEventSelection :: execute ()
     vec_signal_lept.clear();
 
     fill_electrons(
-		NEl,
-		11, // particle id e- = 11
-		El_eta,
-		El_etaclus,
-		El_phi,
-		El_pT,
-		El_E,
-		El_charge,
-		El_sigd0,
-		El_z0sinTheta,
-		El_d0pvtx,
-		El_passOR,
-		El_SFwMediumLH,
-		El_IsoSFwMediumLH,
-		El_SFwTightLH,
-		El_SFwLooseAndBLayerLH,
-		El_SFwTrigMediumLH_e12_lhloose_L1EM10VH,
-		El_SFwTrigMediumLH_e17_lhloose,
-		El_SFwTrigMediumLH_single,
-		El_SFwTrigLooseAndBLayerLH_e12_lhloose_L1EM10VH,
-		El_isLooseAndBLayerLH,
-		El_isMediumLH,
-		El_isTightLH,
-		El_nBLayerHits,
-		El_expectBLayerHit,
-		El_type,
-		El_origin,
-		El_bkgMotherPdgId,
-		El_bkgOrigin,
-		El_chFlip,
-		El_ptcone20,
-		El_ptcone30,
-		El_ptcone40,
-		El_ptvarcone20,
-		El_ptvarcone30,
-		El_ptvarcone40,
-		El_topoetcone20,
-		El_topoetcone30,
-		El_topoetcone40,
-		El_passIsoLooseTO,
-		El_passIsoLoose,
-		El_passIsoTight,
-		El_passIsoGrad,
-		El_passIsoGradCustomTight,
-		El_passIsoGradCustom,
-		El_passIsoGradLoose,
-		El_trigMatch_e12_lhloose_L1EM10VH,
-		El_trigMatch_e17_lhloose,
-		El_trigMatch_e60_lhmedium,
-		El_trigMatch_e24_lhmedium_iloose_L1EM20VH,
-		El_trigMatch_2e12_lhloose_L12EM10VH,
-		El_trigMatch_2e15_lhloose_L12EM10VH,
-		El_trigMatch_2e15_lhvloose_L12EM13VH,
-		El_trigMatch_2e15_lhvloose_nod0_L12EM13VH,
-		El_trigMatch_2e17_lhvloose_nod0,
-		El_trigMatch_e17_lhloose_mu14,
-		El_trigMatch_e17_lhloose_nod0_mu14,
-		El_TrigMatch_e24_lhmedium_nod0_ivarloose,
-		El_TrigMatch_e24_lhtight_nod0_ivarloose,
-		El_TrigMatch_e60_lhmedium_nod0);
+        NEl,
+        11, // particle id e- = 11
+        El_eta,
+        El_etaclus,
+        El_phi,
+        El_pT,
+        El_E,
+        El_charge,
+        El_sigd0,
+        El_z0sinTheta,
+        El_d0pvtx,
+        El_passOR,
+        El_SFwMediumLH,
+        El_IsoSFwMediumLH,
+        El_SFwTightLH,
+        El_SFwLooseAndBLayerLH,
+        El_SFwTrigMediumLH_e12_lhloose_L1EM10VH,
+        El_SFwTrigMediumLH_e17_lhloose,
+        El_SFwTrigMediumLH_single,
+        El_SFwTrigLooseAndBLayerLH_e12_lhloose_L1EM10VH,
+        El_isLooseAndBLayerLH,
+        El_isMediumLH,
+        El_isTightLH,
+        El_nBLayerHits,
+        El_expectBLayerHit,
+        El_type,
+        El_origin,
+        El_bkgMotherPdgId,
+        El_bkgOrigin,
+        El_chFlip,
+        El_ptcone20,
+        El_ptcone30,
+        El_ptcone40,
+        El_ptvarcone20,
+        El_ptvarcone30,
+        El_ptvarcone40,
+        El_topoetcone20,
+        El_topoetcone30,
+        El_topoetcone40,
+        El_passIsoLooseTO,
+        El_passIsoLoose,
+        El_passIsoTight,
+        El_passIsoGrad,
+        El_passIsoGradCustomTight,
+        El_passIsoGradCustom,
+        El_passIsoGradLoose,
+        El_trigMatch_e12_lhloose_L1EM10VH,
+        El_trigMatch_e17_lhloose,
+        El_trigMatch_e60_lhmedium,
+        El_trigMatch_e24_lhmedium_iloose_L1EM20VH,
+        El_trigMatch_2e12_lhloose_L12EM10VH,
+        El_trigMatch_2e15_lhloose_L12EM10VH,
+        El_trigMatch_2e15_lhvloose_L12EM13VH,
+        El_trigMatch_2e15_lhvloose_nod0_L12EM13VH,
+        El_trigMatch_2e17_lhvloose_nod0,
+        El_trigMatch_e17_lhloose_mu14,
+        El_trigMatch_e17_lhloose_nod0_mu14,
+        El_TrigMatch_e24_lhmedium_nod0_ivarloose,
+        El_TrigMatch_e24_lhtight_nod0_ivarloose,
+        El_TrigMatch_e60_lhmedium_nod0);
 
     fill_muons(
-		NMu,
-		13, // particle id mu- = 13
-		Mu_eta,
-		Mu_phi,
-		Mu_pT,
-		Mu_SFw,
-		Mu_IsoSFw,
-		Mu_charge,
-		Mu_d0pvtx,
-		Mu_sigd0,
-		Mu_z0sinTheta,
-		Mu_isBad,
-		Mu_passOR,
-		Mu_isTight,
-		Mu_isCosmic,
-		Mu_type,
-		Mu_origin,
-		Mu_ptcone20,
-		Mu_ptcone30,
-		Mu_ptcone40,
-		Mu_ptvarcone20,
-		Mu_ptvarcone30,
-		Mu_ptvarcone40,
-		Mu_topoetcone20,
-		Mu_topoetcone30,
-		Mu_topoetcone40,
-		Mu_passIsoLooseTO,
-		Mu_passIsoLoose,
-		Mu_passIsoTight,
-		Mu_passIsoGrad,
-		Mu_passIsoGradCustomTight,
-		Mu_passIsoGradCustom,
-		Mu_passIsoGradLoose,
-		MuTrigSF_HLT_mu20_iloose_L1MU15_OR_HLT_mu50,
-		Mu_trigMatch_mu26_imedium,
-		Mu_trigMatch_mu50,
-		Mu_trigMatch_mu8noL1,
-		Mu_trigMatch_mu14,
-		Mu_trigMatch_mu18,
-		Mu_trigMatch_mu18_mu8noL1,
-		Mu_trigMatch_e17_lhloose_mu14,
-		Mu_trigMatch_e17_lhloose_nod0_mu14,
-		Mu_trigMatch_mu20_mu8noL1,
-		Mu_trigMatch_mu22_mu8noL1,
-		Mu_TrigMatch_mu24_iloose,
-		Mu_TrigMatch_mu24_ivarloose,
-		Mu_TrigMatch_mu24_iloose_L1MU15,
-		Mu_TrigMatch_mu24_ivarloose_L1MU15,
-		Mu_trigMatchPair_mu18_mu8noL1,
-		Mu_trigMatchPair_mu20_mu8noL1,
-		Mu_trigMatchPair_mu22_mu8noL1);
+        NMu,
+        13, // particle id mu- = 13
+        Mu_eta,
+        Mu_phi,
+        Mu_pT,
+        Mu_SFw,
+        Mu_IsoSFw,
+        Mu_charge,
+        Mu_d0pvtx,
+        Mu_sigd0,
+        Mu_z0sinTheta,
+        Mu_isBad,
+        Mu_passOR,
+        Mu_isTight,
+        Mu_isCosmic,
+        Mu_type,
+        Mu_origin,
+        Mu_ptcone20,
+        Mu_ptcone30,
+        Mu_ptcone40,
+        Mu_ptvarcone20,
+        Mu_ptvarcone30,
+        Mu_ptvarcone40,
+        Mu_topoetcone20,
+        Mu_topoetcone30,
+        Mu_topoetcone40,
+        Mu_passIsoLooseTO,
+        Mu_passIsoLoose,
+        Mu_passIsoTight,
+        Mu_passIsoGrad,
+        Mu_passIsoGradCustomTight,
+        Mu_passIsoGradCustom,
+        Mu_passIsoGradLoose,
+        MuTrigSF_HLT_mu20_iloose_L1MU15_OR_HLT_mu50,
+        Mu_trigMatch_mu26_imedium,
+        Mu_trigMatch_mu50,
+        Mu_trigMatch_mu8noL1,
+        Mu_trigMatch_mu14,
+        Mu_trigMatch_mu18,
+        Mu_trigMatch_mu18_mu8noL1,
+        Mu_trigMatch_e17_lhloose_mu14,
+        Mu_trigMatch_e17_lhloose_nod0_mu14,
+        Mu_trigMatch_mu20_mu8noL1,
+        Mu_trigMatch_mu22_mu8noL1,
+        Mu_TrigMatch_mu24_iloose,
+        Mu_TrigMatch_mu24_ivarloose,
+        Mu_TrigMatch_mu24_iloose_L1MU15,
+        Mu_TrigMatch_mu24_ivarloose_L1MU15,
+        Mu_trigMatchPair_mu18_mu8noL1,
+        Mu_trigMatchPair_mu20_mu8noL1,
+        Mu_trigMatchPair_mu22_mu8noL1);
 
     fill_jets(
-		NJet,
-		Jet_eta,
-		Jet_phi,
-		Jet_pT,
-		Jet_E,
-		Jet_quality,
-		Jet_JVT,
-		Jet_JVTsf,
-		Jet_MV2c20,
-		Jet_MV2c10,
-		Jet_SFw,
-		Jet_ConeTruthLabel,
-		Jet_PartonTruthLabel,
-		Jet_HadronConeExclTruthLabel,
-		Jet_deltaR,
-		Jet_nTrk,
-		Jet_passOR);
+        NJet,
+        Jet_eta,
+        Jet_phi,
+        Jet_pT,
+        Jet_E,
+        Jet_quality,
+        Jet_JVT,
+        Jet_JVTsf,
+        Jet_MV2c20,
+        Jet_MV2c10,
+        Jet_SFw,
+        Jet_ConeTruthLabel,
+        Jet_PartonTruthLabel,
+        Jet_HadronConeExclTruthLabel,
+        Jet_deltaR,
+        Jet_nTrk,
+        Jet_passOR);
 
     // sort by descending Pt
     sort(vec_elec.begin(), vec_elec.end(), sort_descending_Pt<Electron>);
@@ -826,64 +826,64 @@ EL::StatusCode ytEventSelection :: execute ()
     if (mumu_cut1 == 3 && mumu_cut2 && mumu_cut3 && mumu_cut4 && mumu_cut5)
         m_cutflow->update(mumu_MET_greater_than_125GeV, mumu_cut5);
 */
-	return EL::StatusCode::SUCCESS;
+    return EL::StatusCode::SUCCESS;
 }
 
 
 
 EL::StatusCode ytEventSelection :: postExecute ()
 {
-	// Here you do everything that needs to be done after the main event
-	// processing.  This is typically very rare, particularly in user
-	// code.  It is mainly used in implementing the NTupleSvc.
+    // Here you do everything that needs to be done after the main event
+    // processing.  This is typically very rare, particularly in user
+    // code.  It is mainly used in implementing the NTupleSvc.
 
-	//const char * function_name = "postExecute()";
-	//Info(function_name, "Function calls");
+    //const char * function_name = "postExecute()";
+    //Info(function_name, "Function calls");
 
-	return EL::StatusCode::SUCCESS;
+    return EL::StatusCode::SUCCESS;
 }
 
 
 
 EL::StatusCode ytEventSelection :: finalize ()
 {
-	// This method is the mirror image of initialize(), meaning it gets
-	// called after the last event has been processed on the worker node
-	// and allows you to finish up any objects you created in
-	// initialize() before they are written to disk.  This is actually
-	// fairly rare, since this happens separately for each worker node.
-	// Most of the time you want to do your post-processing on the
-	// submission node after all your histogram outputs have been
-	// merged.  This is different from histFinalize() in that it only
-	// gets called on worker nodes that processed input events.
+    // This method is the mirror image of initialize(), meaning it gets
+    // called after the last event has been processed on the worker node
+    // and allows you to finish up any objects you created in
+    // initialize() before they are written to disk.  This is actually
+    // fairly rare, since this happens separately for each worker node.
+    // Most of the time you want to do your post-processing on the
+    // submission node after all your histogram outputs have been
+    // merged.  This is different from histFinalize() in that it only
+    // gets called on worker nodes that processed input events.
 
-	//const char * function_name = "finalize()";
-	//Info(function_name, "Function calls");
+    //const char * function_name = "finalize()";
+    //Info(function_name, "Function calls");
 
     m_cutflow->print();
 
-	return EL::StatusCode::SUCCESS;
+    return EL::StatusCode::SUCCESS;
 }
 
 
 
 EL::StatusCode ytEventSelection :: histFinalize ()
 {
-	// This method is the mirror image of histInitialize(), meaning it
-	// gets called after the last event has been processed on the worker
-	// node and allows you to finish up any objects you created in
-	// histInitialize() before they are written to disk.  This is
-	// actually fairly rare, since this happens separately for each
-	// worker node.  Most of the time you want to do your
-	// post-processing on the submission node after all your histogram
-	// outputs have been merged.  This is different from finalize() in
-	// that it gets called on all worker nodes regardless of whether
-	// they processed input events.
+    // This method is the mirror image of histInitialize(), meaning it
+    // gets called after the last event has been processed on the worker
+    // node and allows you to finish up any objects you created in
+    // histInitialize() before they are written to disk.  This is
+    // actually fairly rare, since this happens separately for each
+    // worker node.  Most of the time you want to do your
+    // post-processing on the submission node after all your histogram
+    // outputs have been merged.  This is different from finalize() in
+    // that it gets called on all worker nodes regardless of whether
+    // they processed input events.
 
-	//const char * function_name = "histFinalize()";
-	//Info(function_name, "Function calls");
+    //const char * function_name = "histFinalize()";
+    //Info(function_name, "Function calls");
 
-	return EL::StatusCode::SUCCESS;
+    return EL::StatusCode::SUCCESS;
 }
 
 template<typename T>
@@ -894,25 +894,25 @@ void ytEventSelection :: debug_print(vector<T> vec)
     cout << type << endl;
     // This template doesn't work...
 /*
-	if (type.compare("Lepton") == 0) {
-		cout << "This is Lepton" << endl;
-		debug_lept_print(vec);
-	}
-	else if (type.compare("Electron") == 0) {
-		cout << "This is Electron" << endl;
-		debug_elec_print(vec);
-	}
-	else if (type.compare("Muon") == 0) {
-		cout << "This is Muon" << endl;
-		debug_muon_print(vec);
-	}
-	else if (type.compare("Jet") == 0) {
-		cout << "This is Jet" << endl;
-		debug_jets_print(vec);
-	}
-	else {
-		cout << "Type " << type << " doesn't match" << endl;
-	}
+    if (type.compare("Lepton") == 0) {
+        cout << "This is Lepton" << endl;
+        debug_lept_print(vec);
+    }
+    else if (type.compare("Electron") == 0) {
+        cout << "This is Electron" << endl;
+        debug_elec_print(vec);
+    }
+    else if (type.compare("Muon") == 0) {
+        cout << "This is Muon" << endl;
+        debug_muon_print(vec);
+    }
+    else if (type.compare("Jet") == 0) {
+        cout << "This is Jet" << endl;
+        debug_jets_print(vec);
+    }
+    else {
+        cout << "Type " << type << " doesn't match" << endl;
+    }
 */
 }
 
@@ -1016,66 +1016,66 @@ void ytEventSelection :: debug_jets_print(vector<Jet> vec_jets)
 }
 
 void ytEventSelection :: fill_electrons(
-		Int_t           NEl,
-		int             flavor,
-		vector<double>  *El_eta,
-		vector<double>  *El_etaclus,
-		vector<double>  *El_phi,
-		vector<double>  *El_pT,
-		vector<double>  *El_E,
-		vector<int>     *El_charge,
-		vector<double>  *El_sigd0,
-		vector<double>  *El_z0sinTheta,
-		vector<double>  *El_d0pvtx,
-		vector<bool>    *El_passOR,
-		vector<double>  *El_SFwMediumLH,
-		vector<float>   *El_IsoSFwMediumLH,
-		vector<double>  *El_SFwTightLH,
-		vector<double>  *El_SFwLooseAndBLayerLH,
-		vector<double>  *El_SFwTrigMediumLH_e12_lhloose_L1EM10VH,
-		vector<double>  *El_SFwTrigMediumLH_e17_lhloose,
-		vector<double>  *El_SFwTrigMediumLH_single,
-		vector<double>  *El_SFwTrigLooseAndBLayerLH_e12_lhloose_L1EM10VH,
-		vector<bool>    *El_isLooseAndBLayerLH,
-		vector<bool>    *El_isMediumLH,
-		vector<bool>    *El_isTightLH,
-		vector<int>     *El_nBLayerHits,
-		vector<int>     *El_expectBLayerHit,
-		vector<int>     *El_type,
-		vector<int>     *El_origin,
-		vector<int>     *El_bkgMotherPdgId,
-		vector<int>     *El_bkgOrigin,
-		vector<int>     *El_chFlip,
-		vector<double>  *El_ptcone20,
-		vector<double>  *El_ptcone30,
-		vector<double>  *El_ptcone40,
-		vector<double>  *El_ptvarcone20,
-		vector<double>  *El_ptvarcone30,
-		vector<double>  *El_ptvarcone40,
-		vector<double>  *El_topoetcone20,
-		vector<double>  *El_topoetcone30,
-		vector<double>  *El_topoetcone40,
-		vector<bool>    *El_passIsoLooseTO,
-		vector<bool>    *El_passIsoLoose,
-		vector<bool>    *El_passIsoTight,
-		vector<bool>    *El_passIsoGrad,
-		vector<bool>    *El_passIsoGradCustomTight,
-		vector<bool>    *El_passIsoGradCustom,
-		vector<bool>    *El_passIsoGradLoose,
-		vector<bool>    *El_trigMatch_e12_lhloose_L1EM10VH,
-		vector<bool>    *El_trigMatch_e17_lhloose,
-		vector<bool>    *El_trigMatch_e60_lhmedium,
-		vector<bool>    *El_trigMatch_e24_lhmedium_iloose_L1EM20VH,
-		vector<bool>    *El_trigMatch_2e12_lhloose_L12EM10VH,
-		vector<bool>    *El_trigMatch_2e15_lhloose_L12EM10VH,
-		vector<bool>    *El_trigMatch_2e15_lhvloose_L12EM13VH,
-		vector<bool>    *El_trigMatch_2e15_lhvloose_nod0_L12EM13VH,
-		vector<bool>    *El_trigMatch_2e17_lhvloose_nod0,
-		vector<bool>    *El_trigMatch_e17_lhloose_mu14,
-		vector<bool>    *El_trigMatch_e17_lhloose_nod0_mu14,
-		vector<bool>    *El_TrigMatch_e24_lhmedium_nod0_ivarloose,
-		vector<bool>    *El_TrigMatch_e24_lhtight_nod0_ivarloose,
-		vector<bool>    *El_TrigMatch_e60_lhmedium_nod0)
+        Int_t           NEl,
+        int             flavor,
+        vector<double>  *El_eta,
+        vector<double>  *El_etaclus,
+        vector<double>  *El_phi,
+        vector<double>  *El_pT,
+        vector<double>  *El_E,
+        vector<int>     *El_charge,
+        vector<double>  *El_sigd0,
+        vector<double>  *El_z0sinTheta,
+        vector<double>  *El_d0pvtx,
+        vector<bool>    *El_passOR,
+        vector<double>  *El_SFwMediumLH,
+        vector<float>   *El_IsoSFwMediumLH,
+        vector<double>  *El_SFwTightLH,
+        vector<double>  *El_SFwLooseAndBLayerLH,
+        vector<double>  *El_SFwTrigMediumLH_e12_lhloose_L1EM10VH,
+        vector<double>  *El_SFwTrigMediumLH_e17_lhloose,
+        vector<double>  *El_SFwTrigMediumLH_single,
+        vector<double>  *El_SFwTrigLooseAndBLayerLH_e12_lhloose_L1EM10VH,
+        vector<bool>    *El_isLooseAndBLayerLH,
+        vector<bool>    *El_isMediumLH,
+        vector<bool>    *El_isTightLH,
+        vector<int>     *El_nBLayerHits,
+        vector<int>     *El_expectBLayerHit,
+        vector<int>     *El_type,
+        vector<int>     *El_origin,
+        vector<int>     *El_bkgMotherPdgId,
+        vector<int>     *El_bkgOrigin,
+        vector<int>     *El_chFlip,
+        vector<double>  *El_ptcone20,
+        vector<double>  *El_ptcone30,
+        vector<double>  *El_ptcone40,
+        vector<double>  *El_ptvarcone20,
+        vector<double>  *El_ptvarcone30,
+        vector<double>  *El_ptvarcone40,
+        vector<double>  *El_topoetcone20,
+        vector<double>  *El_topoetcone30,
+        vector<double>  *El_topoetcone40,
+        vector<bool>    *El_passIsoLooseTO,
+        vector<bool>    *El_passIsoLoose,
+        vector<bool>    *El_passIsoTight,
+        vector<bool>    *El_passIsoGrad,
+        vector<bool>    *El_passIsoGradCustomTight,
+        vector<bool>    *El_passIsoGradCustom,
+        vector<bool>    *El_passIsoGradLoose,
+        vector<bool>    *El_trigMatch_e12_lhloose_L1EM10VH,
+        vector<bool>    *El_trigMatch_e17_lhloose,
+        vector<bool>    *El_trigMatch_e60_lhmedium,
+        vector<bool>    *El_trigMatch_e24_lhmedium_iloose_L1EM20VH,
+        vector<bool>    *El_trigMatch_2e12_lhloose_L12EM10VH,
+        vector<bool>    *El_trigMatch_2e15_lhloose_L12EM10VH,
+        vector<bool>    *El_trigMatch_2e15_lhvloose_L12EM13VH,
+        vector<bool>    *El_trigMatch_2e15_lhvloose_nod0_L12EM13VH,
+        vector<bool>    *El_trigMatch_2e17_lhvloose_nod0,
+        vector<bool>    *El_trigMatch_e17_lhloose_mu14,
+        vector<bool>    *El_trigMatch_e17_lhloose_nod0_mu14,
+        vector<bool>    *El_TrigMatch_e24_lhmedium_nod0_ivarloose,
+        vector<bool>    *El_TrigMatch_e24_lhtight_nod0_ivarloose,
+        vector<bool>    *El_TrigMatch_e60_lhmedium_nod0)
 {
     for (int i = 0; i < NEl; i++) {
         Electron el;
@@ -1146,57 +1146,57 @@ void ytEventSelection :: fill_electrons(
 }
 
 void ytEventSelection :: fill_muons(
-		Int_t           NMu,
-		int             flavor,
-		vector<double>  *Mu_eta,
-		vector<double>  *Mu_phi,
-		vector<double>  *Mu_pT,
-		vector<double>  *Mu_SFw,
-		vector<float>   *Mu_IsoSFw,
-		vector<int>     *Mu_charge,
-		vector<double>  *Mu_d0pvtx,
-		vector<double>  *Mu_sigd0,
-		vector<double>  *Mu_z0sinTheta,
-		vector<bool>    *Mu_isBad,
-		vector<bool>    *Mu_passOR,
-		vector<bool>    *Mu_isTight,
-		vector<bool>    *Mu_isCosmic,
-		vector<int>     *Mu_type,
-		vector<int>     *Mu_origin,
-		vector<double>  *Mu_ptcone20,
-		vector<double>  *Mu_ptcone30,
-		vector<double>  *Mu_ptcone40,
-		vector<double>  *Mu_ptvarcone20,
-		vector<double>  *Mu_ptvarcone30,
-		vector<double>  *Mu_ptvarcone40,
-		vector<double>  *Mu_topoetcone20,
-		vector<double>  *Mu_topoetcone30,
-		vector<double>  *Mu_topoetcone40,
-		vector<bool>    *Mu_passIsoLooseTO,
-		vector<bool>    *Mu_passIsoLoose,
-		vector<bool>    *Mu_passIsoTight,
-		vector<bool>    *Mu_passIsoGrad,
-		vector<bool>    *Mu_passIsoGradCustomTight,
-		vector<bool>    *Mu_passIsoGradCustom,
-		vector<bool>    *Mu_passIsoGradLoose,
-		Float_t         MuTrigSF_HLT_mu20_iloose_L1MU15_OR_HLT_mu50,
-		vector<bool>    *Mu_trigMatch_mu26_imedium,
-		vector<bool>    *Mu_trigMatch_mu50,
-		vector<bool>    *Mu_trigMatch_mu8noL1,
-		vector<bool>    *Mu_trigMatch_mu14,
-		vector<bool>    *Mu_trigMatch_mu18,
-		vector<bool>    *Mu_trigMatch_mu18_mu8noL1,
-		vector<bool>    *Mu_trigMatch_e17_lhloose_mu14,
-		vector<bool>    *Mu_trigMatch_e17_lhloose_nod0_mu14,
-		vector<bool>    *Mu_trigMatch_mu20_mu8noL1,
-		vector<bool>    *Mu_trigMatch_mu22_mu8noL1,
-		vector<bool>    *Mu_TrigMatch_mu24_iloose,
-		vector<bool>    *Mu_TrigMatch_mu24_ivarloose,
-		vector<bool>    *Mu_TrigMatch_mu24_iloose_L1MU15,
-		vector<bool>    *Mu_TrigMatch_mu24_ivarloose_L1MU15,
-		vector<vector<bool> > *Mu_trigMatchPair_mu18_mu8noL1,
-		vector<vector<bool> > *Mu_trigMatchPair_mu20_mu8noL1,
-		vector<vector<bool> > *Mu_trigMatchPair_mu22_mu8noL1)
+        Int_t           NMu,
+        int             flavor,
+        vector<double>  *Mu_eta,
+        vector<double>  *Mu_phi,
+        vector<double>  *Mu_pT,
+        vector<double>  *Mu_SFw,
+        vector<float>   *Mu_IsoSFw,
+        vector<int>     *Mu_charge,
+        vector<double>  *Mu_d0pvtx,
+        vector<double>  *Mu_sigd0,
+        vector<double>  *Mu_z0sinTheta,
+        vector<bool>    *Mu_isBad,
+        vector<bool>    *Mu_passOR,
+        vector<bool>    *Mu_isTight,
+        vector<bool>    *Mu_isCosmic,
+        vector<int>     *Mu_type,
+        vector<int>     *Mu_origin,
+        vector<double>  *Mu_ptcone20,
+        vector<double>  *Mu_ptcone30,
+        vector<double>  *Mu_ptcone40,
+        vector<double>  *Mu_ptvarcone20,
+        vector<double>  *Mu_ptvarcone30,
+        vector<double>  *Mu_ptvarcone40,
+        vector<double>  *Mu_topoetcone20,
+        vector<double>  *Mu_topoetcone30,
+        vector<double>  *Mu_topoetcone40,
+        vector<bool>    *Mu_passIsoLooseTO,
+        vector<bool>    *Mu_passIsoLoose,
+        vector<bool>    *Mu_passIsoTight,
+        vector<bool>    *Mu_passIsoGrad,
+        vector<bool>    *Mu_passIsoGradCustomTight,
+        vector<bool>    *Mu_passIsoGradCustom,
+        vector<bool>    *Mu_passIsoGradLoose,
+        Float_t         MuTrigSF_HLT_mu20_iloose_L1MU15_OR_HLT_mu50,
+        vector<bool>    *Mu_trigMatch_mu26_imedium,
+        vector<bool>    *Mu_trigMatch_mu50,
+        vector<bool>    *Mu_trigMatch_mu8noL1,
+        vector<bool>    *Mu_trigMatch_mu14,
+        vector<bool>    *Mu_trigMatch_mu18,
+        vector<bool>    *Mu_trigMatch_mu18_mu8noL1,
+        vector<bool>    *Mu_trigMatch_e17_lhloose_mu14,
+        vector<bool>    *Mu_trigMatch_e17_lhloose_nod0_mu14,
+        vector<bool>    *Mu_trigMatch_mu20_mu8noL1,
+        vector<bool>    *Mu_trigMatch_mu22_mu8noL1,
+        vector<bool>    *Mu_TrigMatch_mu24_iloose,
+        vector<bool>    *Mu_TrigMatch_mu24_ivarloose,
+        vector<bool>    *Mu_TrigMatch_mu24_iloose_L1MU15,
+        vector<bool>    *Mu_TrigMatch_mu24_ivarloose_L1MU15,
+        vector<vector<bool> > *Mu_trigMatchPair_mu18_mu8noL1,
+        vector<vector<bool> > *Mu_trigMatchPair_mu20_mu8noL1,
+        vector<vector<bool> > *Mu_trigMatchPair_mu22_mu8noL1)
 {
     for (int i = 0; i < NMu; i++) {
         Muon mu;
@@ -1270,23 +1270,23 @@ void ytEventSelection :: fill_muons(
 }
 
 void ytEventSelection :: fill_jets(
-		Int_t           NJet,
-		vector<double>  *Jet_eta,
-		vector<double>  *Jet_phi,
-		vector<double>  *Jet_pT,
-		vector<double>  *Jet_E,
-		vector<double>  *Jet_quality,
-		vector<double>  *Jet_JVT,
-		vector<double>  *Jet_JVTsf,
-		vector<double>  *Jet_MV2c20,
-		vector<double>  *Jet_MV2c10,
-		vector<double>  *Jet_SFw,
-		vector<int>     *Jet_ConeTruthLabel,
-		vector<int>     *Jet_PartonTruthLabel,
-		vector<int>     *Jet_HadronConeExclTruthLabel,
-		vector<double>  *Jet_deltaR,
-		vector<int>     *Jet_nTrk,
-		vector<bool>    *Jet_passOR)
+        Int_t           NJet,
+        vector<double>  *Jet_eta,
+        vector<double>  *Jet_phi,
+        vector<double>  *Jet_pT,
+        vector<double>  *Jet_E,
+        vector<double>  *Jet_quality,
+        vector<double>  *Jet_JVT,
+        vector<double>  *Jet_JVTsf,
+        vector<double>  *Jet_MV2c20,
+        vector<double>  *Jet_MV2c10,
+        vector<double>  *Jet_SFw,
+        vector<int>     *Jet_ConeTruthLabel,
+        vector<int>     *Jet_PartonTruthLabel,
+        vector<int>     *Jet_HadronConeExclTruthLabel,
+        vector<double>  *Jet_deltaR,
+        vector<int>     *Jet_nTrk,
+        vector<bool>    *Jet_passOR)
 {
     for (int i = 0; i < NJet; i++) {
         Jet je;

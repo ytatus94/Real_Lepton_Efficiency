@@ -6,14 +6,14 @@ This is the new real lepton efficiency framework.
 2. Using markdown language in `README.md`
 
 
-### v01.(ouhep05 branch)-03. Modify the `READMD.md`
+### v01-03. (ouhep05 branch) Modify the `READMD.md`
 
 
-### v01.(ouhep05 branch)-02. This are files on ouhep05.
+### v01-02. (ouhep05 branch) This are files on ouhep05.
 The current results (20161006) are obtained using this version.
 
 
-### v01.(ouhep05 branch)-01. This are files on ouhep05
+### v01-01. (ouhep05 branch) This are files on ouhep05
 The latest modified date of files is Sep./30/2016.
 
 

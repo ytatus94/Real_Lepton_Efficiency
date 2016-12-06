@@ -3,11 +3,11 @@
 # Standard setup of RealEfficiency
 setupATLAS
 if [ -e rcSetup.sh ]; then
-	echo ">>>>> Using the existing rcSetup.sh."
-	rcSetup # defaults to whatever was previously set up
+    echo ">>>>> Using the existing rcSetup.sh."
+    rcSetup # defaults to whatever was previously set up
 else
-	echo ">>>>> Setup rcSetup SUSY,2.4.17"
-	rcSetup SUSY,2.4.17
+    echo ">>>>> Setup rcSetup SUSY,2.4.17"
+    rcSetup SUSY,2.4.17
 fi
 
 # Find and compile these packages
