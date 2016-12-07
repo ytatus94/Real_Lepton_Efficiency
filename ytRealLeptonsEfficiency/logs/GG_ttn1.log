@@ -1,0 +1,342 @@
+isMC = true, isData = false
+Submit jobs to DirectDriver...
+process = GG_ttn1
+Read MC files...
+SampleHandler with 1 files
+Sample:name=MC,tags=()
+file:///raid05/users/shen/Ximo_ntuples/v44/MC/GG_ttn1_merged.root
+
+
+PathResolver              WARNING XMLPATH environment variable not defined!
+PathResolver              WARNING XMLPATH environment variable not defined!
+--- TGRLCollection      : Now merging GRLs where possible. Metadata required to be identical.[0m
+myWeightTool              INFO    AsgTool myWeightTool @ 0x249be70
+asg::ToolStore::put       WARNING Tool with name "GoodRunsListSelectionTool" already registered
+PathResolver              WARNING XMLPATH environment variable not defined!
+PathResolver              WARNING XMLPATH environment variable not defined!
+--- TGRLCollection      : Now merging GRLs where possible. Metadata required to be identical.[0m
+asg::ToolStore::put       WARNING Tool with name "Pileup" already registered
+asg::ToolStore::put       WARNING Tool with name "myWeightTool" already registered
+myWeightTool              INFO    AsgTool myWeightTool @ 0x364ba50
+asg::ToolStore::put       WARNING Tool with name "GoodRunsListSelectionTool" already registered
+PathResolver              WARNING XMLPATH environment variable not defined!
+PathResolver              WARNING XMLPATH environment variable not defined!
+--- TGRLCollection      : Now merging GRLs where possible. Metadata required to be identical.[0m
+asg::ToolStore::put       WARNING Tool with name "Pileup" already registered
+asg::ToolStore::put       WARNING Tool with name "myWeightTool" already registered
+myWeightTool              INFO    AsgTool myWeightTool @ 0x439e190
+Running sample: MC
+Processing File: file:///raid05/users/shen/Ximo_ntuples/v44/MC/GG_ttn1_merged.root
+derivation_stat_weights=4.52145e+06
+Processed 10000 events
+Processed 20000 events
+Processed 30000 events
+Processed 40000 events
+Processed 50000 events
+Processed 60000 events
+Processed 70000 events
+Processed 80000 events
+Processed 90000 events
+Processed 100000 events
+Processed 110000 events
+Processed 120000 events
+Processed 130000 events
+Processed 140000 events
+Processed 150000 events
+Processed 160000 events
+Processed 170000 events
+Processed 180000 events
+Processed 190000 events
+Processed 200000 events
+Processed 210000 events
+Processed 220000 events
+Processed 230000 events
+Processed 240000 events
+Processed 250000 events
+Processed 260000 events
+Processed 270000 events
+Processed 280000 events
+Processed 290000 events
+Processed 300000 events
+Processed 310000 events
+Processed 320000 events
+Processed 330000 events
+Processed 340000 events
+Processed 350000 events
+Processed 360000 events
+Processed 370000 events
+Processed 380000 events
+Processed 390000 events
+Processed 400000 events
+Processed 410000 events
+Processed 420000 events
+Processed 430000 events
+Processed 440000 events
+Processed 450000 events
+Processed 460000 events
+Processed 470000 events
+Processed 480000 events
+Processed 490000 events
+Processed 500000 events
+Processed 510000 events
+Processed 520000 events
+Processed 530000 events
+Processed 540000 events
+Processed 550000 events
+Processed 560000 events
+Processed 570000 events
+Processed 580000 events
+Processed 590000 events
+Processed 600000 events
+Processed 610000 events
+Processed 620000 events
+Processed 630000 events
+Processed 640000 events
+Processed 650000 events
+Processed 660000 events
+Processed 670000 events
+Processed 680000 events
+Processed 690000 events
+Processed 700000 events
+Processed 710000 events
+Processed 720000 events
+Processed 730000 events
+Processed 740000 events
+Processed 750000 events
+Processed 760000 events
+Processed 770000 events
+Processed 780000 events
+Processed 790000 events
+Processed 800000 events
+Processed 810000 events
+Processed 820000 events
+Processed 830000 events
+Processed 840000 events
+Processed 850000 events
+Processed 860000 events
+Processed 870000 events
+Processed 880000 events
+Processed 890000 events
+Processed 900000 events
+Processed 910000 events
+Processed 920000 events
+Processed 930000 events
+Processed 940000 events
+Processed 950000 events
+Processed 960000 events
+Processed 970000 events
+Processed 980000 events
+Processed 990000 events
+Processed 1000000 events
+Processed 1010000 events
+Processed 1020000 events
+Processed 1030000 events
+Processed 1040000 events
+Processed 1050000 events
+Processed 1060000 events
+Processed 1070000 events
+Processed 1080000 events
+Processed 1090000 events
+Processed 1100000 events
+Processed 1110000 events
+Processed 1120000 events
+Processed 1130000 events
+Processed 1140000 events
+Processed 1150000 events
+Processed 1160000 events
+Processed 1170000 events
+Processed 1180000 events
+Processed 1190000 events
+Processed 1200000 events
+Processed 1210000 events
+Processed 1220000 events
+Processed 1230000 events
+Processed 1240000 events
+Processed 1250000 events
+Processed 1260000 events
+Processed 1270000 events
+Processed 1280000 events
+Processed 1290000 events
+Processed 1300000 events
+Processed 1310000 events
+Processed 1320000 events
+Processed 1330000 events
+Processed 1340000 events
+Processed 1350000 events
+Processed 1360000 events
+Processed 1370000 events
+Processed 1380000 events
+Processed 1390000 events
+Processed 1400000 events
+Processed 1410000 events
+Processed 1420000 events
+Processed 1430000 events
+Processed 1440000 events
+Processed 1450000 events
+Processed 1460000 events
+Processed 1470000 events
+Processed 1480000 events
+Processed 1490000 events
+Processed 1500000 events
+Processed 1510000 events
+Processed 1520000 events
+Processed 1530000 events
+Processed 1540000 events
+Processed 1550000 events
+Processed 1560000 events
+Processed 1570000 events
+Processed 1580000 events
+Processed 1590000 events
+Processed 1600000 events
+Processed 1610000 events
+Processed 1620000 events
+Processed 1630000 events
+Processed 1640000 events
+Processed 1650000 events
+Processed 1660000 events
+Processed 1670000 events
+Processed 1680000 events
+Processed 1690000 events
+Processed 1700000 events
+Processed 1710000 events
+Processed 1720000 events
+Processed 1730000 events
+Processed 1740000 events
+Processed 1750000 events
+Processed 1760000 events
+Processed 1770000 events
+Processed 1780000 events
+Processed 1790000 events
+Processed 1800000 events
+Processed 1810000 events
+Processed 1820000 events
+Processed 1830000 events
+Processed 1840000 events
+Processed 1850000 events
+Processed 1860000 events
+Processed 1870000 events
+Processed 1880000 events
+Processed 1890000 events
+Processed 1900000 events
+Processed 1910000 events
+Processed 1920000 events
+Processed 1930000 events
+Processed 1940000 events
+Processed 1950000 events
+Processed 1960000 events
+Processed 1970000 events
+Processed 1980000 events
+Processed 1990000 events
+Processed 2000000 events
+Processed 2010000 events
+Processed 2020000 events
+Processed 2030000 events
+Processed 2040000 events
+Processed 2050000 events
+Processed 2060000 events
+Processed 2070000 events
+Processed 2080000 events
+Processed 2090000 events
+Processed 2100000 events
+Processed 2110000 events
+Processed 2120000 events
+Processed 2130000 events
+Processed 2140000 events
+Processed 2150000 events
+Processed 2160000 events
+Processed 2170000 events
+Processed 2180000 events
+Processed 2190000 events
+Processed 2200000 events
+Processed 2210000 events
+Processed 2220000 events
+Processed 2230000 events
+Processed 2240000 events
+Processed 2250000 events
+Processed 2260000 events
+Processed 2270000 events
+Processed 2280000 events
+Processed 2290000 events
+Processed 2300000 events
+Processed 2310000 events
+Processed 2320000 events
+Processed 2330000 events
+Processed 2340000 events
+Processed 2350000 events
+Processed 2360000 events
+Processed 2370000 events
+Processed 2380000 events
+Processed 2390000 events
+Processed 2400000 events
+**************************************************
+Cut 0: All events before derivations (DerivationStat_Weights) = -2.35344e-185
+Cut 1: All events in derivation/ntuple = 2.40421e+06
+Cut 2: GRL (for data only) = 2.40421e+06
+Cut 3: Primary vertex = 2.40421e+06
+Cut 4: Trigger       = 2.2843e+06
+Cut 5: Global flags (data only) = 2.2843e+06
+Cut 6: Bad muon      = 2.28316e+06
+Cut 7: >= 1 jet passes jet OR = 2.28316e+06
+Cut 8: Bad jet       = 2.27727e+06
+Cut 9: >= 1 signal jet = 2.27727e+06
+Cut 10: Cosmic muons veto = 2.23537e+06
+Cut 11: >= 2 baseline leptons > 10 GeV = 828409    
+Cut 12: >= 2 signal leptons > 20 GeV = 544700    
+Cut 13: Same sign    = 235043    
+***** El-El channel *****
+Cut 14: Channel seperation, same-sign [20, 20]: (el-el) = 48082     
+Cut 15: Trigger matching: (el-el) = 47935     
+Cut 16: >= 1 bjet > 20 GeV: (el-el) = 46763     
+Cut 17: 4 jets > 50 GeV: (el-el) = 41996     
+Cut 18: MET > 125 GeV: (el-el) = 39925     
+***** El-Mu channel *****
+Cut 14: Channel seperation, same-sign [20, 20]: (el-mu) = 116166    
+Cut 15: Trigger matching: (el-mu) = 115008    
+Cut 16: >= 1 bjet > 20 GeV: (el-mu) = 112156    
+Cut 17: 4 jets > 50 GeV: (el-mu) = 101280    
+Cut 18: MET > 125 GeV: (el-mu) = 97073     
+***** Mu-Mu channel *****
+Cut 14: Channel seperation, same-sign [20, 20]: (mu-mu) = 70795     
+Cut 15: Trigger matching: (mu-mu) = 70592     
+Cut 16: >= 1 bjet > 20 GeV: (mu-mu) = 68894     
+Cut 17: 4 jets > 50 GeV: (mu-mu) = 62689     
+Cut 18: MET > 125 GeV: (mu-mu) = 59904     
+**************************************************
+**************************************************
+ Sum of EventWeight for each cut
+**************************************************
+Cut 0: All events before derivations (DerivationStat_Weights) = 0         
+Cut 1: All events in derivation/ntuple = 2.1688e+06
+Cut 2: GRL (for data only) = 2.1688e+06
+Cut 3: Primary vertex = 2.1688e+06
+Cut 4: Trigger       = 2.06096e+06
+Cut 5: Global flags (data only) = 2.06096e+06
+Cut 6: Bad muon      = 2.05996e+06
+Cut 7: >= 1 jet passes jet OR = 2.05996e+06
+Cut 8: Bad jet       = 2.05521e+06
+Cut 9: >= 1 signal jet = 2.14531e+06
+Cut 10: Cosmic muons veto = 2.10597e+06
+Cut 11: >= 2 baseline leptons > 10 GeV = 776593    
+Cut 12: >= 2 signal leptons > 20 GeV = 511513    
+Cut 13: Same sign    = 220797    
+***** El-El channel *****
+Cut 14: Channel seperation, same-sign [20, 20]: (el-el) = 45067.2   
+Cut 15: Trigger matching: (el-el) = 44936.1   
+Cut 16: >= 1 bjet > 20 GeV: (el-el) = 43809.4   
+Cut 17: 4 jets > 50 GeV: (el-el) = 39365.4   
+Cut 18: MET > 125 GeV: (el-el) = 37357.3   
+***** El-Mu channel *****
+Cut 14: Channel seperation, same-sign [20, 20]: (el-mu) = 109223    
+Cut 15: Trigger matching: (el-mu) = 108187    
+Cut 16: >= 1 bjet > 20 GeV: (el-mu) = 105436    
+Cut 17: 4 jets > 50 GeV: (el-mu) = 95349.6   
+Cut 18: MET > 125 GeV: (el-mu) = 91411.3   
+***** Mu-Mu channel *****
+Cut 14: Channel seperation, same-sign [20, 20]: (mu-mu) = 66507.6   
+Cut 15: Trigger matching: (mu-mu) = 66341.1   
+Cut 16: >= 1 bjet > 20 GeV: (mu-mu) = 64707.6   
+Cut 17: 4 jets > 50 GeV: (mu-mu) = 58992.8   
+Cut 18: MET > 125 GeV: (mu-mu) = 56339.1   
+**************************************************
+worker finished:
+Real time 0:03:13, CP time 192.490

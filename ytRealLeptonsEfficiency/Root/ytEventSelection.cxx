@@ -8,7 +8,7 @@ ClassImp(ytEventSelection)
 
 
 
-ytEventSelection :: ytEventSelection ()
+ytEventSelection::ytEventSelection ()
 {
     // Here you put any code for the base initialization of variables,
     // e.g. initialize all pointers to 0.  Note that you should only put
@@ -21,18 +21,16 @@ ytEventSelection :: ytEventSelection ()
     //Info(function_name, "Function calls");
 
     m_cutflow   = new yt_cutflows;
+    m_skim      = new yt_skim;
+    m_XsecDB    = new SUSY::CrossSectionDB(PathResolverFindCalibDirectory("SUSYTools/mc15_13TeV/"));
 
     // initialize event weight sum to zero
-    sum_of_weight_at_cut = vector<double>(Ncuts, 0); // initialize Ncuts elements to zero.
-
-    if (isSkim) {
-        m_skim = new yt_skim;
-    }
+    //sum_of_weight_at_cut = vector<double>(Ncuts, 0); // initialize Ncuts elements to zero.
 }
 
 
 
-EL::StatusCode ytEventSelection :: setupJob (EL::Job& job)
+EL::StatusCode ytEventSelection::setupJob (EL::Job& job)
 {
     // Here you put code that sets up the job on the submission object
     // so that it is ready to work with your algorithm, e.g. you can
@@ -50,7 +48,7 @@ EL::StatusCode ytEventSelection :: setupJob (EL::Job& job)
 
 
 
-EL::StatusCode ytEventSelection :: histInitialize ()
+EL::StatusCode ytEventSelection::histInitialize ()
 {
     // Here you do everything that needs to be done at the very
     // beginning on each worker node, e.g. create histograms and output
@@ -65,7 +63,7 @@ EL::StatusCode ytEventSelection :: histInitialize ()
 
 
 
-EL::StatusCode ytEventSelection :: fileExecute ()
+EL::StatusCode ytEventSelection::fileExecute ()
 {
     // Here you do everything that needs to be done exactly once for every
     // single file, e.g. collect a list of all lumi-blocks processed
@@ -74,14 +72,15 @@ EL::StatusCode ytEventSelection :: fileExecute ()
     //Info(function_name, "Function calls");
 
     TH1F *h1 = (TH1F *)wk()->inputFile()->Get("DerivationStat_Weights");
-    cout <<	"derivation_stat_weights=" << h1->GetBinContent(1) << endl;
+    derivation_stat_weights += h1->GetBinContent(1);
+    //cout <<   "derivation_stat_weights=" << h1->GetBinContent(1) << endl;
 
     return EL::StatusCode::SUCCESS;
 }
 
 
 
-EL::StatusCode ytEventSelection :: changeInput (bool firstFile)
+EL::StatusCode ytEventSelection::changeInput (bool firstFile)
 {
     // Here you do everything you need to do when we change input files,
     // e.g. resetting branch addresses on trees.  If you are using
@@ -95,7 +94,7 @@ EL::StatusCode ytEventSelection :: changeInput (bool firstFile)
 
 
 
-EL::StatusCode ytEventSelection :: initialize ()
+EL::StatusCode ytEventSelection::initialize ()
 {
     // Here you do everything that you need to do after the first input
     // file has been connected and before the first event is processed,
@@ -495,17 +494,17 @@ EL::StatusCode ytEventSelection :: initialize ()
     fChain->SetBranchAddress("SherpaNjetWeight", &SherpaNjetWeight, &b_SherpaNjetWeight);
     fChain->SetBranchAddress("TruthPDGID1", &TruthPDGID1, &b_TruthPDGID1);
     fChain->SetBranchAddress("TruthPDGID2", &TruthPDGID2, &b_TruthPDGID2);
-
+/*
     if (isSkim) {
         m_skim->initialize(wk()->tree(), process);
     }
-
+*/
     return EL::StatusCode::SUCCESS;
 }
 
 
 
-EL::StatusCode ytEventSelection :: execute ()
+EL::StatusCode ytEventSelection::execute ()
 {
     // Here you do everything that needs to be done on every single
     // events, e.g. read input variables, apply cuts, and fill
@@ -516,6 +515,32 @@ EL::StatusCode ytEventSelection :: execute ()
     //Info(function_name, "Function calls");
 
     wk()->tree()->GetEntry(wk()->treeEntry());
+
+    if (isMC) {
+        cross_section = m_XsecDB->rawxsect(ChannelNumber);
+        k_factor = m_XsecDB->kfactor(ChannelNumber);
+        filter_efficiency = m_XsecDB->efficiency(ChannelNumber);
+        cross_section_kfactor_efficiency = m_XsecDB->xsectTimesEff(ChannelNumber);
+/*
+        if (process.find("NUHM2") != string::npos) {
+            cross_section = m_XsecDB->rawxsect(ChannelNumber, 2);
+            k_factor = m_XsecDB->kfactor(ChannelNumber, 2);
+            filter_efficiency = m_XsecDB->efficiency(ChannelNumber, 2);
+            cross_section_kfactor_efficiency = m_XsecDB->xsectTimesEff(ChannelNumber, 2);
+        }
+*/
+    }
+    else if (isData) {
+        cross_section = 1.;
+        k_factor = 1.;
+        filter_efficiency = 1.;
+        cross_section_kfactor_efficiency = 1.;
+    }
+
+    //cout << "cross_section=" << cross_section << endl;
+    //cout << "k_factor=" << k_factor << endl;
+    //cout << "filter_efficiency=" << filter_efficiency << endl;
+    //cout << "cross_section_kfactor_efficiency=" << cross_section_kfactor_efficiency << endl;
 
     // Reset vectors
     vec_elec.clear();
@@ -743,7 +768,7 @@ EL::StatusCode ytEventSelection :: execute ()
             El_TrigMatch_e24_lhmedium_nod0_ivarloose,
             El_TrigMatch_e24_lhtight_nod0_ivarloose,
             El_TrigMatch_e60_lhmedium_nod0);
-    
+
         fill_muons(
             NMu,
             13, // particle id mu- = 13
@@ -798,7 +823,7 @@ EL::StatusCode ytEventSelection :: execute ()
             Mu_trigMatchPair_mu18_mu8noL1,
             Mu_trigMatchPair_mu20_mu8noL1,
             Mu_trigMatchPair_mu22_mu8noL1);
-    
+
         fill_jets(
             NJet,
             Jet_eta,
@@ -819,7 +844,7 @@ EL::StatusCode ytEventSelection :: execute ()
             */
             Jet_nTrk,
             Jet_passOR);
-        //#endif // #ifdef _IS_DATA_
+    //#endif // #ifdef _IS_DATA_
     }
 
     // sort by descending Pt
@@ -851,15 +876,15 @@ EL::StatusCode ytEventSelection :: execute ()
     // Apply cuts
     //----------------------------------//
 
-    // Apply cutflows
     m_cutflow->events_pass_cutflow[DerivationStat_Weights] = derivation_stat_weights; // read the first bin from root file.
-
+/*
     double elec_ID_weight = 1., elec_iso_weight = 1.,
            muon_ID_weight = 1., muon_iso_weight = 1.,
            lepton_weight = 1., jet_weight = 1.;
-
+*/
     bool cut1  = m_cutflow->pass_all_events();
     m_cutflow->update(All_events, cut1);
+/*
     elec_ID_weight = ID_weight(vec_baseline_elec, false);
     elec_iso_weight = 1.0; // no isolation applied at this stage
     muon_ID_weight = ID_weight(vec_baseline_muon);
@@ -867,10 +892,12 @@ EL::StatusCode ytEventSelection :: execute ()
     lepton_weight = lept_weight(elec_ID_weight, elec_iso_weight, muon_ID_weight, muon_iso_weight);
     jet_weight = jets_weight(vec_baseline_jets);
     update(All_events, cut1, calculate_weight(EventWeight, PRWWeight, lepton_weight, jet_weight));
+*/
     if (!cut1) return EL::StatusCode::SUCCESS;
 
     bool cut2  = m_cutflow->pass_GRL(isData, RunNb, LB);
     m_cutflow->update(GRL, cut2);
+/*
     elec_ID_weight = ID_weight(vec_baseline_elec, false);
     elec_iso_weight = 1.0; // no isolation applied at this stage
     muon_ID_weight = ID_weight(vec_baseline_muon);
@@ -878,10 +905,12 @@ EL::StatusCode ytEventSelection :: execute ()
     lepton_weight = lept_weight(elec_ID_weight, elec_iso_weight, muon_ID_weight, muon_iso_weight);
     jet_weight = jets_weight(vec_baseline_jets);
     update(GRL, cut2, calculate_weight(EventWeight, PRWWeight, lepton_weight, jet_weight));
+*/
     if (!cut2) return EL::StatusCode::SUCCESS;
 
     bool cut3  = m_cutflow->pass_primary_vertex(PV_z);
     m_cutflow->update(Primary_vertex, cut3);
+/*
     elec_ID_weight = ID_weight(vec_baseline_elec, false);
     elec_iso_weight = 1.0; // no isolation applied at this stage
     muon_ID_weight = ID_weight(vec_baseline_muon);
@@ -889,6 +918,7 @@ EL::StatusCode ytEventSelection :: execute ()
     lepton_weight = lept_weight(elec_ID_weight, elec_iso_weight, muon_ID_weight, muon_iso_weight);
     jet_weight = jets_weight(vec_baseline_jets);
     update(Primary_vertex, cut3, calculate_weight(EventWeight, PRWWeight, lepton_weight, jet_weight));
+*/
     if (!cut3) return EL::StatusCode::SUCCESS;
 
     bool cut4  = m_cutflow->pass_trigger(isData, isMC, RunNb, PRWrandomRunNumber,
@@ -896,6 +926,7 @@ EL::StatusCode ytEventSelection :: execute ()
                                          HLT_2e17_lhvloose_nod0, HLT_e17_lhloose_nod0_mu14, HLT_mu20_mu8noL1, HLT_xe100_mht_L1XE50,
                                          Etmiss_TST_Et);
     m_cutflow->update(Trigger, cut4);
+/*
     elec_ID_weight = ID_weight(vec_baseline_elec, false);
     elec_iso_weight = 1.0; // no isolation applied at this stage
     muon_ID_weight = ID_weight(vec_baseline_muon);
@@ -903,10 +934,12 @@ EL::StatusCode ytEventSelection :: execute ()
     lepton_weight = lept_weight(elec_ID_weight, elec_iso_weight, muon_ID_weight, muon_iso_weight);
     jet_weight = jets_weight(vec_baseline_jets);
     update(Trigger, cut4, calculate_weight(EventWeight, PRWWeight, lepton_weight, jet_weight));
+*/
     if (!cut4) return EL::StatusCode::SUCCESS;
 
     bool cut5  = m_cutflow->pass_global_flags(isData, isMC, DetError);
     m_cutflow->update(Global_flags, cut5);
+/*
     elec_ID_weight = ID_weight(vec_baseline_elec, false);
     elec_iso_weight = 1.0; // no isolation applied at this stage
     muon_ID_weight = ID_weight(vec_baseline_muon);
@@ -914,10 +947,12 @@ EL::StatusCode ytEventSelection :: execute ()
     lepton_weight = lept_weight(elec_ID_weight, elec_iso_weight, muon_ID_weight, muon_iso_weight);
     jet_weight = jets_weight(vec_baseline_jets);
     update(Global_flags, cut5, calculate_weight(EventWeight, PRWWeight, lepton_weight, jet_weight));
+*/
     if (!cut5) return EL::StatusCode::SUCCESS;
 
     bool cut6  = m_cutflow->pass_bad_muon(vec_baseline_muon); // use baseline muons
     m_cutflow->update(Bad_muon, cut6);
+/*
     elec_ID_weight = ID_weight(vec_baseline_elec, false);
     elec_iso_weight = 1.0; // no isolation applied at this stage
     muon_ID_weight = ID_weight(vec_baseline_muon);
@@ -925,11 +960,13 @@ EL::StatusCode ytEventSelection :: execute ()
     lepton_weight = lept_weight(elec_ID_weight, elec_iso_weight, muon_ID_weight, muon_iso_weight);
     jet_weight = jets_weight(vec_baseline_jets);
     update(Bad_muon, cut6, calculate_weight(EventWeight, PRWWeight, lepton_weight, jet_weight));
+*/
     if (!cut6) return EL::StatusCode::SUCCESS;
 
     if (!isSkim) {
         bool cut7  = m_cutflow->pass_at_least_one_jet_passes_jet_OR(vec_baseline_jets); // use baseline jets
         m_cutflow->update(At_least_one_jet_passes_jet_OR, cut7);
+/*
         elec_ID_weight = ID_weight(vec_baseline_elec, false);
         elec_iso_weight = 1.0; // no isolation applied at this stage
         muon_ID_weight = ID_weight(vec_baseline_muon);
@@ -937,11 +974,13 @@ EL::StatusCode ytEventSelection :: execute ()
         lepton_weight = lept_weight(elec_ID_weight, elec_iso_weight, muon_ID_weight, muon_iso_weight);
         jet_weight = jets_weight(vec_baseline_jets);
         update(At_least_one_jet_passes_jet_OR, cut7, calculate_weight(EventWeight, PRWWeight, lepton_weight, jet_weight));
+*/
         if (!cut7) return EL::StatusCode::SUCCESS;
     }
 
     bool cut8  = m_cutflow->pass_bad_jet(vec_jets); // we have to use the raw jet objects (vec_jets) at this step.
     m_cutflow->update(Bad_jet, cut8);
+/*
     elec_ID_weight = ID_weight(vec_baseline_elec, false);
     elec_iso_weight = 1.0; // no isolation applied at this stage
     muon_ID_weight = ID_weight(vec_baseline_muon);
@@ -949,6 +988,7 @@ EL::StatusCode ytEventSelection :: execute ()
     lepton_weight = lept_weight(elec_ID_weight, elec_iso_weight, muon_ID_weight, muon_iso_weight);
     jet_weight = jets_weight(vec_baseline_jets);
     update(Bad_jet, cut8, calculate_weight(EventWeight, PRWWeight, lepton_weight, jet_weight));
+*/
     if (!cut8) return EL::StatusCode::SUCCESS;
 
     // Fill OR electrons, OR muons, OR jets, and OR leptons into vectors.
@@ -965,6 +1005,7 @@ EL::StatusCode ytEventSelection :: execute ()
     if (!isSkim) {
         bool cut9  = m_cutflow->pass_at_least_one_signal_jet(vec_JVT_jets);
         m_cutflow->update(At_least_one_signal_jet, cut9);
+/*
         elec_ID_weight = ID_weight(vec_OR_elec, false);
         elec_iso_weight = 1.0; // no isolation applied at this stage
         muon_ID_weight = ID_weight(vec_OR_muon);
@@ -972,11 +1013,13 @@ EL::StatusCode ytEventSelection :: execute ()
         lepton_weight = lept_weight(elec_ID_weight, elec_iso_weight, muon_ID_weight, muon_iso_weight);
         jet_weight = jets_weight(vec_JVT_jets);
         update(At_least_one_signal_jet, cut9, calculate_weight(EventWeight, PRWWeight, lepton_weight, jet_weight));
+*/
         if (!cut9) return EL::StatusCode::SUCCESS;
     }
     
     bool cut10 = m_cutflow->pass_cosmic_muon_veto(vec_OR_muon);
     m_cutflow->update(Cosmic_muons_veto, cut10);
+/*
     elec_ID_weight = ID_weight(vec_OR_elec, false);
     elec_iso_weight = 1.0; // no isolation applied at this stage
     muon_ID_weight = ID_weight(vec_OR_muon);
@@ -984,10 +1027,12 @@ EL::StatusCode ytEventSelection :: execute ()
     lepton_weight = lept_weight(elec_ID_weight, elec_iso_weight, muon_ID_weight, muon_iso_weight);
     jet_weight = jets_weight(vec_JVT_jets);
     update(Cosmic_muons_veto, cut10, calculate_weight(EventWeight, PRWWeight, lepton_weight, jet_weight));
+*/
     if (!cut10) return EL::StatusCode::SUCCESS;
 
     bool cut11 = m_cutflow->pass_at_least_two_baseline_leptons_greater_than_10GeV(vec_OR_lept);
     m_cutflow->update(At_least_two_baseline_leptons_greater_than_10GeV, cut11);
+/*
     elec_ID_weight = ID_weight(vec_OR_elec, false);
     elec_iso_weight = 1.0; // no isolation applied at this stage
     muon_ID_weight = ID_weight(vec_OR_muon);
@@ -995,6 +1040,7 @@ EL::StatusCode ytEventSelection :: execute ()
     lepton_weight = lept_weight(elec_ID_weight, elec_iso_weight, muon_ID_weight, muon_iso_weight);
     jet_weight = jets_weight(vec_JVT_jets);
     update(At_least_two_baseline_leptons_greater_than_10GeV, cut11, calculate_weight(EventWeight, PRWWeight, lepton_weight, jet_weight));
+*/
     if (!cut11) return EL::StatusCode::SUCCESS;
 
     // Fill signal electrons, signal muons, signal jets, and signal leptons into vectors.
@@ -1004,12 +1050,13 @@ EL::StatusCode ytEventSelection :: execute ()
     fill_signal_jets(vec_JVT_jets);
     // Now sort leptons by descending Pt
     sort(vec_signal_lept.begin(), vec_signal_lept.end(), sort_descending_Pt<Lepton>);
-
+/*
     // Calculate weight
     double baseline_weight = 1., signal_weight = 1.;
     baseline_weight = ID_weight(vec_baseline_elec, false) * ID_weight(vec_baseline_muon) * jets_weight(vec_signal_jets);
     signal_weight = ID_weight(vec_signal_elec, true) * Iso_weight(vec_signal_elec) * ID_weight(vec_signal_muon) * Iso_weight(vec_signal_muon) * jets_weight(vec_signal_jets);
-
+*/
+/*
     if (isSkim) {
         //cout << "Doing skim at here..." << endl;
         m_skim->set_isMC(isMC);
@@ -1028,9 +1075,10 @@ EL::StatusCode ytEventSelection :: execute ()
                         vec_baseline_elec, vec_baseline_muon, vec_baseline_lept, vec_baseline_jets,
                         vec_signal_elec, vec_signal_muon, vec_signal_lept, vec_signal_jets);
     }
-
+*/
     bool cut12 = m_cutflow->pass_at_least_two_signal_leptons_greater_than_20GeV(vec_signal_lept);
     m_cutflow->update(At_least_two_signal_leptons_greater_than_20GeV, cut12);
+/*
     elec_ID_weight = ID_weight(vec_signal_elec, true);
     elec_iso_weight = Iso_weight(vec_signal_elec);
     muon_ID_weight = ID_weight(vec_signal_muon);
@@ -1038,10 +1086,12 @@ EL::StatusCode ytEventSelection :: execute ()
     lepton_weight = lept_weight(elec_ID_weight, elec_iso_weight, muon_ID_weight, muon_iso_weight);
     jet_weight = jets_weight(vec_signal_jets);
     update(At_least_two_signal_leptons_greater_than_20GeV, cut12, calculate_weight(EventWeight, PRWWeight, lepton_weight, jet_weight));
+*/
     if (!cut12) return EL::StatusCode::SUCCESS;
 
     bool cut13 = m_cutflow->pass_same_sign(vec_signal_lept);
     m_cutflow->update(Same_sign, cut13);
+/*
     elec_ID_weight = ID_weight(vec_signal_elec, true);
     elec_iso_weight = Iso_weight(vec_signal_elec);
     muon_ID_weight = ID_weight(vec_signal_muon);
@@ -1049,6 +1099,7 @@ EL::StatusCode ytEventSelection :: execute ()
     lepton_weight = lept_weight(elec_ID_weight, elec_iso_weight, muon_ID_weight, muon_iso_weight);
     jet_weight = jets_weight(vec_signal_jets);
     update(Same_sign, cut13, calculate_weight(EventWeight, PRWWeight, lepton_weight, jet_weight));
+*/
     if (!cut13) return EL::StatusCode::SUCCESS;
 
     // same-sign
@@ -1056,6 +1107,7 @@ EL::StatusCode ytEventSelection :: execute ()
     int ee_cut1 = m_cutflow->pass_channel_separation(vec_signal_lept);
     if (ee_cut1 == 1) {
         m_cutflow->update(ee_channel_separation, true);
+/*
         elec_ID_weight = ID_weight(vec_signal_elec, true);
         elec_iso_weight = Iso_weight(vec_signal_elec);
         muon_ID_weight = ID_weight(vec_signal_muon);
@@ -1063,6 +1115,7 @@ EL::StatusCode ytEventSelection :: execute ()
         lepton_weight = lept_weight(elec_ID_weight, elec_iso_weight, muon_ID_weight, muon_iso_weight);
         jet_weight = jets_weight(vec_signal_jets);
         update(ee_channel_separation, true, calculate_weight(EventWeight, PRWWeight, lepton_weight, jet_weight));
+*/
     }
 
     bool ee_cut2 = m_cutflow->pass_trigger_matching(isData, isMC, RunNb, PRWrandomRunNumber, vec_signal_elec, vec_signal_muon,
@@ -1071,6 +1124,7 @@ EL::StatusCode ytEventSelection :: execute ()
                                                     Etmiss_TST_Et);
     if (ee_cut1 == 1 && ee_cut2) {
         m_cutflow->update(ee_trigger_matching, ee_cut2);
+/*
         elec_ID_weight = ID_weight(vec_signal_elec, true);
         elec_iso_weight = Iso_weight(vec_signal_elec);
         muon_ID_weight = ID_weight(vec_signal_muon);
@@ -1078,11 +1132,13 @@ EL::StatusCode ytEventSelection :: execute ()
         lepton_weight = lept_weight(elec_ID_weight, elec_iso_weight, muon_ID_weight, muon_iso_weight);
         jet_weight = jets_weight(vec_signal_jets);
         update(ee_trigger_matching, ee_cut2, calculate_weight(EventWeight, PRWWeight, lepton_weight, jet_weight));
+*/
     }
 
     bool ee_cut3 = m_cutflow->pass_at_least_one_bjet_greater_than_20GeV(vec_signal_jets);
     if (ee_cut1 == 1 && ee_cut2 && ee_cut3) {
         m_cutflow->update(ee_at_least_one_bjet_greater_than_20GeV, ee_cut3);
+/*
         elec_ID_weight = ID_weight(vec_signal_elec, true);
         elec_iso_weight = Iso_weight(vec_signal_elec);
         muon_ID_weight = ID_weight(vec_signal_muon);
@@ -1090,11 +1146,13 @@ EL::StatusCode ytEventSelection :: execute ()
         lepton_weight = lept_weight(elec_ID_weight, elec_iso_weight, muon_ID_weight, muon_iso_weight);
         jet_weight = jets_weight(vec_signal_jets);
         update(ee_at_least_one_bjet_greater_than_20GeV, ee_cut3, calculate_weight(EventWeight, PRWWeight, lepton_weight, jet_weight));
+*/
     }
 
     bool ee_cut4 = m_cutflow->pass_four_jets_greater_than_50GeV(vec_signal_jets);
     if (ee_cut1 == 1 && ee_cut2 && ee_cut3 && ee_cut4) {
         m_cutflow->update(ee_four_jets_greater_than_50GeV, ee_cut4);
+/*
         elec_ID_weight = ID_weight(vec_signal_elec, true);
         elec_iso_weight = Iso_weight(vec_signal_elec);
         muon_ID_weight = ID_weight(vec_signal_muon);
@@ -1102,11 +1160,13 @@ EL::StatusCode ytEventSelection :: execute ()
         lepton_weight = lept_weight(elec_ID_weight, elec_iso_weight, muon_ID_weight, muon_iso_weight);
         jet_weight = jets_weight(vec_signal_jets);
         update(ee_four_jets_greater_than_50GeV, ee_cut4, calculate_weight(EventWeight, PRWWeight, lepton_weight, jet_weight));
+*/
     }
 
     bool ee_cut5 = m_cutflow->pass_MET_greater_than_125GeV(Etmiss_TST_Et);
     if (ee_cut1 == 1 && ee_cut2 && ee_cut3 && ee_cut4 && ee_cut5) {
         m_cutflow->update(ee_MET_greater_than_125GeV, ee_cut5);
+/*
         elec_ID_weight = ID_weight(vec_signal_elec, true);
         elec_iso_weight = Iso_weight(vec_signal_elec);
         muon_ID_weight = ID_weight(vec_signal_muon);
@@ -1114,12 +1174,14 @@ EL::StatusCode ytEventSelection :: execute ()
         lepton_weight = lept_weight(elec_ID_weight, elec_iso_weight, muon_ID_weight, muon_iso_weight);
         jet_weight = jets_weight(vec_signal_jets);
         update(ee_MET_greater_than_125GeV, ee_cut5, calculate_weight(EventWeight, PRWWeight, lepton_weight, jet_weight));
+*/
     }
 
     // e-mu
     int emu_cut1 = m_cutflow->pass_channel_separation(vec_signal_lept);
     if (emu_cut1 == 2) {
         m_cutflow->update(emu_channel_separation, true);
+/*
         elec_ID_weight = ID_weight(vec_signal_elec, true);
         elec_iso_weight = Iso_weight(vec_signal_elec);
         muon_ID_weight = ID_weight(vec_signal_muon);
@@ -1127,6 +1189,7 @@ EL::StatusCode ytEventSelection :: execute ()
         lepton_weight = lept_weight(elec_ID_weight, elec_iso_weight, muon_ID_weight, muon_iso_weight);
         jet_weight = jets_weight(vec_signal_jets);
         update(emu_channel_separation, true, calculate_weight(EventWeight, PRWWeight, lepton_weight, jet_weight));
+*/
     }
 
     bool emu_cut2 = m_cutflow->pass_trigger_matching(isData, isMC, RunNb, PRWrandomRunNumber, vec_signal_elec, vec_signal_muon,
@@ -1135,6 +1198,7 @@ EL::StatusCode ytEventSelection :: execute ()
                                                      Etmiss_TST_Et);
     if (emu_cut1 == 2 && emu_cut2) {
         m_cutflow->update(emu_trigger_matching, emu_cut2);
+/*
         elec_ID_weight = ID_weight(vec_signal_elec, true);
         elec_iso_weight = Iso_weight(vec_signal_elec);
         muon_ID_weight = ID_weight(vec_signal_muon);
@@ -1142,11 +1206,13 @@ EL::StatusCode ytEventSelection :: execute ()
         lepton_weight = lept_weight(elec_ID_weight, elec_iso_weight, muon_ID_weight, muon_iso_weight);
         jet_weight = jets_weight(vec_signal_jets);
         update(emu_trigger_matching, emu_cut2, calculate_weight(EventWeight, PRWWeight, lepton_weight, jet_weight));
+*/
     }
 
     bool emu_cut3 = m_cutflow->pass_at_least_one_bjet_greater_than_20GeV(vec_signal_jets);
     if (emu_cut1 == 2 && emu_cut2 && emu_cut3) {
         m_cutflow->update(emu_at_least_one_bjet_greater_than_20GeV, emu_cut3);
+/*
         elec_ID_weight = ID_weight(vec_signal_elec, true);
         elec_iso_weight = Iso_weight(vec_signal_elec);
         muon_ID_weight = ID_weight(vec_signal_muon);
@@ -1154,12 +1220,14 @@ EL::StatusCode ytEventSelection :: execute ()
         lepton_weight = lept_weight(elec_ID_weight, elec_iso_weight, muon_ID_weight, muon_iso_weight);
         jet_weight = jets_weight(vec_signal_jets);
         update(emu_at_least_one_bjet_greater_than_20GeV, emu_cut3, calculate_weight(EventWeight, PRWWeight, lepton_weight, jet_weight));
+*/
     }
         
 
     bool emu_cut4 = m_cutflow->pass_four_jets_greater_than_50GeV(vec_signal_jets);
     if (emu_cut1 == 2 && emu_cut2 && emu_cut3 && emu_cut4) {
         m_cutflow->update(emu_four_jets_greater_than_50GeV, emu_cut4);
+/*
         elec_ID_weight = ID_weight(vec_signal_elec, true);
         elec_iso_weight = Iso_weight(vec_signal_elec);
         muon_ID_weight = ID_weight(vec_signal_muon);
@@ -1167,11 +1235,13 @@ EL::StatusCode ytEventSelection :: execute ()
         lepton_weight = lept_weight(elec_ID_weight, elec_iso_weight, muon_ID_weight, muon_iso_weight);
         jet_weight = jets_weight(vec_signal_jets);
         update(emu_four_jets_greater_than_50GeV, emu_cut4, calculate_weight(EventWeight, PRWWeight, lepton_weight, jet_weight));
+*/
     }
 
     bool emu_cut5 = m_cutflow->pass_MET_greater_than_125GeV(Etmiss_TST_Et);
     if (emu_cut1 == 2 && emu_cut2 && emu_cut3 && emu_cut4 && emu_cut5) {
         m_cutflow->update(emu_MET_greater_than_125GeV, emu_cut5);
+/*
         elec_ID_weight = ID_weight(vec_signal_elec, true);
         elec_iso_weight = Iso_weight(vec_signal_elec);
         muon_ID_weight = ID_weight(vec_signal_muon);
@@ -1179,12 +1249,14 @@ EL::StatusCode ytEventSelection :: execute ()
         lepton_weight = lept_weight(elec_ID_weight, elec_iso_weight, muon_ID_weight, muon_iso_weight);
         jet_weight = jets_weight(vec_signal_jets);
         update(emu_MET_greater_than_125GeV, emu_cut5, calculate_weight(EventWeight, PRWWeight, lepton_weight, jet_weight));
+*/
     }
 
     // mu-mu
     int mumu_cut1 = m_cutflow->pass_channel_separation(vec_signal_lept);
     if (mumu_cut1 == 3) {
         m_cutflow->update(mumu_channel_separation, true);
+/*
         elec_ID_weight = ID_weight(vec_signal_elec, true);
         elec_iso_weight = Iso_weight(vec_signal_elec);
         muon_ID_weight = ID_weight(vec_signal_muon);
@@ -1192,14 +1264,16 @@ EL::StatusCode ytEventSelection :: execute ()
         lepton_weight = lept_weight(elec_ID_weight, elec_iso_weight, muon_ID_weight, muon_iso_weight);
         jet_weight = jets_weight(vec_signal_jets);
         update(mumu_channel_separation, true, calculate_weight(EventWeight, PRWWeight, lepton_weight, jet_weight));
+*/
     }
-    
+
     bool mumu_cut2 = m_cutflow->pass_trigger_matching(isData, isMC, RunNb, PRWrandomRunNumber, vec_signal_elec, vec_signal_muon,
                                                       HLT_2e12_lhloose_L12EM10VH, HLT_e17_lhloose_mu14, HLT_mu18_mu8noL1, HLT_xe70,
                                                       HLT_2e17_lhvloose_nod0, HLT_e17_lhloose_nod0_mu14, HLT_mu20_mu8noL1, HLT_xe100_mht_L1XE50,
                                                       Etmiss_TST_Et);
     if (mumu_cut1 == 3 && mumu_cut2) {
         m_cutflow->update(mumu_trigger_matching, mumu_cut2);
+/*
         elec_ID_weight = ID_weight(vec_signal_elec, true);
         elec_iso_weight = Iso_weight(vec_signal_elec);
         muon_ID_weight = ID_weight(vec_signal_muon);
@@ -1207,11 +1281,13 @@ EL::StatusCode ytEventSelection :: execute ()
         lepton_weight = lept_weight(elec_ID_weight, elec_iso_weight, muon_ID_weight, muon_iso_weight);
         jet_weight = jets_weight(vec_signal_jets);
         update(mumu_trigger_matching, mumu_cut2, calculate_weight(EventWeight, PRWWeight, lepton_weight, jet_weight));
+*/
     }
 
     bool mumu_cut3 = m_cutflow->pass_at_least_one_bjet_greater_than_20GeV(vec_signal_jets);
     if (mumu_cut1 == 3 && mumu_cut2 && mumu_cut3) {
         m_cutflow->update(mumu_at_least_one_bjet_greater_than_20GeV, mumu_cut3);
+/*
         elec_ID_weight = ID_weight(vec_signal_elec, true);
         elec_iso_weight = Iso_weight(vec_signal_elec);
         muon_ID_weight = ID_weight(vec_signal_muon);
@@ -1219,11 +1295,13 @@ EL::StatusCode ytEventSelection :: execute ()
         lepton_weight = lept_weight(elec_ID_weight, elec_iso_weight, muon_ID_weight, muon_iso_weight);
         jet_weight = jets_weight(vec_signal_jets);
         update(mumu_at_least_one_bjet_greater_than_20GeV, mumu_cut3, calculate_weight(EventWeight, PRWWeight, lepton_weight, jet_weight));
+*/
     }
 
     bool mumu_cut4 = m_cutflow->pass_four_jets_greater_than_50GeV(vec_signal_jets);
     if (mumu_cut1 == 3 && mumu_cut2 && mumu_cut3 && mumu_cut4) {
         m_cutflow->update(mumu_four_jets_greater_than_50GeV, mumu_cut4);
+/*
         elec_ID_weight = ID_weight(vec_signal_elec, true);
         elec_iso_weight = Iso_weight(vec_signal_elec);
         muon_ID_weight = ID_weight(vec_signal_muon);
@@ -1231,11 +1309,13 @@ EL::StatusCode ytEventSelection :: execute ()
         lepton_weight = lept_weight(elec_ID_weight, elec_iso_weight, muon_ID_weight, muon_iso_weight);
         jet_weight = jets_weight(vec_signal_jets);
         update(mumu_four_jets_greater_than_50GeV, mumu_cut4, calculate_weight(EventWeight, PRWWeight, lepton_weight, jet_weight));
+*/
     } 
 
     bool mumu_cut5 = m_cutflow->pass_MET_greater_than_125GeV(Etmiss_TST_Et);
     if (mumu_cut1 == 3 && mumu_cut2 && mumu_cut3 && mumu_cut4 && mumu_cut5) {
         m_cutflow->update(mumu_MET_greater_than_125GeV, mumu_cut5);
+/*
         elec_ID_weight = ID_weight(vec_signal_elec, true);
         elec_iso_weight = Iso_weight(vec_signal_elec);
         muon_ID_weight = ID_weight(vec_signal_muon);
@@ -1243,14 +1323,15 @@ EL::StatusCode ytEventSelection :: execute ()
         lepton_weight = lept_weight(elec_ID_weight, elec_iso_weight, muon_ID_weight, muon_iso_weight);
         jet_weight = jets_weight(vec_signal_jets);
         update(mumu_MET_greater_than_125GeV, mumu_cut5, calculate_weight(EventWeight, PRWWeight, lepton_weight, jet_weight));
+*/
     }
-        
+
     return EL::StatusCode::SUCCESS;
 }
 
 
 
-EL::StatusCode ytEventSelection :: postExecute ()
+EL::StatusCode ytEventSelection::postExecute ()
 {
     // Here you do everything that needs to be done after the main event
     // processing.  This is typically very rare, particularly in user
@@ -1264,7 +1345,7 @@ EL::StatusCode ytEventSelection :: postExecute ()
 
 
 
-EL::StatusCode ytEventSelection :: finalize ()
+EL::StatusCode ytEventSelection::finalize ()
 {
     // This method is the mirror image of initialize(), meaning it gets
     // called after the last event has been processed on the worker node
@@ -1280,16 +1361,17 @@ EL::StatusCode ytEventSelection :: finalize ()
     //Info(function_name, "Function calls");
 
     m_cutflow->print();
+/*
     if (isSkim)
         m_skim->debug_print();
     debug_sum_of_weight_print();
-
+*/
     return EL::StatusCode::SUCCESS;
 }
 
 
 
-EL::StatusCode ytEventSelection :: histFinalize ()
+EL::StatusCode ytEventSelection::histFinalize ()
 {
     // This method is the mirror image of histInitialize(), meaning it
     // gets called after the last event has been processed on the worker
@@ -1308,6 +1390,7 @@ EL::StatusCode ytEventSelection :: histFinalize ()
     return EL::StatusCode::SUCCESS;
 }
 
+/*
 template<typename T>
 void ytEventSelection::debug_print(vector<T> vec)
 {
@@ -1315,7 +1398,6 @@ void ytEventSelection::debug_print(vector<T> vec)
     string type = typeid(T).name();
     cout << type << endl;
     // This template doesn't work...
-/*
     if (type.compare("Lepton") == 0) {
         cout << "This is Lepton" << endl;
         debug_lept_print(vec);
@@ -1335,9 +1417,15 @@ void ytEventSelection::debug_print(vector<T> vec)
     else {
         cout << "Type " << type << " doesn't match" << endl;
     }
-*/
 }
+*/
+//
+// user defined functions
+//
 
+//----------------------------------//
+// debug print functions
+//----------------------------------//
 void ytEventSelection::debug_lept_print(vector<Lepton> vec_lept)
 {
     cout << "*** Event Number=" << EventNumber << endl;
@@ -1346,15 +1434,15 @@ void ytEventSelection::debug_lept_print(vector<Lepton> vec_lept)
     for (auto & lep_itr : vec_lept) {
         //cout << "NEl+NMu=" << lep_itr.get_number() << endl;
         cout << i + 1
-        << ": pt=" << lep_itr.get_pt()
-        << ", eta=" << lep_itr.get_eta()
-        << ", phi=" << lep_itr.get_phi()
-        << ", baseline=" << lep_itr.get_baseline()
-        << ", passOR=" << lep_itr.get_passOR()
-        << ", isSignal=" << lep_itr.get_isSignal()
-        << ", flavor=" << lep_itr.get_flavor()
-        << ", charge=" << lep_itr.get_charge()
-        << endl;
+            << ": pt=" << lep_itr.get_pt()
+            << ", eta=" << lep_itr.get_eta()
+            << ", phi=" << lep_itr.get_phi()
+            << ", baseline=" << lep_itr.get_baseline()
+            << ", passOR=" << lep_itr.get_passOR()
+            << ", isSignal=" << lep_itr.get_isSignal()
+            << ", flavor=" << lep_itr.get_flavor()
+            << ", charge=" << lep_itr.get_charge()
+            << endl;
         i++;
     }
 }
@@ -1477,6 +1565,10 @@ void ytEventSelection::debug_jets_print(vector<Jet> vec_jets)
     }
 }
 
+/*
+//----------------------------------//
+// Calculate weight functions
+//----------------------------------//
 double ytEventSelection::ID_weight(vector<Electron> elec, bool signal)
 {
     double total = 1.;
@@ -1522,7 +1614,7 @@ double ytEventSelection::Iso_weight(vector<Muon> muon)
 
 double ytEventSelection::lept_weight(double elec_ID_weight, double elec_iso_weight, double muon_ID_weight, double muon_iso_weight)
 {
-    return elec_ID_weight * elec_iso_weight * muon_ID_weight * muon_ID_weight;
+    return elec_ID_weight * elec_iso_weight * muon_ID_weight * muon_iso_weight;
 }
 
 double ytEventSelection::jets_weight(vector<Jet> jets)
@@ -1588,7 +1680,11 @@ void ytEventSelection::debug_sum_of_weight_print()
     }
     cout << "**************************************************" << endl;
 }
+*/
 
+//----------------------------------//
+// Fill & set functions
+//----------------------------------//
 //#ifdef _IS_MC_
 void ytEventSelection::fill_electrons(
     Int_t           NEl,

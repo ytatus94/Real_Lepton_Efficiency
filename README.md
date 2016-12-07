@@ -2,6 +2,12 @@
 This is the new real lepton efficiency framework.
 
 
+### v31-03. (combine branch) Rewrite `ytEventSelection`.
+1. Rewrite the structure of `ytEventSelection` so it can get the correct cutflow results as before.
+2. Add SUSYTools in package dependence.
+3. Add log files for 4topSM, Zee, Zmumu, ttbar, GG_ttn1.
+
+
 ### v31-02. (combine branch) Add `ytRealLeptonsEfficiency` class
 * `ytRealLeptonsEfficiency` is used to replace `ytRealLeptonsEfficiency_Data` and `ytRealLeptonsEfficiency_MC`
 

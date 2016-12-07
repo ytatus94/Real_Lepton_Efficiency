@@ -1,0 +1,110 @@
+isMC = true, isData = false
+Submit jobs to DirectDriver...
+process = 4topSM
+Read MC files...
+SampleHandler with 1 files
+Sample:name=user.jpoveda.t0789_v44.410080.MadGraphPythia8EvtGen_A14NNPDF23_4topSM.DAOD_SUSY2.s2608_r7725_p2666_output.root,tags=()
+file:///raid05/users/shen/Ximo_ntuples/v44/MC/user.jpoveda.t0789_v44.410080.MadGraphPythia8EvtGen_A14NNPDF23_4topSM.DAOD_SUSY2.s2608_r7725_p2666_output.root/user.jpoveda.9048853._000001.output.root
+
+
+PathResolver              WARNING XMLPATH environment variable not defined!
+PathResolver              WARNING XMLPATH environment variable not defined!
+--- TGRLCollection      : Now merging GRLs where possible. Metadata required to be identical.[0m
+myWeightTool              INFO    AsgTool myWeightTool @ 0x331ee90
+asg::ToolStore::put       WARNING Tool with name "GoodRunsListSelectionTool" already registered
+PathResolver              WARNING XMLPATH environment variable not defined!
+PathResolver              WARNING XMLPATH environment variable not defined!
+--- TGRLCollection      : Now merging GRLs where possible. Metadata required to be identical.[0m
+asg::ToolStore::put       WARNING Tool with name "Pileup" already registered
+asg::ToolStore::put       WARNING Tool with name "myWeightTool" already registered
+myWeightTool              INFO    AsgTool myWeightTool @ 0x44ceaa0
+asg::ToolStore::put       WARNING Tool with name "GoodRunsListSelectionTool" already registered
+PathResolver              WARNING XMLPATH environment variable not defined!
+PathResolver              WARNING XMLPATH environment variable not defined!
+--- TGRLCollection      : Now merging GRLs where possible. Metadata required to be identical.[0m
+asg::ToolStore::put       WARNING Tool with name "Pileup" already registered
+asg::ToolStore::put       WARNING Tool with name "myWeightTool" already registered
+myWeightTool              INFO    AsgTool myWeightTool @ 0x5221490
+Running sample: user.jpoveda.t0789_v44.410080.MadGraphPythia8EvtGen_A14NNPDF23_4topSM.DAOD_SUSY2.s2608_r7725_p2666_output.root
+Processing File: file:///raid05/users/shen/Ximo_ntuples/v44/MC/user.jpoveda.t0789_v44.410080.MadGraphPythia8EvtGen_A14NNPDF23_4topSM.DAOD_SUSY2.s2608_r7725_p2666_output.root/user.jpoveda.9048853._000001.output.root
+derivation_stat_weights=198800
+Processed 10000 events
+Processed 20000 events
+Processed 30000 events
+Processed 40000 events
+Processed 50000 events
+Processed 60000 events
+Processed 70000 events
+Processed 80000 events
+**************************************************
+Cut 0: All events before derivations (DerivationStat_Weights) = -2.35344e-185
+Cut 1: All events in derivation/ntuple = 86839     
+Cut 2: GRL (for data only) = 86839     
+Cut 3: Primary vertex = 86839     
+Cut 4: Trigger       = 60242     
+Cut 5: Global flags (data only) = 60242     
+Cut 6: Bad muon      = 60237     
+Cut 7: >= 1 jet passes jet OR = 60237     
+Cut 8: Bad jet       = 60009     
+Cut 9: >= 1 signal jet = 60009     
+Cut 10: Cosmic muons veto = 59184     
+Cut 11: >= 2 baseline leptons > 10 GeV = 29026     
+Cut 12: >= 2 signal leptons > 20 GeV = 18881     
+Cut 13: Same sign    = 8084      
+***** El-El channel *****
+Cut 14: Channel seperation, same-sign [20, 20]: (el-el) = 1642      
+Cut 15: Trigger matching: (el-el) = 1626      
+Cut 16: >= 1 bjet > 20 GeV: (el-el) = 1587      
+Cut 17: 4 jets > 50 GeV: (el-el) = 1274      
+Cut 18: MET > 125 GeV: (el-el) = 622       
+***** El-Mu channel *****
+Cut 14: Channel seperation, same-sign [20, 20]: (el-mu) = 3873      
+Cut 15: Trigger matching: (el-mu) = 3712      
+Cut 16: >= 1 bjet > 20 GeV: (el-mu) = 3616      
+Cut 17: 4 jets > 50 GeV: (el-mu) = 2945      
+Cut 18: MET > 125 GeV: (el-mu) = 1437      
+***** Mu-Mu channel *****
+Cut 14: Channel seperation, same-sign [20, 20]: (mu-mu) = 2569      
+Cut 15: Trigger matching: (mu-mu) = 2543      
+Cut 16: >= 1 bjet > 20 GeV: (mu-mu) = 2479      
+Cut 17: 4 jets > 50 GeV: (mu-mu) = 2018      
+Cut 18: MET > 125 GeV: (mu-mu) = 923       
+**************************************************
+**************************************************
+ Sum of EventWeight for each cut
+**************************************************
+Cut 0: All events before derivations (DerivationStat_Weights) = 0         
+Cut 1: All events in derivation/ntuple = 75731.8   
+Cut 2: GRL (for data only) = 75731.8   
+Cut 3: Primary vertex = 75731.8   
+Cut 4: Trigger       = 52922.6   
+Cut 5: Global flags (data only) = 52922.6   
+Cut 6: Bad muon      = 52918     
+Cut 7: >= 1 jet passes jet OR = 52918     
+Cut 8: Bad jet       = 52732.6   
+Cut 9: >= 1 signal jet = 55219.4   
+Cut 10: Cosmic muons veto = 54467.7   
+Cut 11: >= 2 baseline leptons > 10 GeV = 26535.9   
+Cut 12: >= 2 signal leptons > 20 GeV = 17329     
+Cut 13: Same sign    = 7304.87   
+***** El-El channel *****
+Cut 14: Channel seperation, same-sign [20, 20]: (el-el) = 1498.17   
+Cut 15: Trigger matching: (el-el) = 1487.33   
+Cut 16: >= 1 bjet > 20 GeV: (el-el) = 1452.74   
+Cut 17: 4 jets > 50 GeV: (el-el) = 1151.77   
+Cut 18: MET > 125 GeV: (el-el) = 580.306   
+***** El-Mu channel *****
+Cut 14: Channel seperation, same-sign [20, 20]: (el-mu) = 3460.87   
+Cut 15: Trigger matching: (el-mu) = 3313.68   
+Cut 16: >= 1 bjet > 20 GeV: (el-mu) = 3229.54   
+Cut 17: 4 jets > 50 GeV: (el-mu) = 2658.95   
+Cut 18: MET > 125 GeV: (el-mu) = 1327.33   
+***** Mu-Mu channel *****
+Cut 14: Channel seperation, same-sign [20, 20]: (mu-mu) = 2345.84   
+Cut 15: Trigger matching: (mu-mu) = 2322.33   
+Cut 16: >= 1 bjet > 20 GeV: (mu-mu) = 2271.14   
+Cut 17: 4 jets > 50 GeV: (mu-mu) = 1844.44   
+Cut 18: MET > 125 GeV: (mu-mu) = 851.837   
+**************************************************
+worker finished:
+Real time 0:00:07, CP time 6.770
