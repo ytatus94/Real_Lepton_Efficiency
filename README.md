@@ -2,6 +2,11 @@
 This is the new real lepton efficiency framework.
 
 
+### v31-04. (combine branch) Remove functions and add histograms in `ytEventSelection`.
+1. Remove the calculate weight functions.
+2. Add histograms for Nvtx, AvgMu, NLepts, and NJets.
+
+
 ### v31-03. (combine branch) Rewrite `ytEventSelection`.
 1. Rewrite the structure of `ytEventSelection` so it can get the correct cutflow results as before.
 2. Add SUSYTools in package dependence.
