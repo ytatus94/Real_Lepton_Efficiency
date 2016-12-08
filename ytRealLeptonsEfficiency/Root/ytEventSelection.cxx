@@ -58,6 +58,36 @@ EL::StatusCode ytEventSelection::histInitialize ()
     //const char * function_name = "histInitialize()";
     //Info(function_name, "Function calls");
 
+    h_Nvtx      = new TH1F("h_Nvtx", "Nvtx;Nvtx;Events", 50, 0 , 50);
+    h_AvgMu     = new TH1F("h_AvgMu", "AvgMu;<#mu>;Events", 50, 0 , 50);
+    h_NLepts    = new TH1F("h_NLepts", "Number of leptons;N_{leptons};Events",10, 0, 10);
+    h_NJets     = new TH1F("h_NJets", "Number of jets;N_{jets};Events", 40, 0, 40);
+
+    h_Nvtx->Sumw2();
+    h_AvgMu->Sumw2();
+    h_NLepts->Sumw2();
+    h_NJets->Sumw2();
+
+    wk()->addOutput(h_Nvtx);
+    wk()->addOutput(h_AvgMu);
+    wk()->addOutput(h_NLepts);
+    wk()->addOutput(h_NJets);
+
+    h_Nvtx_weighted      = new TH1F("h_Nvtx_weighted", "Nvtx (weighted);Nvtx;Events", 50, 0 , 50);
+    h_AvgMu_weighted     = new TH1F("h_AvgMu_weighted", "AvgMu (weighted);<#mu>;Events", 50, 0 , 50);
+    h_NLepts_weighted    = new TH1F("h_NLepts_weighted", "Number of leptons (weighted);N_{leptons};Events",10, 0, 10);
+    h_NJets_weighted     = new TH1F("h_NJets_weighted", "Number of jets (weighted);N_{jets};Events", 40, 0, 40);
+    
+    h_Nvtx_weighted->Sumw2();
+    h_AvgMu_weighted->Sumw2();
+    h_NLepts_weighted->Sumw2();
+    h_NJets_weighted->Sumw2();
+
+    wk()->addOutput(h_Nvtx_weighted);
+    wk()->addOutput(h_AvgMu_weighted);
+    wk()->addOutput(h_NLepts_weighted);
+    wk()->addOutput(h_NJets_weighted);
+
     return EL::StatusCode::SUCCESS;
 }
 
@@ -872,53 +902,53 @@ EL::StatusCode ytEventSelection::execute ()
     // Now sort leptons by descending Pt
     sort(vec_baseline_lept.begin(), vec_baseline_lept.end(), sort_descending_Pt<Lepton>);
 
+    // Dump histograms
+    if (isData) {
+        h_Nvtx->Fill(Nvtx);
+        h_AvgMu->Fill(AvgMu);
+
+        if (vec_lept.size() > 0)
+            h_NLepts->Fill(vec_lept.at(0).get_number());
+        else
+            h_NLepts->Fill(0.);
+
+        if (vec_jets.size() > 0)
+            h_NJets->Fill(vec_jets.at(0).get_number());
+        else
+            h_NJets->Fill(0.);
+    }
+    else if (isMC) {
+        double weight = cross_section_kfactor_efficiency * EventWeight * PRWWeight;
+        h_Nvtx_weighted->Fill(Nvtx, weight);
+        h_AvgMu_weighted->Fill(AvgMu, weight);
+
+        if (vec_lept.size() > 0)
+            h_NLepts_weighted->Fill(vec_lept.at(0).get_number(), weight);
+        else
+            h_NLepts_weighted->Fill(0., weight);
+
+        if (vec_jets.size() > 0)
+            h_NJets_weighted->Fill(vec_jets.at(0).get_number(), weight);
+        else
+            h_NJets_weighted->Fill(0., weight);
+    }
+
     //----------------------------------//
     // Apply cuts
     //----------------------------------//
 
     m_cutflow->events_pass_cutflow[DerivationStat_Weights] = derivation_stat_weights; // read the first bin from root file.
-/*
-    double elec_ID_weight = 1., elec_iso_weight = 1.,
-           muon_ID_weight = 1., muon_iso_weight = 1.,
-           lepton_weight = 1., jet_weight = 1.;
-*/
+
     bool cut1  = m_cutflow->pass_all_events();
     m_cutflow->update(All_events, cut1);
-/*
-    elec_ID_weight = ID_weight(vec_baseline_elec, false);
-    elec_iso_weight = 1.0; // no isolation applied at this stage
-    muon_ID_weight = ID_weight(vec_baseline_muon);
-    muon_iso_weight = Iso_weight(vec_baseline_muon);
-    lepton_weight = lept_weight(elec_ID_weight, elec_iso_weight, muon_ID_weight, muon_iso_weight);
-    jet_weight = jets_weight(vec_baseline_jets);
-    update(All_events, cut1, calculate_weight(EventWeight, PRWWeight, lepton_weight, jet_weight));
-*/
     if (!cut1) return EL::StatusCode::SUCCESS;
 
     bool cut2  = m_cutflow->pass_GRL(isData, RunNb, LB);
     m_cutflow->update(GRL, cut2);
-/*
-    elec_ID_weight = ID_weight(vec_baseline_elec, false);
-    elec_iso_weight = 1.0; // no isolation applied at this stage
-    muon_ID_weight = ID_weight(vec_baseline_muon);
-    muon_iso_weight = Iso_weight(vec_baseline_muon);
-    lepton_weight = lept_weight(elec_ID_weight, elec_iso_weight, muon_ID_weight, muon_iso_weight);
-    jet_weight = jets_weight(vec_baseline_jets);
-    update(GRL, cut2, calculate_weight(EventWeight, PRWWeight, lepton_weight, jet_weight));
-*/
     if (!cut2) return EL::StatusCode::SUCCESS;
 
     bool cut3  = m_cutflow->pass_primary_vertex(PV_z);
     m_cutflow->update(Primary_vertex, cut3);
-/*
-    elec_ID_weight = ID_weight(vec_baseline_elec, false);
-    elec_iso_weight = 1.0; // no isolation applied at this stage
-    muon_ID_weight = ID_weight(vec_baseline_muon);
-    muon_iso_weight = Iso_weight(vec_baseline_muon);
-    lepton_weight = lept_weight(elec_ID_weight, elec_iso_weight, muon_ID_weight, muon_iso_weight);
-    jet_weight = jets_weight(vec_baseline_jets);
-    update(Primary_vertex, cut3, calculate_weight(EventWeight, PRWWeight, lepton_weight, jet_weight));
-*/
     if (!cut3) return EL::StatusCode::SUCCESS;
 
     bool cut4  = m_cutflow->pass_trigger(isData, isMC, RunNb, PRWrandomRunNumber,
@@ -926,69 +956,24 @@ EL::StatusCode ytEventSelection::execute ()
                                          HLT_2e17_lhvloose_nod0, HLT_e17_lhloose_nod0_mu14, HLT_mu20_mu8noL1, HLT_xe100_mht_L1XE50,
                                          Etmiss_TST_Et);
     m_cutflow->update(Trigger, cut4);
-/*
-    elec_ID_weight = ID_weight(vec_baseline_elec, false);
-    elec_iso_weight = 1.0; // no isolation applied at this stage
-    muon_ID_weight = ID_weight(vec_baseline_muon);
-    muon_iso_weight = Iso_weight(vec_baseline_muon);
-    lepton_weight = lept_weight(elec_ID_weight, elec_iso_weight, muon_ID_weight, muon_iso_weight);
-    jet_weight = jets_weight(vec_baseline_jets);
-    update(Trigger, cut4, calculate_weight(EventWeight, PRWWeight, lepton_weight, jet_weight));
-*/
     if (!cut4) return EL::StatusCode::SUCCESS;
 
     bool cut5  = m_cutflow->pass_global_flags(isData, isMC, DetError);
     m_cutflow->update(Global_flags, cut5);
-/*
-    elec_ID_weight = ID_weight(vec_baseline_elec, false);
-    elec_iso_weight = 1.0; // no isolation applied at this stage
-    muon_ID_weight = ID_weight(vec_baseline_muon);
-    muon_iso_weight = Iso_weight(vec_baseline_muon);
-    lepton_weight = lept_weight(elec_ID_weight, elec_iso_weight, muon_ID_weight, muon_iso_weight);
-    jet_weight = jets_weight(vec_baseline_jets);
-    update(Global_flags, cut5, calculate_weight(EventWeight, PRWWeight, lepton_weight, jet_weight));
-*/
     if (!cut5) return EL::StatusCode::SUCCESS;
 
     bool cut6  = m_cutflow->pass_bad_muon(vec_baseline_muon); // use baseline muons
     m_cutflow->update(Bad_muon, cut6);
-/*
-    elec_ID_weight = ID_weight(vec_baseline_elec, false);
-    elec_iso_weight = 1.0; // no isolation applied at this stage
-    muon_ID_weight = ID_weight(vec_baseline_muon);
-    muon_iso_weight = Iso_weight(vec_baseline_muon);
-    lepton_weight = lept_weight(elec_ID_weight, elec_iso_weight, muon_ID_weight, muon_iso_weight);
-    jet_weight = jets_weight(vec_baseline_jets);
-    update(Bad_muon, cut6, calculate_weight(EventWeight, PRWWeight, lepton_weight, jet_weight));
-*/
     if (!cut6) return EL::StatusCode::SUCCESS;
 
     if (!isSkim) {
         bool cut7  = m_cutflow->pass_at_least_one_jet_passes_jet_OR(vec_baseline_jets); // use baseline jets
         m_cutflow->update(At_least_one_jet_passes_jet_OR, cut7);
-/*
-        elec_ID_weight = ID_weight(vec_baseline_elec, false);
-        elec_iso_weight = 1.0; // no isolation applied at this stage
-        muon_ID_weight = ID_weight(vec_baseline_muon);
-        muon_iso_weight = Iso_weight(vec_baseline_muon);
-        lepton_weight = lept_weight(elec_ID_weight, elec_iso_weight, muon_ID_weight, muon_iso_weight);
-        jet_weight = jets_weight(vec_baseline_jets);
-        update(At_least_one_jet_passes_jet_OR, cut7, calculate_weight(EventWeight, PRWWeight, lepton_weight, jet_weight));
-*/
         if (!cut7) return EL::StatusCode::SUCCESS;
     }
 
     bool cut8  = m_cutflow->pass_bad_jet(vec_jets); // we have to use the raw jet objects (vec_jets) at this step.
     m_cutflow->update(Bad_jet, cut8);
-/*
-    elec_ID_weight = ID_weight(vec_baseline_elec, false);
-    elec_iso_weight = 1.0; // no isolation applied at this stage
-    muon_ID_weight = ID_weight(vec_baseline_muon);
-    muon_iso_weight = Iso_weight(vec_baseline_muon);
-    lepton_weight = lept_weight(elec_ID_weight, elec_iso_weight, muon_ID_weight, muon_iso_weight);
-    jet_weight = jets_weight(vec_baseline_jets);
-    update(Bad_jet, cut8, calculate_weight(EventWeight, PRWWeight, lepton_weight, jet_weight));
-*/
     if (!cut8) return EL::StatusCode::SUCCESS;
 
     // Fill OR electrons, OR muons, OR jets, and OR leptons into vectors.
@@ -1005,42 +990,15 @@ EL::StatusCode ytEventSelection::execute ()
     if (!isSkim) {
         bool cut9  = m_cutflow->pass_at_least_one_signal_jet(vec_JVT_jets);
         m_cutflow->update(At_least_one_signal_jet, cut9);
-/*
-        elec_ID_weight = ID_weight(vec_OR_elec, false);
-        elec_iso_weight = 1.0; // no isolation applied at this stage
-        muon_ID_weight = ID_weight(vec_OR_muon);
-        muon_iso_weight = Iso_weight(vec_OR_muon);
-        lepton_weight = lept_weight(elec_ID_weight, elec_iso_weight, muon_ID_weight, muon_iso_weight);
-        jet_weight = jets_weight(vec_JVT_jets);
-        update(At_least_one_signal_jet, cut9, calculate_weight(EventWeight, PRWWeight, lepton_weight, jet_weight));
-*/
         if (!cut9) return EL::StatusCode::SUCCESS;
     }
     
     bool cut10 = m_cutflow->pass_cosmic_muon_veto(vec_OR_muon);
     m_cutflow->update(Cosmic_muons_veto, cut10);
-/*
-    elec_ID_weight = ID_weight(vec_OR_elec, false);
-    elec_iso_weight = 1.0; // no isolation applied at this stage
-    muon_ID_weight = ID_weight(vec_OR_muon);
-    muon_iso_weight = Iso_weight(vec_OR_muon);
-    lepton_weight = lept_weight(elec_ID_weight, elec_iso_weight, muon_ID_weight, muon_iso_weight);
-    jet_weight = jets_weight(vec_JVT_jets);
-    update(Cosmic_muons_veto, cut10, calculate_weight(EventWeight, PRWWeight, lepton_weight, jet_weight));
-*/
     if (!cut10) return EL::StatusCode::SUCCESS;
 
     bool cut11 = m_cutflow->pass_at_least_two_baseline_leptons_greater_than_10GeV(vec_OR_lept);
     m_cutflow->update(At_least_two_baseline_leptons_greater_than_10GeV, cut11);
-/*
-    elec_ID_weight = ID_weight(vec_OR_elec, false);
-    elec_iso_weight = 1.0; // no isolation applied at this stage
-    muon_ID_weight = ID_weight(vec_OR_muon);
-    muon_iso_weight = Iso_weight(vec_OR_muon);
-    lepton_weight = lept_weight(elec_ID_weight, elec_iso_weight, muon_ID_weight, muon_iso_weight);
-    jet_weight = jets_weight(vec_JVT_jets);
-    update(At_least_two_baseline_leptons_greater_than_10GeV, cut11, calculate_weight(EventWeight, PRWWeight, lepton_weight, jet_weight));
-*/
     if (!cut11) return EL::StatusCode::SUCCESS;
 
     // Fill signal electrons, signal muons, signal jets, and signal leptons into vectors.
@@ -1050,12 +1008,12 @@ EL::StatusCode ytEventSelection::execute ()
     fill_signal_jets(vec_JVT_jets);
     // Now sort leptons by descending Pt
     sort(vec_signal_lept.begin(), vec_signal_lept.end(), sort_descending_Pt<Lepton>);
-/*
+
     // Calculate weight
     double baseline_weight = 1., signal_weight = 1.;
     baseline_weight = ID_weight(vec_baseline_elec, false) * ID_weight(vec_baseline_muon) * jets_weight(vec_signal_jets);
     signal_weight = ID_weight(vec_signal_elec, true) * Iso_weight(vec_signal_elec) * ID_weight(vec_signal_muon) * Iso_weight(vec_signal_muon) * jets_weight(vec_signal_jets);
-*/
+
 /*
     if (isSkim) {
         //cout << "Doing skim at here..." << endl;
@@ -1078,28 +1036,10 @@ EL::StatusCode ytEventSelection::execute ()
 */
     bool cut12 = m_cutflow->pass_at_least_two_signal_leptons_greater_than_20GeV(vec_signal_lept);
     m_cutflow->update(At_least_two_signal_leptons_greater_than_20GeV, cut12);
-/*
-    elec_ID_weight = ID_weight(vec_signal_elec, true);
-    elec_iso_weight = Iso_weight(vec_signal_elec);
-    muon_ID_weight = ID_weight(vec_signal_muon);
-    muon_iso_weight = Iso_weight(vec_signal_muon);
-    lepton_weight = lept_weight(elec_ID_weight, elec_iso_weight, muon_ID_weight, muon_iso_weight);
-    jet_weight = jets_weight(vec_signal_jets);
-    update(At_least_two_signal_leptons_greater_than_20GeV, cut12, calculate_weight(EventWeight, PRWWeight, lepton_weight, jet_weight));
-*/
     if (!cut12) return EL::StatusCode::SUCCESS;
 
     bool cut13 = m_cutflow->pass_same_sign(vec_signal_lept);
     m_cutflow->update(Same_sign, cut13);
-/*
-    elec_ID_weight = ID_weight(vec_signal_elec, true);
-    elec_iso_weight = Iso_weight(vec_signal_elec);
-    muon_ID_weight = ID_weight(vec_signal_muon);
-    muon_iso_weight = Iso_weight(vec_signal_muon);
-    lepton_weight = lept_weight(elec_ID_weight, elec_iso_weight, muon_ID_weight, muon_iso_weight);
-    jet_weight = jets_weight(vec_signal_jets);
-    update(Same_sign, cut13, calculate_weight(EventWeight, PRWWeight, lepton_weight, jet_weight));
-*/
     if (!cut13) return EL::StatusCode::SUCCESS;
 
     // same-sign
@@ -1107,15 +1047,6 @@ EL::StatusCode ytEventSelection::execute ()
     int ee_cut1 = m_cutflow->pass_channel_separation(vec_signal_lept);
     if (ee_cut1 == 1) {
         m_cutflow->update(ee_channel_separation, true);
-/*
-        elec_ID_weight = ID_weight(vec_signal_elec, true);
-        elec_iso_weight = Iso_weight(vec_signal_elec);
-        muon_ID_weight = ID_weight(vec_signal_muon);
-        muon_iso_weight = Iso_weight(vec_signal_muon);
-        lepton_weight = lept_weight(elec_ID_weight, elec_iso_weight, muon_ID_weight, muon_iso_weight);
-        jet_weight = jets_weight(vec_signal_jets);
-        update(ee_channel_separation, true, calculate_weight(EventWeight, PRWWeight, lepton_weight, jet_weight));
-*/
     }
 
     bool ee_cut2 = m_cutflow->pass_trigger_matching(isData, isMC, RunNb, PRWrandomRunNumber, vec_signal_elec, vec_signal_muon,
@@ -1124,72 +1055,27 @@ EL::StatusCode ytEventSelection::execute ()
                                                     Etmiss_TST_Et);
     if (ee_cut1 == 1 && ee_cut2) {
         m_cutflow->update(ee_trigger_matching, ee_cut2);
-/*
-        elec_ID_weight = ID_weight(vec_signal_elec, true);
-        elec_iso_weight = Iso_weight(vec_signal_elec);
-        muon_ID_weight = ID_weight(vec_signal_muon);
-        muon_iso_weight = Iso_weight(vec_signal_muon);
-        lepton_weight = lept_weight(elec_ID_weight, elec_iso_weight, muon_ID_weight, muon_iso_weight);
-        jet_weight = jets_weight(vec_signal_jets);
-        update(ee_trigger_matching, ee_cut2, calculate_weight(EventWeight, PRWWeight, lepton_weight, jet_weight));
-*/
     }
 
     bool ee_cut3 = m_cutflow->pass_at_least_one_bjet_greater_than_20GeV(vec_signal_jets);
     if (ee_cut1 == 1 && ee_cut2 && ee_cut3) {
         m_cutflow->update(ee_at_least_one_bjet_greater_than_20GeV, ee_cut3);
-/*
-        elec_ID_weight = ID_weight(vec_signal_elec, true);
-        elec_iso_weight = Iso_weight(vec_signal_elec);
-        muon_ID_weight = ID_weight(vec_signal_muon);
-        muon_iso_weight = Iso_weight(vec_signal_muon);
-        lepton_weight = lept_weight(elec_ID_weight, elec_iso_weight, muon_ID_weight, muon_iso_weight);
-        jet_weight = jets_weight(vec_signal_jets);
-        update(ee_at_least_one_bjet_greater_than_20GeV, ee_cut3, calculate_weight(EventWeight, PRWWeight, lepton_weight, jet_weight));
-*/
     }
 
     bool ee_cut4 = m_cutflow->pass_four_jets_greater_than_50GeV(vec_signal_jets);
     if (ee_cut1 == 1 && ee_cut2 && ee_cut3 && ee_cut4) {
         m_cutflow->update(ee_four_jets_greater_than_50GeV, ee_cut4);
-/*
-        elec_ID_weight = ID_weight(vec_signal_elec, true);
-        elec_iso_weight = Iso_weight(vec_signal_elec);
-        muon_ID_weight = ID_weight(vec_signal_muon);
-        muon_iso_weight = Iso_weight(vec_signal_muon);
-        lepton_weight = lept_weight(elec_ID_weight, elec_iso_weight, muon_ID_weight, muon_iso_weight);
-        jet_weight = jets_weight(vec_signal_jets);
-        update(ee_four_jets_greater_than_50GeV, ee_cut4, calculate_weight(EventWeight, PRWWeight, lepton_weight, jet_weight));
-*/
     }
 
     bool ee_cut5 = m_cutflow->pass_MET_greater_than_125GeV(Etmiss_TST_Et);
     if (ee_cut1 == 1 && ee_cut2 && ee_cut3 && ee_cut4 && ee_cut5) {
         m_cutflow->update(ee_MET_greater_than_125GeV, ee_cut5);
-/*
-        elec_ID_weight = ID_weight(vec_signal_elec, true);
-        elec_iso_weight = Iso_weight(vec_signal_elec);
-        muon_ID_weight = ID_weight(vec_signal_muon);
-        muon_iso_weight = Iso_weight(vec_signal_muon);
-        lepton_weight = lept_weight(elec_ID_weight, elec_iso_weight, muon_ID_weight, muon_iso_weight);
-        jet_weight = jets_weight(vec_signal_jets);
-        update(ee_MET_greater_than_125GeV, ee_cut5, calculate_weight(EventWeight, PRWWeight, lepton_weight, jet_weight));
-*/
     }
 
     // e-mu
     int emu_cut1 = m_cutflow->pass_channel_separation(vec_signal_lept);
     if (emu_cut1 == 2) {
         m_cutflow->update(emu_channel_separation, true);
-/*
-        elec_ID_weight = ID_weight(vec_signal_elec, true);
-        elec_iso_weight = Iso_weight(vec_signal_elec);
-        muon_ID_weight = ID_weight(vec_signal_muon);
-        muon_iso_weight = Iso_weight(vec_signal_muon);
-        lepton_weight = lept_weight(elec_ID_weight, elec_iso_weight, muon_ID_weight, muon_iso_weight);
-        jet_weight = jets_weight(vec_signal_jets);
-        update(emu_channel_separation, true, calculate_weight(EventWeight, PRWWeight, lepton_weight, jet_weight));
-*/
     }
 
     bool emu_cut2 = m_cutflow->pass_trigger_matching(isData, isMC, RunNb, PRWrandomRunNumber, vec_signal_elec, vec_signal_muon,
@@ -1198,73 +1084,27 @@ EL::StatusCode ytEventSelection::execute ()
                                                      Etmiss_TST_Et);
     if (emu_cut1 == 2 && emu_cut2) {
         m_cutflow->update(emu_trigger_matching, emu_cut2);
-/*
-        elec_ID_weight = ID_weight(vec_signal_elec, true);
-        elec_iso_weight = Iso_weight(vec_signal_elec);
-        muon_ID_weight = ID_weight(vec_signal_muon);
-        muon_iso_weight = Iso_weight(vec_signal_muon);
-        lepton_weight = lept_weight(elec_ID_weight, elec_iso_weight, muon_ID_weight, muon_iso_weight);
-        jet_weight = jets_weight(vec_signal_jets);
-        update(emu_trigger_matching, emu_cut2, calculate_weight(EventWeight, PRWWeight, lepton_weight, jet_weight));
-*/
     }
 
     bool emu_cut3 = m_cutflow->pass_at_least_one_bjet_greater_than_20GeV(vec_signal_jets);
     if (emu_cut1 == 2 && emu_cut2 && emu_cut3) {
         m_cutflow->update(emu_at_least_one_bjet_greater_than_20GeV, emu_cut3);
-/*
-        elec_ID_weight = ID_weight(vec_signal_elec, true);
-        elec_iso_weight = Iso_weight(vec_signal_elec);
-        muon_ID_weight = ID_weight(vec_signal_muon);
-        muon_iso_weight = Iso_weight(vec_signal_muon);
-        lepton_weight = lept_weight(elec_ID_weight, elec_iso_weight, muon_ID_weight, muon_iso_weight);
-        jet_weight = jets_weight(vec_signal_jets);
-        update(emu_at_least_one_bjet_greater_than_20GeV, emu_cut3, calculate_weight(EventWeight, PRWWeight, lepton_weight, jet_weight));
-*/
     }
-        
 
     bool emu_cut4 = m_cutflow->pass_four_jets_greater_than_50GeV(vec_signal_jets);
     if (emu_cut1 == 2 && emu_cut2 && emu_cut3 && emu_cut4) {
         m_cutflow->update(emu_four_jets_greater_than_50GeV, emu_cut4);
-/*
-        elec_ID_weight = ID_weight(vec_signal_elec, true);
-        elec_iso_weight = Iso_weight(vec_signal_elec);
-        muon_ID_weight = ID_weight(vec_signal_muon);
-        muon_iso_weight = Iso_weight(vec_signal_muon);
-        lepton_weight = lept_weight(elec_ID_weight, elec_iso_weight, muon_ID_weight, muon_iso_weight);
-        jet_weight = jets_weight(vec_signal_jets);
-        update(emu_four_jets_greater_than_50GeV, emu_cut4, calculate_weight(EventWeight, PRWWeight, lepton_weight, jet_weight));
-*/
     }
 
     bool emu_cut5 = m_cutflow->pass_MET_greater_than_125GeV(Etmiss_TST_Et);
     if (emu_cut1 == 2 && emu_cut2 && emu_cut3 && emu_cut4 && emu_cut5) {
         m_cutflow->update(emu_MET_greater_than_125GeV, emu_cut5);
-/*
-        elec_ID_weight = ID_weight(vec_signal_elec, true);
-        elec_iso_weight = Iso_weight(vec_signal_elec);
-        muon_ID_weight = ID_weight(vec_signal_muon);
-        muon_iso_weight = Iso_weight(vec_signal_muon);
-        lepton_weight = lept_weight(elec_ID_weight, elec_iso_weight, muon_ID_weight, muon_iso_weight);
-        jet_weight = jets_weight(vec_signal_jets);
-        update(emu_MET_greater_than_125GeV, emu_cut5, calculate_weight(EventWeight, PRWWeight, lepton_weight, jet_weight));
-*/
     }
 
     // mu-mu
     int mumu_cut1 = m_cutflow->pass_channel_separation(vec_signal_lept);
     if (mumu_cut1 == 3) {
         m_cutflow->update(mumu_channel_separation, true);
-/*
-        elec_ID_weight = ID_weight(vec_signal_elec, true);
-        elec_iso_weight = Iso_weight(vec_signal_elec);
-        muon_ID_weight = ID_weight(vec_signal_muon);
-        muon_iso_weight = Iso_weight(vec_signal_muon);
-        lepton_weight = lept_weight(elec_ID_weight, elec_iso_weight, muon_ID_weight, muon_iso_weight);
-        jet_weight = jets_weight(vec_signal_jets);
-        update(mumu_channel_separation, true, calculate_weight(EventWeight, PRWWeight, lepton_weight, jet_weight));
-*/
     }
 
     bool mumu_cut2 = m_cutflow->pass_trigger_matching(isData, isMC, RunNb, PRWrandomRunNumber, vec_signal_elec, vec_signal_muon,
@@ -1273,57 +1113,21 @@ EL::StatusCode ytEventSelection::execute ()
                                                       Etmiss_TST_Et);
     if (mumu_cut1 == 3 && mumu_cut2) {
         m_cutflow->update(mumu_trigger_matching, mumu_cut2);
-/*
-        elec_ID_weight = ID_weight(vec_signal_elec, true);
-        elec_iso_weight = Iso_weight(vec_signal_elec);
-        muon_ID_weight = ID_weight(vec_signal_muon);
-        muon_iso_weight = Iso_weight(vec_signal_muon);
-        lepton_weight = lept_weight(elec_ID_weight, elec_iso_weight, muon_ID_weight, muon_iso_weight);
-        jet_weight = jets_weight(vec_signal_jets);
-        update(mumu_trigger_matching, mumu_cut2, calculate_weight(EventWeight, PRWWeight, lepton_weight, jet_weight));
-*/
     }
 
     bool mumu_cut3 = m_cutflow->pass_at_least_one_bjet_greater_than_20GeV(vec_signal_jets);
     if (mumu_cut1 == 3 && mumu_cut2 && mumu_cut3) {
         m_cutflow->update(mumu_at_least_one_bjet_greater_than_20GeV, mumu_cut3);
-/*
-        elec_ID_weight = ID_weight(vec_signal_elec, true);
-        elec_iso_weight = Iso_weight(vec_signal_elec);
-        muon_ID_weight = ID_weight(vec_signal_muon);
-        muon_iso_weight = Iso_weight(vec_signal_muon);
-        lepton_weight = lept_weight(elec_ID_weight, elec_iso_weight, muon_ID_weight, muon_iso_weight);
-        jet_weight = jets_weight(vec_signal_jets);
-        update(mumu_at_least_one_bjet_greater_than_20GeV, mumu_cut3, calculate_weight(EventWeight, PRWWeight, lepton_weight, jet_weight));
-*/
     }
 
     bool mumu_cut4 = m_cutflow->pass_four_jets_greater_than_50GeV(vec_signal_jets);
     if (mumu_cut1 == 3 && mumu_cut2 && mumu_cut3 && mumu_cut4) {
         m_cutflow->update(mumu_four_jets_greater_than_50GeV, mumu_cut4);
-/*
-        elec_ID_weight = ID_weight(vec_signal_elec, true);
-        elec_iso_weight = Iso_weight(vec_signal_elec);
-        muon_ID_weight = ID_weight(vec_signal_muon);
-        muon_iso_weight = Iso_weight(vec_signal_muon);
-        lepton_weight = lept_weight(elec_ID_weight, elec_iso_weight, muon_ID_weight, muon_iso_weight);
-        jet_weight = jets_weight(vec_signal_jets);
-        update(mumu_four_jets_greater_than_50GeV, mumu_cut4, calculate_weight(EventWeight, PRWWeight, lepton_weight, jet_weight));
-*/
     } 
 
     bool mumu_cut5 = m_cutflow->pass_MET_greater_than_125GeV(Etmiss_TST_Et);
     if (mumu_cut1 == 3 && mumu_cut2 && mumu_cut3 && mumu_cut4 && mumu_cut5) {
         m_cutflow->update(mumu_MET_greater_than_125GeV, mumu_cut5);
-/*
-        elec_ID_weight = ID_weight(vec_signal_elec, true);
-        elec_iso_weight = Iso_weight(vec_signal_elec);
-        muon_ID_weight = ID_weight(vec_signal_muon);
-        muon_iso_weight = Iso_weight(vec_signal_muon);
-        lepton_weight = lept_weight(elec_ID_weight, elec_iso_weight, muon_ID_weight, muon_iso_weight);
-        jet_weight = jets_weight(vec_signal_jets);
-        update(mumu_MET_greater_than_125GeV, mumu_cut5, calculate_weight(EventWeight, PRWWeight, lepton_weight, jet_weight));
-*/
     }
 
     return EL::StatusCode::SUCCESS;
@@ -1447,6 +1251,8 @@ void ytEventSelection::debug_lept_print(vector<Lepton> vec_lept)
     }
 }
 
+
+
 void ytEventSelection::debug_elec_print(vector<Electron> vec_elec)
 {
     cout << "*** Event Number=" << EventNumber << endl;
@@ -1490,10 +1296,12 @@ void ytEventSelection::debug_elec_print(vector<Electron> vec_elec)
             << ", trigMatch_e24_lhmedium_nod0_ivarloose=" << el_itr.get_trigMatch_e24_lhmedium_nod0_ivarloose()
             << ", trigMatch_e24_lhtight_nod0_ivarloose=" << el_itr.get_trigMatch_e24_lhtight_nod0_ivarloose()
             << ", trigMatch_e60_lhmedium_nod0=" << el_itr.get_trigMatch_e60_lhmedium_nod0()
-        << endl;
+            << endl;
         i++;
     }
 }
+
+
 
 void ytEventSelection::debug_muon_print(vector<Muon> vec_muon)
 {
@@ -1534,10 +1342,12 @@ void ytEventSelection::debug_muon_print(vector<Muon> vec_muon)
             << ", trigMatch_mu24_ivarloose=" << mu_itr.get_trigMatch_mu24_ivarloose()
             << ", trigMatch_mu24_iloose_L1MU15=" << mu_itr.get_trigMatch_mu24_iloose_L1MU15()
             << ", trigMatch_mu24_ivarloose_L1MU15=" << mu_itr.get_trigMatch_mu24_ivarloose_L1MU15()
-        << endl;
+            << endl;
         i++;
     }
 }
+
+
 
 void ytEventSelection::debug_jets_print(vector<Jet> vec_jets)
 {
@@ -1560,127 +1370,12 @@ void ytEventSelection::debug_jets_print(vector<Jet> vec_jets)
             << ", MV2c10=" << jet_itr.get_MV2c10()
             << ", SFw=" << jet_itr.get_SFw()
             << ", nTrk=" << jet_itr.get_nTrk()
-        << endl;
+            << endl;
         i++;
     }
 }
 
-/*
-//----------------------------------//
-// Calculate weight functions
-//----------------------------------//
-double ytEventSelection::ID_weight(vector<Electron> elec, bool signal)
-{
-    double total = 1.;
-    if (!signal) {// baseline electrons
-        for (auto & el_itr : elec) {
-            total *= el_itr.get_SFwLooseAndBLayerLH();
-        }
-    }
-    else {// signal electrons
-        for (auto & el_itr : elec) {
-            total *= el_itr.get_SFwMediumLH();
-        }
-    }
-    return total;
-}
 
-double ytEventSelection::ID_weight(vector<Muon> muon)
-{
-    double total = 1.;
-    for (auto & mu_itr : muon) {
-        total *= mu_itr.get_SFw();
-    }
-    return total;
-}
-
-double ytEventSelection::Iso_weight(vector<Electron> elec)
-{
-    double total = 1.;
-    for (auto & el_itr : elec) {
-        total *= el_itr.get_IsoSFwMediumLH();
-    }
-    return total;
-}
-
-double ytEventSelection::Iso_weight(vector<Muon> muon)
-{
-    double total = 1.;
-    for (auto & mu_itr : muon) {
-        total *= mu_itr.get_IsoSFw();
-    }
-    return total;
-}
-
-double ytEventSelection::lept_weight(double elec_ID_weight, double elec_iso_weight, double muon_ID_weight, double muon_iso_weight)
-{
-    return elec_ID_weight * elec_iso_weight * muon_ID_weight * muon_iso_weight;
-}
-
-double ytEventSelection::jets_weight(vector<Jet> jets)
-{
-    double total = 1.;
-    for (auto & jet_itr : jets) {
-        total *= jet_itr.get_SFw() * jet_itr.get_JVTsf();
-    }
-    return total;
-}
-
-double ytEventSelection::calculate_weight(double event_weight, double PRW_weight, double lept_weight, double jets_weight)
-{
-    return event_weight * PRW_weight * lept_weight * jets_weight;
-}
-
-double ytEventSelection::calculate_weight(double event_weight, double PRW_weight, vector<Electron> elec, vector<Muon> muon, vector<Jet> jets)
-{
-    double total = event_weight * PRW_weight;
-    for (auto & el_itr : elec) {
-        total *= el_itr.get_SFwMediumLH() * el_itr.get_IsoSFwMediumLH();
-    }
-    for (auto & mu_itr : muon) {
-        total *= mu_itr.get_SFw() * mu_itr.get_IsoSFw();
-    }
-    for (auto & jet_itr : jets) {
-        total *= jet_itr.get_SFw() * jet_itr.get_JVTsf();
-    }
-    return total;
-}
-
-void ytEventSelection::update(int cut, bool passed, double weight)
-{
-    if (passed)
-        sum_of_weight_at_cut[cut] += weight;
-}
-
-void ytEventSelection::debug_sum_of_weight_print()
-{
-    extern const char* cut_name[];
-    cout << "**************************************************" << endl;
-    cout << " Sum of EventWeight for each cut" << endl;
-    cout << "**************************************************" << endl;
-    for (int cuts = 0; cuts < Ncuts; cuts++) {
-        //if (cuts == 14) {
-        if (cuts == ee_channel_separation) {
-            cout << "***** El-El channel *****" << endl;
-            cout << setw(20) << left << cut_name[cuts]  << " = " << setw(10) << sum_of_weight_at_cut[cuts] << endl;
-        }
-        //else if (cuts == 19) {
-        else if (cuts == emu_channel_separation) {
-            cout << "***** El-Mu channel *****" << endl;
-            cout << setw(20) << left << cut_name[cuts]  << " = " << setw(10) << sum_of_weight_at_cut[cuts] << endl;
-        }
-        //else if (cuts == 24) {
-        else if (cuts == mumu_channel_separation) {
-            cout << "***** Mu-Mu channel *****" << endl;
-            cout << setw(20) << left << cut_name[cuts]  << " = " << setw(10) << sum_of_weight_at_cut[cuts] << endl;
-        }
-        else {
-            cout << setw(20) << left << cut_name[cuts]  << " = " << setw(10) << sum_of_weight_at_cut[cuts] << endl;
-        }
-    }
-    cout << "**************************************************" << endl;
-}
-*/
 
 //----------------------------------//
 // Fill & set functions
@@ -1816,6 +1511,8 @@ void ytEventSelection::fill_electrons(
     }
 }
 
+
+
 void ytEventSelection::fill_muons(
     Int_t           NMu,
     int             flavor,
@@ -1940,6 +1637,8 @@ void ytEventSelection::fill_muons(
     }
 }
 
+
+
 void ytEventSelection::fill_jets(
     Int_t           NJet,
     vector<double>  *Jet_eta,
@@ -1984,6 +1683,8 @@ void ytEventSelection::fill_jets(
     }
 }
 //#endif // #ifdef _IS_MC_
+
+
 
 //#ifdef _IS_DATA_
 void ytEventSelection::fill_electrons(
@@ -2120,6 +1821,8 @@ void ytEventSelection::fill_electrons(
     }
 }
 
+
+
 void ytEventSelection::fill_muons(
     Int_t           NMu,
     int             flavor,
@@ -2248,6 +1951,8 @@ void ytEventSelection::fill_muons(
     }
 }
 
+
+
 void ytEventSelection::fill_jets(
     Int_t           NJet,
     vector<double>  *Jet_eta,
@@ -2297,6 +2002,8 @@ void ytEventSelection::fill_jets(
 }
 //#endif // #ifdef _IS_DATA_
 
+
+
 void ytEventSelection::fill_leptons(vector<Electron> vec_elec, vector<Muon> vec_muon)
 {
     for (auto & el_itr : vec_elec) {
@@ -2306,6 +2013,8 @@ void ytEventSelection::fill_leptons(vector<Electron> vec_elec, vector<Muon> vec_
         vec_lept.push_back(mu_itr);
     }
 }
+
+
 
 //
 // baseline objects
@@ -2318,6 +2027,8 @@ void ytEventSelection::fill_baseline_electrons(vector<Electron> vec_elec)
     }
 }
 
+
+
 void ytEventSelection::fill_baseline_muons(vector<Muon> vec_muon)
 {
     for (auto & mu_itr : vec_muon) {
@@ -2325,6 +2036,8 @@ void ytEventSelection::fill_baseline_muons(vector<Muon> vec_muon)
             vec_baseline_muon.push_back(mu_itr);
     }
 }
+
+
 
 void ytEventSelection::fill_baseline_leptons(vector<Electron> vec_elec, vector<Muon> vec_muon)
 {
@@ -2338,6 +2051,8 @@ void ytEventSelection::fill_baseline_leptons(vector<Electron> vec_elec, vector<M
     }
 }
 
+
+
 void ytEventSelection::fill_baseline_jets(vector<Jet> vec_jets)
 {
     for (auto & jet_itr : vec_jets) {
@@ -2346,6 +2061,8 @@ void ytEventSelection::fill_baseline_jets(vector<Jet> vec_jets)
         }
     }
 }
+
+
 
 //
 // pass OR objects
@@ -2360,6 +2077,8 @@ void ytEventSelection::fill_OR_electrons(vector<Electron> vec_elec)
     }
 }
 
+
+
 void ytEventSelection::fill_OR_muons(vector<Muon> vec_muon)
 {
     for (auto & mu_itr : vec_muon) {
@@ -2369,6 +2088,8 @@ void ytEventSelection::fill_OR_muons(vector<Muon> vec_muon)
         }
     }
 }
+
+
 
 void ytEventSelection::fill_OR_leptons(vector<Electron> vec_elec, vector<Muon> vec_muon)
 {
@@ -2386,6 +2107,8 @@ void ytEventSelection::fill_OR_leptons(vector<Electron> vec_elec, vector<Muon> v
     }
 }
 
+
+
 void ytEventSelection::fill_OR_jets(vector<Jet> vec_jets)
 {
     for (auto & jet_itr : vec_jets) {
@@ -2395,6 +2118,8 @@ void ytEventSelection::fill_OR_jets(vector<Jet> vec_jets)
         }
     }
 }
+
+
 
 void ytEventSelection::fill_JVT_jets(vector<Jet> vec_jets)
 {
@@ -2414,6 +2139,8 @@ void ytEventSelection::fill_JVT_jets(vector<Jet> vec_jets)
     }
 }
 
+
+
 //
 // signal objects
 //
@@ -2428,6 +2155,8 @@ void ytEventSelection::fill_signal_electrons(vector<Electron> vec_elec)
     }
 }
 
+
+
 void ytEventSelection::fill_signal_muons(vector<Muon> vec_muon)
 {
     for (auto & mu_itr : vec_muon) {
@@ -2439,6 +2168,8 @@ void ytEventSelection::fill_signal_muons(vector<Muon> vec_muon)
     }
 }
 
+
+
 void ytEventSelection::fill_signal_leptons(vector<Electron> signal_elec, vector<Muon> signal_muon)
 {
     for (auto & el_itr : signal_elec) {
@@ -2448,6 +2179,8 @@ void ytEventSelection::fill_signal_leptons(vector<Electron> signal_elec, vector<
         vec_signal_lept.push_back(mu_itr);
     }
 }
+
+
 
 void ytEventSelection::fill_signal_jets(vector<Jet> vec_jets)
 {
@@ -2459,6 +2192,8 @@ void ytEventSelection::fill_signal_jets(vector<Jet> vec_jets)
         }
     }
 }
+
+
 
 //
 // Set methods
@@ -2498,6 +2233,8 @@ void ytEventSelection::set_baseline_and_signal_electrons()
     }
 }
 
+
+
 void ytEventSelection::set_baseline_and_signal_muons()
 {
     for (auto & mu_itr : vec_muon) {
@@ -2521,6 +2258,8 @@ void ytEventSelection::set_baseline_and_signal_muons()
         }
     }
 }
+
+
 
 void ytEventSelection::set_jets_and_bjets()
 {
@@ -2546,11 +2285,15 @@ void ytEventSelection::set_jets_and_bjets()
     }
 }
 
+
+
 template <typename T>
 bool sort_descending_Pt(T obj1, T obj2) // Cannot use bool sort_descending_Pt(const T & obj1, const T & obj2)
 {
     return (obj1.get_TLV()).Pt() > (obj2.get_TLV()).Pt();
 }
+
+
 
 template <>  // explicit specialization
 bool sort_descending_Pt(TLorentzVector tlv1, TLorentzVector tlv2)
