@@ -101,10 +101,10 @@ int main( int argc, char* argv[] ) {
     const double luminosity = 13.2; // unit: 1/fb, Ximo: the lumi is 13.2 for the ichep analysis
     // cross section, k factor, and filter efficiency are obtained from
     // https://svnweb.cern.ch/trac/atlasphys-susy/browser/Physics/SUSY/Analyses/SameSignLeptonsJets/trunk/Data/ss3l_xsect.txt
-    double cross_section = 1.;
-    double k_factor = 1.;
-    double filter_efficiency = 1.;
-    double derivation_stat_weights = 1.;
+    //double cross_section = 1.;
+    //double k_factor = 1.;
+    //double filter_efficiency = 1.;
+    //double derivation_stat_weights = 1.;
 
     if (isMC) {
         cout << "Read MC files..." << endl;
@@ -115,43 +115,43 @@ int main( int argc, char* argv[] ) {
             //SH::ScanDir().filePattern("user.jpoveda.9048853._000001.output.root").scan(sh, inputFilePath);
             SH::ScanDir().samplePattern("user.jpoveda.t0789_v44.*4topSM*").scan(sh, inputFilePath); // Get all root files in this dataset
 
-            cross_section = 0.0091622 * 1000.; // in fb
-            k_factor = 1.0042;
-            filter_efficiency = 1.;
-            derivation_stat_weights = 1.988000e+05; 
+            //cross_section = 0.0091622 * 1000.; // in fb
+            //k_factor = 1.0042;
+            //filter_efficiency = 1.;
+            //derivation_stat_weights = 1.988000e+05; 
         }
         // For real lepton efficiency study
         else if (process == "Zee") {
-            //SH::ScanDir().filePattern("Zee_merged.root").scan(sh, inputFilePath); // Get specific root file
-            SH::ScanDir().samplePattern("user.jpoveda.t0789_v44.*Zee*").scan(sh, inputFilePath); // Get all root files in this dataset
+            SH::ScanDir().filePattern("Zee_merged.root").scan(sh, inputFilePath); // Get specific root file
+            //SH::ScanDir().samplePattern("user.jpoveda.t0789_v44.*Zee*").scan(sh, inputFilePath); // Get all root files in this dataset
 
-            cross_section = 1901.2 * 1000.; // in fb
-            k_factor = 1.026;
-            filter_efficiency = 1.;
-            derivation_stat_weights = 37868855526.2;
+            //cross_section = 1901.2 * 1000.; // in fb
+            //k_factor = 1.026;
+            //filter_efficiency = 1.;
+            //derivation_stat_weights = 37868855526.2;
         }
         else if (process == "Zmumu") {
-            //SH::ScanDir().filePattern("Zmumu_merged.root").scan(sh, inputFilePath); // Get specific root file
-            SH::ScanDir().samplePattern("user.jpoveda.t0789_v44.*Zmumu*").scan(sh, inputFilePath); // Get all root files in this dataset
+            SH::ScanDir().filePattern("Zmumu_merged.root").scan(sh, inputFilePath); // Get specific root file
+            //SH::ScanDir().samplePattern("user.jpoveda.t0789_v44.*Zmumu*").scan(sh, inputFilePath); // Get all root files in this dataset
 
-            cross_section = 1901.2 * 1000.; // in fb
-            k_factor = 1.026;
-            filter_efficiency = 1.;
-            derivation_stat_weights = 34148906472.4;
+            //cross_section = 1901.2 * 1000.; // in fb
+            //k_factor = 1.026;
+            //filter_efficiency = 1.;
+            //derivation_stat_weights = 34148906472.4;
         }
         else if (process == "ttbar") {
-            //SH::ScanDir().filePattern("ttbar_merged.root").scan(sh, inputFilePath); // Get specific root file
-            SH::ScanDir().samplePattern("user.jpoveda.t0789_v44.*ttbar*nonallhad*").scan(sh, inputFilePath); // Get all root files in this dataset
+            SH::ScanDir().filePattern("ttbar_merged.root").scan(sh, inputFilePath); // Get specific root file
+            //SH::ScanDir().samplePattern("user.jpoveda.t0789_v44.*ttbar*nonallhad*").scan(sh, inputFilePath); // Get all root files in this dataset
 
-            cross_section = 696.11 * 1000.; // in fb
-            k_factor = 1.1949;
-            filter_efficiency = 0.543;
-            derivation_stat_weights = 49386600.0;
+            //cross_section = 696.11 * 1000.; // in fb
+            //k_factor = 1.1949;
+            //filter_efficiency = 0.543;
+            //derivation_stat_weights = 49386600.0;
         }
         else if (process == "GG_ttn1") {
-            //SH::ScanDir().filePattern("GG_ttn1_merged.root").scan(sh, inputFilePath); // Get specific root file
+            SH::ScanDir().filePattern("GG_ttn1_merged.root").scan(sh, inputFilePath); // Get specific root file
             //SH::ScanDir().samplePattern("user.jpoveda.t0789_v44.*GG_ttn1_*.root").scan(sh, inputFilePath); // Get all root files in this dataset
-
+/*
             // First do an inclusive scan
             SH::SampleHandler sh_gtt;
             SH::ScanDir().samplePattern("user.jpoveda.t0789_v44.*GG_ttn1_*.root").scan(sh_gtt, inputFilePath); // Get all root files in this dataset    
@@ -186,24 +186,25 @@ int main( int argc, char* argv[] ) {
                     // To be implemented.
                 }
             }
+*/
             // Couldn't find information. Set to 1.
-            cross_section = 1.;
-            k_factor = 1.;
-            filter_efficiency = 1.;
-            derivation_stat_weights = 4521452.27602;
+            //cross_section = 1.;
+            //k_factor = 1.;
+            //filter_efficiency = 1.;
+            //derivation_stat_weights = 4521452.27602;
         }
     }
     else if (isData) {
         cout << "Read Data files..." << endl;
         inputFilePath = "/raid05/users/shen/Ximo_ntuples/v44/Data"; // no slash (/) at the end.
         //SH::ScanDir().scan(sh, inputFilePath); // Get all datasets in inputFilePath
-        //SH::ScanDir().filePattern("merged_all_data.root").scan(sh, inputFilePath); // Get specific root file
-        SH::ScanDir().samplePattern("user.jpoveda.t0789_v44.*.physics_Main.DAOD_SUSY2.*").scan(sh, inputFilePath); // Get all root files in this dataset
+        SH::ScanDir().filePattern("merged_all_data.root").scan(sh, inputFilePath); // Get specific root file
+        //SH::ScanDir().samplePattern("user.jpoveda.t0789_v44.*.physics_Main.DAOD_SUSY2.*").scan(sh, inputFilePath); // Get all root files in this dataset
         // Set to 1 for data.
-        cross_section = 1.;
-        k_factor = 1.;
-        filter_efficiency = 1.;
-        derivation_stat_weights = 3587333027.0;
+        //cross_section = 1.;
+        //k_factor = 1.;
+        //filter_efficiency = 1.;
+        //derivation_stat_weights = 3587333027.0;
     }
 
     // Set the name of the input TTree.
@@ -241,10 +242,11 @@ int main( int argc, char* argv[] ) {
     if (isData)
         alg->set_process("Data");
     alg->set_luminosity(luminosity);
-    alg->set_cross_section(cross_section);
-    alg->set_k_factor(k_factor);
-    alg->set_filter_efficiency(filter_efficiency);
-    alg->set_derivation_stat_weights(derivation_stat_weights);
+    alg->set_tag_pt_threshold(25000.);
+    //alg->set_cross_section(cross_section);
+    //alg->set_k_factor(k_factor);
+    //alg->set_filter_efficiency(filter_efficiency);
+    //alg->set_derivation_stat_weights(derivation_stat_weights);
     job.algsAdd( alg );
 
     if (use_Condor) {

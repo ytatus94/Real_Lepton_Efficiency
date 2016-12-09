@@ -102,7 +102,7 @@ EL::StatusCode ytEventSelection::fileExecute ()
     //Info(function_name, "Function calls");
 
     TH1F *h1 = (TH1F *)wk()->inputFile()->Get("DerivationStat_Weights");
-    derivation_stat_weights += h1->GetBinContent(1);
+    derivation_stat_weights = h1->GetBinContent(1);
     //cout <<   "derivation_stat_weights=" << h1->GetBinContent(1) << endl;
 
     return EL::StatusCode::SUCCESS;
@@ -524,11 +524,11 @@ EL::StatusCode ytEventSelection::initialize ()
     fChain->SetBranchAddress("SherpaNjetWeight", &SherpaNjetWeight, &b_SherpaNjetWeight);
     fChain->SetBranchAddress("TruthPDGID1", &TruthPDGID1, &b_TruthPDGID1);
     fChain->SetBranchAddress("TruthPDGID2", &TruthPDGID2, &b_TruthPDGID2);
-/*
+
     if (isSkim) {
         m_skim->initialize(wk()->tree(), process);
     }
-*/
+
     return EL::StatusCode::SUCCESS;
 }
 
@@ -1014,9 +1014,10 @@ EL::StatusCode ytEventSelection::execute ()
     baseline_weight = ID_weight(vec_baseline_elec, false) * ID_weight(vec_baseline_muon) * jets_weight(vec_signal_jets);
     signal_weight = ID_weight(vec_signal_elec, true) * Iso_weight(vec_signal_elec) * ID_weight(vec_signal_muon) * Iso_weight(vec_signal_muon) * jets_weight(vec_signal_jets);
 
-/*
+
     if (isSkim) {
         //cout << "Doing skim at here..." << endl;
+        // Setting
         m_skim->set_isMC(isMC);
         m_skim->set_isData(isData);
         m_skim->set_process(process);
@@ -1024,16 +1025,20 @@ EL::StatusCode ytEventSelection::execute ()
         m_skim->set_cross_section(cross_section);
         m_skim->set_k_factor(k_factor);
         m_skim->set_filter_efficiency(filter_efficiency);
+        m_skim->set_cross_section_kfactor_efficiency(cross_section_kfactor_efficiency);
         m_skim->set_event_weight_sum(derivation_stat_weights);
         m_skim->set_event_weight(EventWeight);
         m_skim->set_pileup_weight(PRWWeight);
+        m_skim->set_baseline_weight(baseline_weight);
+        m_skim->set_signal_weight(signal_weight);
         m_skim->set_run_number(PRWrandomRunNumber);
-        m_skim->set_Etmiss(Etmiss_TST_Et);
+        m_skim->set_tag_pt_threshold(tag_pt_threshold);
+        // Do skim
         m_skim->execute(vec_elec, vec_muon, vec_lept, vec_jets,
                         vec_baseline_elec, vec_baseline_muon, vec_baseline_lept, vec_baseline_jets,
                         vec_signal_elec, vec_signal_muon, vec_signal_lept, vec_signal_jets);
     }
-*/
+
     bool cut12 = m_cutflow->pass_at_least_two_signal_leptons_greater_than_20GeV(vec_signal_lept);
     m_cutflow->update(At_least_two_signal_leptons_greater_than_20GeV, cut12);
     if (!cut12) return EL::StatusCode::SUCCESS;
@@ -1165,11 +1170,14 @@ EL::StatusCode ytEventSelection::finalize ()
     //Info(function_name, "Function calls");
 
     m_cutflow->print();
-/*
-    if (isSkim)
-        m_skim->debug_print();
-    debug_sum_of_weight_print();
-*/
+
+    if (isSkim) {
+        m_skim->finalize();
+        //m_skim->debug_print();
+    }
+
+    //debug_sum_of_weight_print();
+
     return EL::StatusCode::SUCCESS;
 }
 

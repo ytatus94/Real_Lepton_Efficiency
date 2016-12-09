@@ -2,6 +2,15 @@
 This is the new real lepton efficiency framework.
 
 
+### v31-05. (combine branch) Add new skim code
+1. Modify `yt_skim`, comment out the unnecessary parts related to jet.
+2. Add `tag_pt_threshold` in `yt_skim` and `ytEventSelection`
+3. The cross section, k-Factor, filter efficiency are passed into `yt_skim`, they are removed from `skim.cxx`
+4. Correction `normalization` in `yt_skim` and set `normalization = 1` to Data.
+5. Add `yt_useful_functions`.
+6. Add skim part in `ytEventSelection`.
+
+
 ### v31-04. (combine branch) Remove functions and add histograms in `ytEventSelection`.
 1. Remove the calculate weight functions.
 2. Add histograms for Nvtx, AvgMu, NLepts, and NJets.

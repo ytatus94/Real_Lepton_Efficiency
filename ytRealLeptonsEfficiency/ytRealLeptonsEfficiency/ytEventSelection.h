@@ -16,6 +16,7 @@
 #include "ytRealLeptonsEfficiency/Jet.h"
 #include "ytRealLeptonsEfficiency/yt_cutflows.h"
 #include "ytRealLeptonsEfficiency/yt_skim.h"
+#include "ytRealLeptonsEfficiency/yt_useful_functions.h"
 
 #include <iostream>
 #include <vector>
@@ -49,6 +50,8 @@ public:
     float k_factor; //!
     float filter_efficiency; //!
     float cross_section_kfactor_efficiency; //!
+
+    float  tag_pt_threshold;
 
     yt_cutflows         *m_cutflow; //!
     yt_skim             *m_skim; //!
@@ -910,7 +913,8 @@ public:
     void set_isSkim(bool b) { isSkim = b; }
 
     void set_process(string s) { process = s; }
-    void set_luminosity(double d) { luminosity = d; }
+    void set_luminosity(float f) { luminosity = f; }
+    void set_tag_pt_threshold(float f) { tag_pt_threshold = f; }
 
     // this is needed to distribute the algorithm to the workers
     ClassDef(ytEventSelection, 1);
