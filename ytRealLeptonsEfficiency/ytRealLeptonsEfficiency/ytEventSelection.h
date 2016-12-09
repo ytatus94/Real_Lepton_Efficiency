@@ -51,7 +51,7 @@ public:
     float filter_efficiency; //!
     float cross_section_kfactor_efficiency; //!
 
-    float  tag_pt_threshold;
+    float tag_pt_threshold; //!
 
     yt_cutflows         *m_cutflow; //!
     yt_skim             *m_skim; //!

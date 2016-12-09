@@ -992,7 +992,7 @@ EL::StatusCode ytEventSelection::execute ()
         m_cutflow->update(At_least_one_signal_jet, cut9);
         if (!cut9) return EL::StatusCode::SUCCESS;
     }
-    
+
     bool cut10 = m_cutflow->pass_cosmic_muon_veto(vec_OR_muon);
     m_cutflow->update(Cosmic_muons_veto, cut10);
     if (!cut10) return EL::StatusCode::SUCCESS;

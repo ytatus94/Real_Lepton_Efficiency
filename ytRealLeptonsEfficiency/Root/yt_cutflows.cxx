@@ -66,7 +66,7 @@ yt_cutflows::yt_cutflows()
     m_Pileup->setProperty("DataScaleFactorUP", 1.0 / 1.0);
     m_Pileup->setProperty("DataScaleFactorDOWN", 1.0 / 1.23);
     if ( !m_Pileup->initialize().isSuccess() ) {
-        Error("In Begin()", "Fail to properly initialize the PRW. Exiting.");	
+        Error("In Begin()", "Fail to properly initialize the PRW. Exiting.");
     }
 
     // Dummy EventInfo object to manipulate later
