@@ -179,6 +179,16 @@ int yt_cutflows::get_mc_random_event_number(bool isData, bool isMC,
     return static_cast<int>(random_run_number);
 }
 */
+float yt_cutflows::get_AvgMu()
+{
+    return eventInfo->auxdata< float >( "corrected_averageInteractionsPerCrossing" );
+}
+
+float yt_cutflows::get_pileup_weight()
+{
+    return eventInfo->auxdata<float>( "PileupWeight" );
+}
+
 bool yt_cutflows::pass_all_events()
 {
     return true;

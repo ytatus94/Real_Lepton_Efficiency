@@ -70,6 +70,8 @@ public:
     virtual ~yt_cutflows();
     void update(int cut, bool passed);
     void print();
+    float get_AvgMu();
+    float get_pileup_weight();
 
     // user defined cutflow methods
     bool pass_all_events();
