@@ -373,7 +373,7 @@ bool yt_cutflows::pass_same_sign(vector<Lepton> vec_lept)
         pass = true;
     }
     else if (vec_lept.size() == 2) {
-        int sign = vec_lept[0].get_charge() * vec_lept[1].get_charge(); 
+        int sign = vec_lept[0].get_charge() * vec_lept[1].get_charge();
         if (sign == 1)
             pass = true;
     }

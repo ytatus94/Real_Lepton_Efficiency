@@ -584,6 +584,11 @@ public:
     TH1F *h_NLepts_weighted; //!
     TH1F *h_NJets_weighted; //!
 
+    TH1F *h_AvgMu_OSee; //!
+    TH1F *h_AvgMu_OSmumu; //!
+    TH1F *h_AvgMu_OSee_weighted; //!
+    TH1F *h_AvgMu_OSmumu_weighted; //!
+
     // this is a standard constructor
     ytEventSelection ();
 

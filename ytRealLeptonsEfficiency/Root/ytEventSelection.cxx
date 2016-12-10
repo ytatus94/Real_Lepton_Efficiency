@@ -88,6 +88,21 @@ EL::StatusCode ytEventSelection::histInitialize ()
     wk()->addOutput(h_NLepts_weighted);
     wk()->addOutput(h_NJets_weighted);
 
+    h_AvgMu_OSee            = new TH1F("h_AvgMu_OSee", "AvgMu;<#mu>;Events", 50, 0 , 50);
+    h_AvgMu_OSmumu          = new TH1F("h_AvgMu_OSmumu", "AvgMu;<#mu>;Events", 50, 0 , 50);
+    h_AvgMu_OSee_weighted   = new TH1F("h_AvgMu_OSee_weighted", "AvgMu (weighted);<#mu>;Events", 50, 0 , 50);
+    h_AvgMu_OSmumu_weighted = new TH1F("h_AvgMu_OSmumu_weighted", "AvgMu (weighted);<#mu>;Events", 50, 0 , 50);
+
+    h_AvgMu_OSee->Sumw2();
+    h_AvgMu_OSmumu->Sumw2();
+    h_AvgMu_OSee_weighted->Sumw2();
+    h_AvgMu_OSmumu_weighted->Sumw2();
+
+    wk()->addOutput(h_AvgMu_OSee);
+    wk()->addOutput(h_AvgMu_OSmumu);
+    wk()->addOutput(h_AvgMu_OSee_weighted);
+    wk()->addOutput(h_AvgMu_OSmumu_weighted);
+
     return EL::StatusCode::SUCCESS;
 }
 
@@ -918,7 +933,7 @@ EL::StatusCode ytEventSelection::execute ()
             h_NJets->Fill(0.);
     }
     else if (isMC) {
-        double weight = cross_section_kfactor_efficiency * EventWeight * PRWWeight;
+        double weight = luminosity * cross_section_kfactor_efficiency * 1000. * EventWeight * PRWWeight / derivation_stat_weights;
         h_Nvtx_weighted->Fill(Nvtx, weight);
         h_AvgMu_weighted->Fill(AvgMu, weight);
 
@@ -1009,11 +1024,36 @@ EL::StatusCode ytEventSelection::execute ()
     // Now sort leptons by descending Pt
     sort(vec_signal_lept.begin(), vec_signal_lept.end(), sort_descending_Pt<Lepton>);
 
+    // Dump the AvgMu histograms of the opposit sign baseline leptons.
+    if (vec_lept.size() == 2) {
+        int sign = vec_lept[0].get_charge() * vec_lept[1].get_charge();
+        int channel = vec_lept[0].get_flavor() * vec_lept[1].get_flavor();
+        if (sign == -1 && channel == 121) {
+            // OS ee
+            if (isData) {
+                h_AvgMu_OSee->Fill(AvgMu);
+            }
+            else if (isMC) {
+                double weight = luminosity * cross_section_kfactor_efficiency * 1000. * EventWeight * PRWWeight / derivation_stat_weights;
+                h_AvgMu_OSee_weighted->Fill(AvgMu, weight);
+            }
+        }
+        else if (sign == -1 && channel == 169) {
+            // OS mumu
+            if (isData) {
+                h_AvgMu_OSmumu->Fill(AvgMu);
+            }
+            else if (isMC) {
+                double weight = luminosity * cross_section_kfactor_efficiency * 1000. * EventWeight * PRWWeight / derivation_stat_weights;
+                h_AvgMu_OSmumu_weighted->Fill(AvgMu, weight);
+            }
+        }
+    }
+
     // Calculate weight
     double baseline_weight = 1., signal_weight = 1.;
     baseline_weight = ID_weight(vec_baseline_elec, false) * ID_weight(vec_baseline_muon) * jets_weight(vec_signal_jets);
     signal_weight = ID_weight(vec_signal_elec, true) * Iso_weight(vec_signal_elec) * ID_weight(vec_signal_muon) * Iso_weight(vec_signal_muon) * jets_weight(vec_signal_jets);
-
 
     if (isSkim) {
         //cout << "Doing skim at here..." << endl;
