@@ -2,6 +2,10 @@
 This is the new real lepton efficiency framework.
 
 
+### v31-10. (combine branch) Add two methods in `yt_cutflows`.
+* Add `get_AvgMu()` and `get_pileup_weight()` which recalculate AvgMu and PRWWeight.
+
+
 ### v31-09. (combine branch) Add OSee and OSmumu AvgMu histograms.
 1. Add OSee and OSmumu AvgMu histograms for data and MC in `ytEventSelection`.
 2. Correct the weight when dump MC AvgMu.
