@@ -103,6 +103,36 @@ EL::StatusCode ytEventSelection::histInitialize ()
     wk()->addOutput(h_AvgMu_OSee_weighted);
     wk()->addOutput(h_AvgMu_OSmumu_weighted);
 
+    h_baseline_OSee_mll = new TH1F("h_baseline_OSee_mll", "mll;M_{ll} [GeV];Events", 90, 60, 150);
+    h_baseline_OSmumu_mll = new TH1F("h_baseline_OSmumu_mll", "mll;M_{ll} [GeV];Events", 90, 60, 150);
+    h_baseline_OSee_mll_weighted = new TH1F("h_baseline_OSee_mll_weighted", "mll;M_{ll} [GeV];Events", 90, 60, 150);
+    h_baseline_OSmumu_mll_weighted = new TH1F("h_baseline_OSmumu_mll_weighted", "mll;M_{ll} [GeV];Events", 90, 60, 150);
+
+    h_baseline_OSee_mll->Sumw2();
+    h_baseline_OSmumu_mll->Sumw2();
+    h_baseline_OSee_mll_weighted->Sumw2();
+    h_baseline_OSmumu_mll_weighted->Sumw2();
+
+    wk()->addOutput(h_baseline_OSee_mll);
+    wk()->addOutput(h_baseline_OSmumu_mll);
+    wk()->addOutput(h_baseline_OSee_mll_weighted);
+    wk()->addOutput(h_baseline_OSmumu_mll_weighted);
+
+    h_signal_OSee_mll = new TH1F("h_signal_OSee_mll", "mll;M_{ll} [GeV];Events", 90, 60, 150);
+    h_signal_OSmumu_mll = new TH1F("h_signal_OSmumu_mll", "mll;M_{ll} [GeV];Events", 90, 60, 150);
+    h_signal_OSee_mll_weighted = new TH1F("h_signal_OSee_mll_weighted", "mll;M_{ll} [GeV];Events", 90, 60, 150);
+    h_signal_OSmumu_mll_weighted = new TH1F("h_signal_OSmumu_mll_weighted", "mll;M_{ll} [GeV];Events", 90, 60, 150);
+
+    h_signal_OSee_mll->Sumw2();
+    h_signal_OSmumu_mll->Sumw2();
+    h_signal_OSee_mll_weighted->Sumw2();
+    h_signal_OSmumu_mll_weighted->Sumw2();
+
+    wk()->addOutput(h_signal_OSee_mll);
+    wk()->addOutput(h_signal_OSmumu_mll);
+    wk()->addOutput(h_signal_OSee_mll_weighted);
+    wk()->addOutput(h_signal_OSmumu_mll_weighted);
+
     return EL::StatusCode::SUCCESS;
 }
 
@@ -917,10 +947,25 @@ EL::StatusCode ytEventSelection::execute ()
     // Now sort leptons by descending Pt
     sort(vec_baseline_lept.begin(), vec_baseline_lept.end(), sort_descending_Pt<Lepton>);
 
+    int random_run_number = -1;
+    random_run_number = m_cutflow->get_mc_random_event_number(isData, isMC,
+                                                              EventNumber, ChannelNumber,
+                                                              AvgMu, EventWeight, //PRWWeight,
+                                                              LB, RunNb);
+
+    //cout << "*** EventNumber=" << EventNumber << endl;
+    //cout << "ytEventSelection AvgMu=" << AvgMu << endl;
+    //cout << "ytEventSelection PRWWeight=" << PRWWeight << endl;
+    //cout << "yt_cutflows AvgMu=" << m_cutflow->get_AvgMu() << endl;
+    //cout << "yt_cutflows pileup_weight=" << m_cutflow->get_pileup_weight() << endl;
+
+    float pileup_weight = 1.;
+    pileup_weight = m_cutflow->get_pileup_weight();
+
     // Dump histograms
     if (isData) {
         h_Nvtx->Fill(Nvtx);
-        h_AvgMu->Fill(AvgMu);
+        h_AvgMu->Fill(m_cutflow->get_AvgMu() * 1.0 / 1.16);
 
         if (vec_lept.size() > 0)
             h_NLepts->Fill(vec_lept.at(0).get_number());
@@ -933,9 +978,9 @@ EL::StatusCode ytEventSelection::execute ()
             h_NJets->Fill(0.);
     }
     else if (isMC) {
-        double weight = luminosity * cross_section_kfactor_efficiency * 1000. * EventWeight * PRWWeight / derivation_stat_weights;
+        double weight = luminosity * cross_section_kfactor_efficiency * 1000. * EventWeight * pileup_weight /*PRWWeight*/ / derivation_stat_weights;
         h_Nvtx_weighted->Fill(Nvtx, weight);
-        h_AvgMu_weighted->Fill(AvgMu, weight);
+        h_AvgMu_weighted->Fill(m_cutflow->get_AvgMu(), weight);
 
         if (vec_lept.size() > 0)
             h_NLepts_weighted->Fill(vec_lept.at(0).get_number(), weight);
@@ -966,7 +1011,7 @@ EL::StatusCode ytEventSelection::execute ()
     m_cutflow->update(Primary_vertex, cut3);
     if (!cut3) return EL::StatusCode::SUCCESS;
 
-    bool cut4  = m_cutflow->pass_trigger(isData, isMC, RunNb, PRWrandomRunNumber,
+    bool cut4  = m_cutflow->pass_trigger(isData, isMC, RunNb, random_run_number /*PRWrandomRunNumber*/,
                                          HLT_2e12_lhloose_L12EM10VH, HLT_e17_lhloose_mu14, HLT_mu18_mu8noL1, HLT_xe70,
                                          HLT_2e17_lhvloose_nod0, HLT_e17_lhloose_nod0_mu14, HLT_mu20_mu8noL1, HLT_xe100_mht_L1XE50,
                                          Etmiss_TST_Et);
@@ -1025,27 +1070,38 @@ EL::StatusCode ytEventSelection::execute ()
     sort(vec_signal_lept.begin(), vec_signal_lept.end(), sort_descending_Pt<Lepton>);
 
     // Dump the AvgMu histograms of the opposit sign baseline leptons.
-    if (vec_lept.size() == 2) {
-        int sign = vec_lept[0].get_charge() * vec_lept[1].get_charge();
-        int channel = vec_lept[0].get_flavor() * vec_lept[1].get_flavor();
+    if (vec_baseline_lept.size() == 2) {
+        int sign = vec_baseline_lept[0].get_charge() * vec_baseline_lept[1].get_charge();
+        int channel = vec_baseline_lept[0].get_flavor() * vec_baseline_lept[1].get_flavor();
+
+        TLorentzVector tlv_lept0;
+        TLorentzVector tlv_lept1;
+        tlv_lept0.SetPtEtaPhiM(vec_baseline_lept[0].get_pt(), vec_baseline_lept[0].get_eta(), vec_baseline_lept[0].get_phi(), vec_baseline_lept[0].get_M());
+        tlv_lept1.SetPtEtaPhiM(vec_baseline_lept[1].get_pt(), vec_baseline_lept[1].get_eta(), vec_baseline_lept[1].get_phi(), vec_baseline_lept[1].get_M());
+        double mll = (tlv_lept0 + tlv_lept1).M();
+
         if (sign == -1 && channel == 121) {
             // OS ee
             if (isData) {
-                h_AvgMu_OSee->Fill(AvgMu);
+                h_AvgMu_OSee->Fill(m_cutflow->get_AvgMu() * 1.0 / 1.16);
+                h_baseline_OSee_mll->Fill(mll);
             }
             else if (isMC) {
-                double weight = luminosity * cross_section_kfactor_efficiency * 1000. * EventWeight * PRWWeight / derivation_stat_weights;
-                h_AvgMu_OSee_weighted->Fill(AvgMu, weight);
+                double weight = luminosity * cross_section_kfactor_efficiency * 1000. * EventWeight * pileup_weight /*PRWWeight*/ / derivation_stat_weights;
+                h_AvgMu_OSee_weighted->Fill(m_cutflow->get_AvgMu(), weight);
+                h_baseline_OSee_mll_weighted->Fill(mll, weight);
             }
         }
         else if (sign == -1 && channel == 169) {
             // OS mumu
             if (isData) {
-                h_AvgMu_OSmumu->Fill(AvgMu);
+                h_AvgMu_OSmumu->Fill(m_cutflow->get_AvgMu() * 1.0 / 1.16);
+                h_baseline_OSmumu_mll->Fill(mll);
             }
             else if (isMC) {
-                double weight = luminosity * cross_section_kfactor_efficiency * 1000. * EventWeight * PRWWeight / derivation_stat_weights;
-                h_AvgMu_OSmumu_weighted->Fill(AvgMu, weight);
+                double weight = luminosity * cross_section_kfactor_efficiency * 1000. * EventWeight * pileup_weight /*PRWWeight*/ / derivation_stat_weights;
+                h_AvgMu_OSmumu_weighted->Fill(m_cutflow->get_AvgMu(), weight);
+                h_baseline_OSmumu_mll_weighted->Fill(mll, weight);
             }
         }
     }
@@ -1068,10 +1124,10 @@ EL::StatusCode ytEventSelection::execute ()
         m_skim->set_cross_section_kfactor_efficiency(cross_section_kfactor_efficiency);
         m_skim->set_event_weight_sum(derivation_stat_weights);
         m_skim->set_event_weight(EventWeight);
-        m_skim->set_pileup_weight(PRWWeight);
+        m_skim->set_pileup_weight(pileup_weight /*PRWWeight*/);
         m_skim->set_baseline_weight(baseline_weight);
         m_skim->set_signal_weight(signal_weight);
-        m_skim->set_run_number(PRWrandomRunNumber);
+        m_skim->set_run_number(random_run_number /*PRWrandomRunNumber*/);
         m_skim->set_tag_pt_threshold(tag_pt_threshold);
         // Do skim
         m_skim->execute(vec_elec, vec_muon, vec_lept, vec_jets,
@@ -1082,6 +1138,43 @@ EL::StatusCode ytEventSelection::execute ()
     bool cut12 = m_cutflow->pass_at_least_two_signal_leptons_greater_than_20GeV(vec_signal_lept);
     m_cutflow->update(At_least_two_signal_leptons_greater_than_20GeV, cut12);
     if (!cut12) return EL::StatusCode::SUCCESS;
+
+    // Dump the AvgMu histograms of the opposit sign baseline leptons.
+    if (vec_signal_lept.size() == 2) {
+        int sign = vec_signal_lept[0].get_charge() * vec_signal_lept[1].get_charge();
+        int channel = vec_baseline_lept[0].get_flavor() * vec_baseline_lept[1].get_flavor();
+
+        TLorentzVector tlv_lept0;
+        TLorentzVector tlv_lept1;
+        tlv_lept0.SetPtEtaPhiM(vec_signal_lept[0].get_pt(), vec_signal_lept[0].get_eta(), vec_signal_lept[0].get_phi(), vec_signal_lept[0].get_M());
+        tlv_lept1.SetPtEtaPhiM(vec_signal_lept[1].get_pt(), vec_signal_lept[1].get_eta(), vec_signal_lept[1].get_phi(), vec_signal_lept[1].get_M());
+        double mll = (tlv_lept0 + tlv_lept1).M();
+
+        if (sign == -1 && channel == 121) {
+            // OS ee
+            if (isData) {
+                //h_AvgMu_OSee->Fill(m_cutflow->get_AvgMu() * 1.0 / 1.16);
+                h_signal_OSee_mll->Fill(mll);
+            }
+            else if (isMC) {
+                double weight = luminosity * cross_section_kfactor_efficiency * 1000. * EventWeight * pileup_weight /*PRWWeight*/ / derivation_stat_weights;
+                //h_AvgMu_OSee_weighted->Fill(m_cutflow->get_AvgMu(), weight);
+                h_signal_OSee_mll_weighted->Fill(mll, weight);
+            }
+        }
+        else if (sign == -1 && channel == 169) {
+            // OS mumu
+            if (isData) {
+                //h_AvgMu_OSmumu->Fill(m_cutflow->get_AvgMu() * 1.0 / 1.16);
+                h_signal_OSmumu_mll->Fill(mll);
+            }
+            else if (isMC) {
+                double weight = luminosity * cross_section_kfactor_efficiency * 1000. * EventWeight * pileup_weight /*PRWWeight*/ / derivation_stat_weights;
+                //h_AvgMu_OSmumu_weighted->Fill(m_cutflow->get_AvgMu(), weight);
+                h_signal_OSmumu_mll_weighted->Fill(mll, weight);
+            }
+        }
+    }
 
     bool cut13 = m_cutflow->pass_same_sign(vec_signal_lept);
     m_cutflow->update(Same_sign, cut13);
@@ -1094,7 +1187,7 @@ EL::StatusCode ytEventSelection::execute ()
         m_cutflow->update(ee_channel_separation, true);
     }
 
-    bool ee_cut2 = m_cutflow->pass_trigger_matching(isData, isMC, RunNb, PRWrandomRunNumber, vec_signal_elec, vec_signal_muon,
+    bool ee_cut2 = m_cutflow->pass_trigger_matching(isData, isMC, RunNb, random_run_number /*PRWrandomRunNumber*/, vec_signal_elec, vec_signal_muon,
                                                     HLT_2e12_lhloose_L12EM10VH, HLT_e17_lhloose_mu14, HLT_mu18_mu8noL1, HLT_xe70,
                                                     HLT_2e17_lhvloose_nod0, HLT_e17_lhloose_nod0_mu14, HLT_mu20_mu8noL1, HLT_xe100_mht_L1XE50,
                                                     Etmiss_TST_Et);
@@ -1123,7 +1216,7 @@ EL::StatusCode ytEventSelection::execute ()
         m_cutflow->update(emu_channel_separation, true);
     }
 
-    bool emu_cut2 = m_cutflow->pass_trigger_matching(isData, isMC, RunNb, PRWrandomRunNumber, vec_signal_elec, vec_signal_muon,
+    bool emu_cut2 = m_cutflow->pass_trigger_matching(isData, isMC, RunNb, random_run_number /*PRWrandomRunNumber*/, vec_signal_elec, vec_signal_muon,
                                                      HLT_2e12_lhloose_L12EM10VH, HLT_e17_lhloose_mu14, HLT_mu18_mu8noL1, HLT_xe70,
                                                      HLT_2e17_lhvloose_nod0, HLT_e17_lhloose_nod0_mu14, HLT_mu20_mu8noL1, HLT_xe100_mht_L1XE50,
                                                      Etmiss_TST_Et);
@@ -1152,7 +1245,7 @@ EL::StatusCode ytEventSelection::execute ()
         m_cutflow->update(mumu_channel_separation, true);
     }
 
-    bool mumu_cut2 = m_cutflow->pass_trigger_matching(isData, isMC, RunNb, PRWrandomRunNumber, vec_signal_elec, vec_signal_muon,
+    bool mumu_cut2 = m_cutflow->pass_trigger_matching(isData, isMC, RunNb, random_run_number /*PRWrandomRunNumber*/, vec_signal_elec, vec_signal_muon,
                                                       HLT_2e12_lhloose_L12EM10VH, HLT_e17_lhloose_mu14, HLT_mu18_mu8noL1, HLT_xe70,
                                                       HLT_2e17_lhvloose_nod0, HLT_e17_lhloose_nod0_mu14, HLT_mu20_mu8noL1, HLT_xe100_mht_L1XE50,
                                                       Etmiss_TST_Et);
@@ -1309,13 +1402,13 @@ void ytEventSelection::debug_elec_print(vector<Electron> vec_elec)
     for (auto & el_itr : vec_elec) {
         //cout << "NEl=" << el_itr.get_number() << endl;
         cout << i + 1
-            << ": pt=" << el_itr.get_pt() 
+            << ": pt=" << el_itr.get_pt()
             << ", eta=" << el_itr.get_eta() << ", etaclus=" << el_itr.get_etaclus() 
-            << ", phi=" << el_itr.get_phi() 
-            << ", baseline=" << el_itr.get_baseline() 
-            << ", passOR=" << el_itr.get_passOR() 
+            << ", phi=" << el_itr.get_phi()
+            << ", baseline=" << el_itr.get_baseline()
+            << ", passOR=" << el_itr.get_passOR()
             << ", isSignal=" << el_itr.get_isSignal()
-            << ", flavor=" << el_itr.get_flavor() 
+            << ", flavor=" << el_itr.get_flavor()
             << ", charge=" << el_itr.get_charge()
             << ", d0pvtx=" << el_itr.get_d0pvtx()
             << ", |d0sig|=" << fabs(el_itr.get_sigd0())
