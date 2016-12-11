@@ -1,6 +1,7 @@
 #!/usr/bin/python
-sys.argv.append( '-b-' ) #Batch mode, same as python <somescript>.py -b
-import ROOT
+import os, ROOT
+os.sys.argv.append( '-b-' ) #Batch mode, same as python <somescript>.py -b
+
 fdata = ROOT.TFile("skimmed_Data/hist-Data.root")
 fZee = ROOT.TFile("skimmed_MC_Zee/hist-MC.root")
 fZmumu = ROOT.TFile("skimmed_MC_Zmumu/hist-MC.root")

@@ -1084,24 +1084,24 @@ EL::StatusCode ytEventSelection::execute ()
             // OS ee
             if (isData) {
                 h_AvgMu_OSee->Fill(m_cutflow->get_AvgMu() * 1.0 / 1.16);
-                h_baseline_OSee_mll->Fill(mll);
+                h_baseline_OSee_mll->Fill(mll / 1000.);
             }
             else if (isMC) {
                 double weight = luminosity * cross_section_kfactor_efficiency * 1000. * EventWeight * pileup_weight /*PRWWeight*/ / derivation_stat_weights;
                 h_AvgMu_OSee_weighted->Fill(m_cutflow->get_AvgMu(), weight);
-                h_baseline_OSee_mll_weighted->Fill(mll, weight);
+                h_baseline_OSee_mll_weighted->Fill(mll / 1000., weight);
             }
         }
         else if (sign == -1 && channel == 169) {
             // OS mumu
             if (isData) {
                 h_AvgMu_OSmumu->Fill(m_cutflow->get_AvgMu() * 1.0 / 1.16);
-                h_baseline_OSmumu_mll->Fill(mll);
+                h_baseline_OSmumu_mll->Fill(mll / 1000.);
             }
             else if (isMC) {
                 double weight = luminosity * cross_section_kfactor_efficiency * 1000. * EventWeight * pileup_weight /*PRWWeight*/ / derivation_stat_weights;
                 h_AvgMu_OSmumu_weighted->Fill(m_cutflow->get_AvgMu(), weight);
-                h_baseline_OSmumu_mll_weighted->Fill(mll, weight);
+                h_baseline_OSmumu_mll_weighted->Fill(mll / 1000., weight);
             }
         }
     }
@@ -1154,24 +1154,24 @@ EL::StatusCode ytEventSelection::execute ()
             // OS ee
             if (isData) {
                 //h_AvgMu_OSee->Fill(m_cutflow->get_AvgMu() * 1.0 / 1.16);
-                h_signal_OSee_mll->Fill(mll);
+                h_signal_OSee_mll->Fill(mll / 1000.);
             }
             else if (isMC) {
                 double weight = luminosity * cross_section_kfactor_efficiency * 1000. * EventWeight * pileup_weight /*PRWWeight*/ / derivation_stat_weights;
                 //h_AvgMu_OSee_weighted->Fill(m_cutflow->get_AvgMu(), weight);
-                h_signal_OSee_mll_weighted->Fill(mll, weight);
+                h_signal_OSee_mll_weighted->Fill(mll / 1000., weight);
             }
         }
         else if (sign == -1 && channel == 169) {
             // OS mumu
             if (isData) {
                 //h_AvgMu_OSmumu->Fill(m_cutflow->get_AvgMu() * 1.0 / 1.16);
-                h_signal_OSmumu_mll->Fill(mll);
+                h_signal_OSmumu_mll->Fill(mll / 1000.);
             }
             else if (isMC) {
                 double weight = luminosity * cross_section_kfactor_efficiency * 1000. * EventWeight * pileup_weight /*PRWWeight*/ / derivation_stat_weights;
                 //h_AvgMu_OSmumu_weighted->Fill(m_cutflow->get_AvgMu(), weight);
-                h_signal_OSmumu_mll_weighted->Fill(mll, weight);
+                h_signal_OSmumu_mll_weighted->Fill(mll / 1000., weight);
             }
         }
     }
