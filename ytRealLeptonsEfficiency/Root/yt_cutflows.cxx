@@ -121,10 +121,10 @@ void yt_cutflows::print()
     }
     cout << "**************************************************" << endl;
 }
-/*
+
 int yt_cutflows::get_mc_random_event_number(bool isData, bool isMC,
                                             int event_number, int channel_number,
-                                            double average_mu, double event_weight, double PRW_weight,
+                                            double average_mu, double event_weight, //double PRW_weight,
                                             int lumi_block, int run_number)
 {
     // Put the ntuple variables into EventInfo
@@ -154,9 +154,9 @@ int yt_cutflows::get_mc_random_event_number(bool isData, bool isMC,
     bool mu_dependent = true;
     m_Pileup->apply(*eventInfo, mu_dependent);
     // example to retrieve decoration:
-    //float pileupwgh = eventInfo->auxdata<float>("PileupWeight");
-    pileupwgh = eventInfo->auxdata<float>("PileupWeight");
-//
+    float pileupwgh = eventInfo->auxdata<float>("PileupWeight");
+    //pileupwgh = eventInfo->auxdata<float>("PileupWeight");
+/*
     // NEW: Systematic Variations
     // DOWN
     CP::SystematicSet downSet;
@@ -173,12 +173,12 @@ int yt_cutflows::get_mc_random_event_number(bool isData, bool isMC,
     m_Pileup->apply(*eventInfo);
     average_mu = eventInfo->auxdata<float>("corrected_averageInteractionsPerCrossing");
     double pileupwghUP = eventInfo->auxdata<double>("PileupWeight");
-//
+*/
     unsigned int random_run_number = eventInfo->auxdata<unsigned int>("RandomRunNumber");
 
     return static_cast<int>(random_run_number);
 }
-*/
+
 float yt_cutflows::get_AvgMu()
 {
     return eventInfo->auxdata< float >( "corrected_averageInteractionsPerCrossing" );

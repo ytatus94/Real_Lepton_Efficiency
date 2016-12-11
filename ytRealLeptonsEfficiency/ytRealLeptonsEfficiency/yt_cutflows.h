@@ -70,6 +70,10 @@ public:
     virtual ~yt_cutflows();
     void update(int cut, bool passed);
     void print();
+    int get_mc_random_event_number(bool isData, bool isMC,
+                                   int event_number, int channel_number,
+                                   double average_mu, double event_weight, //double PRW_weight,
+                                   int lumi_block, int run_number);
     float get_AvgMu();
     float get_pileup_weight();
 

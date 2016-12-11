@@ -2,6 +2,10 @@
 This is the new real lepton efficiency framework.
 
 
+### v31-12. (combine branch) Add `get_mc_random_event_number()` back.
+* In `yt_cutflow`: Add `get_mc_random_event_number()` back.
+
+
 ### v31-11. (combine branch) Add new plotting script.
 * Add new script `make_AvgMu.py` which can make data and MC AvgMu plot.
 
