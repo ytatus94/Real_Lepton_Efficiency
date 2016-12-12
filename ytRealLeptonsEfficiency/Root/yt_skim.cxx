@@ -201,7 +201,7 @@ void yt_skim::initialize(TTree *tree, string process)
     //output_tree->Branch("bJet_isSignal",  &bJet_isSignal);
 
     // Events numbers variables
-    output_tree->Branch("normalization", &normalization);
+    //output_tree->Branch("normalization", &normalization);
     output_tree->Branch("baseline_mll", &baseline_mll);
     output_tree->Branch("signal_mll",   &signal_mll);
     //output_tree->Branch("jets_mll",   &jets_mll);
