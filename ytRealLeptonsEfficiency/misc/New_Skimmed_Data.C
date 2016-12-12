@@ -1,5 +1,5 @@
-#define New_Skimmed_cxx
-// The class definition in New_Skimmed.h has been generated automatically
+#define New_Skimmed_Data_cxx
+// The class definition in New_Skimmed_Data.h has been generated automatically
 // by the ROOT utility TTree::MakeSelector(). This class is derived
 // from the ROOT class TSelector. For more information on the TSelector
 // framework see $ROOTSYS/README/README.SELECTOR or the ROOT User Manual.
@@ -18,17 +18,17 @@
 //
 // To use this file, try the following session on your Tree T:
 //
-// root> T->Process("New_Skimmed.C")
-// root> T->Process("New_Skimmed.C","some options")
-// root> T->Process("New_Skimmed.C+")
+// root> T->Process("New_Skimmed_Data.C")
+// root> T->Process("New_Skimmed_Data.C","some options")
+// root> T->Process("New_Skimmed_Data.C+")
 //
 
-#include "New_Skimmed.h"
+#include "New_Skimmed_Data.h"
 #include <TH2.h>
 #include <TStyle.h>
 
 
-void New_Skimmed::Begin(TTree * /*tree*/)
+void New_Skimmed_Data::Begin(TTree * /*tree*/)
 {
    // The Begin() function is called at the start of the query.
    // When running with PROOF Begin() is only called on the client.
@@ -38,7 +38,7 @@ void New_Skimmed::Begin(TTree * /*tree*/)
 
 }
 
-void New_Skimmed::SlaveBegin(TTree * /*tree*/)
+void New_Skimmed_Data::SlaveBegin(TTree * /*tree*/)
 {
    // The SlaveBegin() function is called after the Begin() function.
    // When running with PROOF SlaveBegin() is called on each slave server.
@@ -48,12 +48,12 @@ void New_Skimmed::SlaveBegin(TTree * /*tree*/)
 
 }
 
-Bool_t New_Skimmed::Process(Long64_t entry)
+Bool_t New_Skimmed_Data::Process(Long64_t entry)
 {
    // The Process() function is called for each entry in the tree (or possibly
    // keyed object in the case of PROOF) to be processed. The entry argument
    // specifies which entry in the currently loaded tree is to be processed.
-   // It can be passed to either New_Skimmed::GetEntry() or TBranch::GetEntry()
+   // It can be passed to either New_Skimmed_Data::GetEntry() or TBranch::GetEntry()
    // to read either all or the required parts of the data. When processing
    // keyed objects with PROOF, the object is already loaded and is available
    // via the fObject pointer.
@@ -72,7 +72,7 @@ Bool_t New_Skimmed::Process(Long64_t entry)
    return kTRUE;
 }
 
-void New_Skimmed::SlaveTerminate()
+void New_Skimmed_Data::SlaveTerminate()
 {
    // The SlaveTerminate() function is called after all entries or objects
    // have been processed. When running with PROOF SlaveTerminate() is called
@@ -80,7 +80,7 @@ void New_Skimmed::SlaveTerminate()
 
 }
 
-void New_Skimmed::Terminate()
+void New_Skimmed_Data::Terminate()
 {
    // The Terminate() function is the last function to be called during
    // a query. It always runs on the client, it can be used to present

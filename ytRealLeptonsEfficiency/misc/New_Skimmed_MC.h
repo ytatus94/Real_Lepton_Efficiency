@@ -1,12 +1,12 @@
 //////////////////////////////////////////////////////////
 // This class has been automatically generated on
-// Mon Oct  3 12:23:40 2016 by ROOT version 6.04/16
+// Mon Dec 12 11:18:24 2016 by ROOT version 6.04/16
 // from TTree AnaNtup/AnaNtup
-// found on file: MC_probes_Zmumu.root
+// found on file: MC_probes_Zee.root
 //////////////////////////////////////////////////////////
 
-#ifndef New_Skimmed_h
-#define New_Skimmed_h
+#ifndef New_Skimmed_MC_h
+#define New_Skimmed_MC_h
 
 #include <TROOT.h>
 #include <TChain.h>
@@ -20,7 +20,7 @@
 #include "vector"
 #include "vector"
 
-class New_Skimmed : public TSelector {
+class New_Skimmed_MC : public TSelector {
 public :
    TTree          *fChain;   //!pointer to the analyzed TTree or TChain
 
@@ -260,10 +260,11 @@ public :
    Int_t           TruthPDGID1;
    Int_t           TruthPDGID2;
    Double_t        normalization;
-   Double_t        luminosity;
-   Double_t        cross_section;
-   Double_t        k_factor;
-   Double_t        filter_efficiency;
+   Float_t         luminosity;
+   Float_t         cross_section;
+   Float_t         k_factor;
+   Float_t         filter_efficiency;
+   Float_t         cross_section_kfactor_efficiency;
    Double_t        event_weight_sum;
    Double_t        event_weight;
    Double_t        pileup_weight;
@@ -276,23 +277,15 @@ public :
    vector<bool>    *El_isZProbe;
    vector<double>  *El_ZTandP_mll;
    vector<bool>    *El_isZProbe_TriggerMatched;
-   vector<double>  *El_DR_closest_Jet;
    vector<bool>    *Mu_isBaseline;
    vector<bool>    *Mu_isSignal;
    vector<bool>    *Mu_isZTag;
    vector<bool>    *Mu_isZProbe;
    vector<double>  *Mu_ZTandP_mll;
    vector<bool>    *Mu_isZProbe_TriggerMatched;
-   vector<double>  *Mu_DR_closest_Jet;
-   vector<bool>    *Jet_isBaseline;
-   vector<bool>    *Jet_isSignal;
-   vector<bool>    *bJet_isSignal;
    Double_t        normalization;
    Double_t        baseline_mll;
    Double_t        signal_mll;
-   Double_t        jets_mll;
-   Double_t        Ht;
-   Double_t        meff;
 
    // List of branches
    TBranch        *b_HLT_e24_lhmedium_nod0_ivarloose;   //!
@@ -532,6 +525,7 @@ public :
    TBranch        *b_cross_section;   //!
    TBranch        *b_k_factor;   //!
    TBranch        *b_filter_efficiency;   //!
+   TBranch        *b_cross_section_kfactor_efficiency;   //!
    TBranch        *b_event_weight_sum;   //!
    TBranch        *b_event_weight;   //!
    TBranch        *b_pileup_weight;   //!
@@ -544,26 +538,18 @@ public :
    TBranch        *b_El_isZProbe;   //!
    TBranch        *b_El_ZTandP_mll;   //!
    TBranch        *b_El_isZProbe_TriggerMatched;   //!
-   TBranch        *b_El_DR_closest_Jet;   //!
    TBranch        *b_Mu_isBaseline;   //!
    TBranch        *b_Mu_isSignal;   //!
    TBranch        *b_Mu_isZTag;   //!
    TBranch        *b_Mu_isZProbe;   //!
    TBranch        *b_Mu_ZTandP_mll;   //!
    TBranch        *b_Mu_isZProbe_TriggerMatched;   //!
-   TBranch        *b_Mu_DR_closest_Jet;   //!
-   TBranch        *b_Jet_isBaseline;   //!
-   TBranch        *b_Jet_isSignal;   //!
-   TBranch        *b_bJet_isSignal;   //!
    TBranch        *b_normalization;   //!
    TBranch        *b_baseline_mll;   //!
    TBranch        *b_signal_mll;   //!
-   TBranch        *b_jets_mll;   //!
-   TBranch        *b_Ht;   //!
-   TBranch        *b_meff;   //!
 
-   New_Skimmed(TTree * /*tree*/ =0) : fChain(0) { }
-   virtual ~New_Skimmed() { }
+   New_Skimmed_MC(TTree * /*tree*/ =0) : fChain(0) { }
+   virtual ~New_Skimmed_MC() { }
    virtual Int_t   Version() const { return 2; }
    virtual void    Begin(TTree *tree);
    virtual void    SlaveBegin(TTree *tree);
@@ -578,13 +564,13 @@ public :
    virtual void    SlaveTerminate();
    virtual void    Terminate();
 
-   ClassDef(New_Skimmed,0);
+   ClassDef(New_Skimmed_MC,0);
 };
 
 #endif
 
-#ifdef New_Skimmed_cxx
-void New_Skimmed::Init(TTree *tree)
+#ifdef New_Skimmed_MC_cxx
+void New_Skimmed_MC::Init(TTree *tree)
 {
    // The Init() function is called when the selector needs to initialize
    // a new tree or chain. Typically here the branch addresses and branch
@@ -733,17 +719,12 @@ void New_Skimmed::Init(TTree *tree)
    El_isZProbe = 0;
    El_ZTandP_mll = 0;
    El_isZProbe_TriggerMatched = 0;
-   El_DR_closest_Jet = 0;
    Mu_isBaseline = 0;
    Mu_isSignal = 0;
    Mu_isZTag = 0;
    Mu_isZProbe = 0;
    Mu_ZTandP_mll = 0;
    Mu_isZProbe_TriggerMatched = 0;
-   Mu_DR_closest_Jet = 0;
-   Jet_isBaseline = 0;
-   Jet_isSignal = 0;
-   bJet_isSignal = 0;
    // Set branch addresses and branch pointers
    if (!tree) return;
    fChain = tree;
@@ -986,6 +967,7 @@ void New_Skimmed::Init(TTree *tree)
    fChain->SetBranchAddress("cross_section", &cross_section, &b_cross_section);
    fChain->SetBranchAddress("k_factor", &k_factor, &b_k_factor);
    fChain->SetBranchAddress("filter_efficiency", &filter_efficiency, &b_filter_efficiency);
+   fChain->SetBranchAddress("cross_section_kfactor_efficiency", &cross_section_kfactor_efficiency, &b_cross_section_kfactor_efficiency);
    fChain->SetBranchAddress("event_weight_sum", &event_weight_sum, &b_event_weight_sum);
    fChain->SetBranchAddress("event_weight", &event_weight, &b_event_weight);
    fChain->SetBranchAddress("pileup_weight", &pileup_weight, &b_pileup_weight);
@@ -998,26 +980,18 @@ void New_Skimmed::Init(TTree *tree)
    fChain->SetBranchAddress("El_isZProbe", &El_isZProbe, &b_El_isZProbe);
    fChain->SetBranchAddress("El_ZTandP_mll", &El_ZTandP_mll, &b_El_ZTandP_mll);
    fChain->SetBranchAddress("El_isZProbe_TriggerMatched", &El_isZProbe_TriggerMatched, &b_El_isZProbe_TriggerMatched);
-   fChain->SetBranchAddress("El_DR_closest_Jet", &El_DR_closest_Jet, &b_El_DR_closest_Jet);
    fChain->SetBranchAddress("Mu_isBaseline", &Mu_isBaseline, &b_Mu_isBaseline);
    fChain->SetBranchAddress("Mu_isSignal", &Mu_isSignal, &b_Mu_isSignal);
    fChain->SetBranchAddress("Mu_isZTag", &Mu_isZTag, &b_Mu_isZTag);
    fChain->SetBranchAddress("Mu_isZProbe", &Mu_isZProbe, &b_Mu_isZProbe);
    fChain->SetBranchAddress("Mu_ZTandP_mll", &Mu_ZTandP_mll, &b_Mu_ZTandP_mll);
    fChain->SetBranchAddress("Mu_isZProbe_TriggerMatched", &Mu_isZProbe_TriggerMatched, &b_Mu_isZProbe_TriggerMatched);
-   fChain->SetBranchAddress("Mu_DR_closest_Jet", &Mu_DR_closest_Jet, &b_Mu_DR_closest_Jet);
-   fChain->SetBranchAddress("Jet_isBaseline", &Jet_isBaseline, &b_Jet_isBaseline);
-   fChain->SetBranchAddress("Jet_isSignal", &Jet_isSignal, &b_Jet_isSignal);
-   fChain->SetBranchAddress("bJet_isSignal", &bJet_isSignal, &b_bJet_isSignal);
 //    fChain->SetBranchAddress("normalization", &normalization, &b_normalization);
    fChain->SetBranchAddress("baseline_mll", &baseline_mll, &b_baseline_mll);
    fChain->SetBranchAddress("signal_mll", &signal_mll, &b_signal_mll);
-   fChain->SetBranchAddress("jets_mll", &jets_mll, &b_jets_mll);
-   fChain->SetBranchAddress("Ht", &Ht, &b_Ht);
-   fChain->SetBranchAddress("meff", &meff, &b_meff);
 }
 
-Bool_t New_Skimmed::Notify()
+Bool_t New_Skimmed_MC::Notify()
 {
    // The Notify() function is called when a new file is opened. This
    // can be either for a new TTree in a TChain or when when a new TTree
@@ -1028,4 +1002,4 @@ Bool_t New_Skimmed::Notify()
    return kTRUE;
 }
 
-#endif // #ifdef New_Skimmed_cxx
+#endif // #ifdef New_Skimmed_MC_cxx
