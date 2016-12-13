@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////
 // This class has been automatically generated on
-// Mon Dec 12 11:18:24 2016 by ROOT version 6.04/16
+// Tue Dec 13 04:27:20 2016 by ROOT version 6.04/16
 // from TTree AnaNtup/AnaNtup
 // found on file: MC_probes_Zee.root
 //////////////////////////////////////////////////////////
@@ -283,7 +283,6 @@ public :
    vector<bool>    *Mu_isZProbe;
    vector<double>  *Mu_ZTandP_mll;
    vector<bool>    *Mu_isZProbe_TriggerMatched;
-   Double_t        normalization;
    Double_t        baseline_mll;
    Double_t        signal_mll;
 
@@ -544,7 +543,6 @@ public :
    TBranch        *b_Mu_isZProbe;   //!
    TBranch        *b_Mu_ZTandP_mll;   //!
    TBranch        *b_Mu_isZProbe_TriggerMatched;   //!
-   TBranch        *b_normalization;   //!
    TBranch        *b_baseline_mll;   //!
    TBranch        *b_signal_mll;   //!
 
@@ -986,7 +984,6 @@ void New_Skimmed_MC::Init(TTree *tree)
    fChain->SetBranchAddress("Mu_isZProbe", &Mu_isZProbe, &b_Mu_isZProbe);
    fChain->SetBranchAddress("Mu_ZTandP_mll", &Mu_ZTandP_mll, &b_Mu_ZTandP_mll);
    fChain->SetBranchAddress("Mu_isZProbe_TriggerMatched", &Mu_isZProbe_TriggerMatched, &b_Mu_isZProbe_TriggerMatched);
-//    fChain->SetBranchAddress("normalization", &normalization, &b_normalization);
    fChain->SetBranchAddress("baseline_mll", &baseline_mll, &b_baseline_mll);
    fChain->SetBranchAddress("signal_mll", &signal_mll, &b_signal_mll);
 }
