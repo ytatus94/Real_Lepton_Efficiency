@@ -2,6 +2,12 @@
 This is the new real lepton efficiency framework.
 
 
+### v31-17. (combine branch) Add new skim output
+1. Fix the typo in `python/make_mll.py`
+2. Add new skim output `new_AvgMu`
+3. Comment the dRjet and meff related histograms
+
+
 ### v31-16. (combine branch) Update `New_Skimmed_Data` and `New_Skimmed_MC`
 
 

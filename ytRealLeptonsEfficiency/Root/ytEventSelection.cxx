@@ -1128,6 +1128,7 @@ EL::StatusCode ytEventSelection::execute ()
         m_skim->set_baseline_weight(baseline_weight);
         m_skim->set_signal_weight(signal_weight);
         m_skim->set_run_number(random_run_number /*PRWrandomRunNumber*/);
+        m_skim->set_new_AvgMu(m_cutflow->get_AvgMu());
         m_skim->set_tag_pt_threshold(tag_pt_threshold);
         // Do skim
         m_skim->execute(vec_elec, vec_muon, vec_lept, vec_jets,
@@ -1403,7 +1404,7 @@ void ytEventSelection::debug_elec_print(vector<Electron> vec_elec)
         //cout << "NEl=" << el_itr.get_number() << endl;
         cout << i + 1
             << ": pt=" << el_itr.get_pt()
-            << ", eta=" << el_itr.get_eta() << ", etaclus=" << el_itr.get_etaclus() 
+            << ", eta=" << el_itr.get_eta() << ", etaclus=" << el_itr.get_etaclus()
             << ", phi=" << el_itr.get_phi()
             << ", baseline=" << el_itr.get_baseline()
             << ", passOR=" << el_itr.get_passOR()

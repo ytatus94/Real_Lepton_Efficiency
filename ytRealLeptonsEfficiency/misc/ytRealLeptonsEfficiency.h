@@ -580,9 +580,32 @@ public:
     TBranch        *b_signal_mll; //!
 
     // Histograms
+    TH1F *h_Nvtx; //!
     TH1F *h_AvgMu; //!
-    TH1F *h_mll; //!
     TH1F *h_zPV; //!
+    TH1F *h_NLepts; //!
+    TH1F *h_NJets; //!
+
+    TH1F *h_Nvtx_weighted; //!
+    TH1F *h_AvgMu_weighted; //!
+    TH1F *h_zPV_weighted; //!
+    TH1F *h_NLepts_weighted; //!
+    TH1F *h_NJets_weighted; //!
+
+    TH1F *h_AvgMu_OSee; //!
+    TH1F *h_AvgMu_OSmumu; //!
+    TH1F *h_AvgMu_OSee_weighted; //!
+    TH1F *h_AvgMu_OSmumu_weighted; //!
+
+    TH1F *h_baseline_OSee_mll; //!
+    TH1F *h_baseline_OSmumu_mll; //!
+    TH1F *h_baseline_OSee_mll_weighted; //!
+    TH1F *h_baseline_OSmumu_mll_weighted; //!
+
+    TH1F *h_signal_OSee_mll; //!
+    TH1F *h_signal_OSmumu_mll; //!
+    TH1F *h_signal_OSee_mll_weighted; //!
+    TH1F *h_signal_OSmumu_mll_weighted; //!
 
     // Baseline histograms
     // 1-dim histograms
@@ -597,9 +620,9 @@ public:
     TH1F *h_baseline_ptvarcone30; //!
     TH1F *h_baseline_topoetcone20; //!
     TH1F *h_baseline_nJets; //!
-    TH1F *h_baseline_dRjet; //!
+    //TH1F *h_baseline_dRjet; //!
     TH1F *h_baseline_Etmiss; //!
-    TH1F *h_baseline_meff; //!
+    //TH1F *h_baseline_meff; //!
 
     TH1F *h_baseline_LooseAndBLayerLLH_to_MediumLLH_cut; //!
     TH1F *h_baseline_CaloIso_cut; //!
@@ -611,14 +634,14 @@ public:
     // 2-dim histograms
     TH2F *h_baseline_pt_eta; //! x: pt, y: eta
     TH2F *h_baseline_pt_nJets; //! x: pt, y: nJets
-    TH2F *h_baseline_pt_dRjet; //! x: pt, y: dRjet
+    //TH2F *h_baseline_pt_dRjet; //! x: pt, y: dRjet
     TH2F *h_baseline_pt_Etmiss; //! x: pt, y: Etmiss
-    TH2F *h_baseline_pt_meff; //! x: pt, y: meff
+    //TH2F *h_baseline_pt_meff; //! x: pt, y: meff
 
     // 3-dim histograms
     TH3F *h_baseline_pt_eta_mll; //! x: pt, y: eta, z: mll
-    TH3F *h_baseline_pt_eta_dRjet; //! x: pt, y: eta, z: dRjet
-    TH3F *h_baseline_pt_dRjet_mll; //! x: pt, y: dRjet, z: mll
+    //TH3F *h_baseline_pt_eta_dRjet; //! x: pt, y: eta, z: dRjet
+    //TH3F *h_baseline_pt_dRjet_mll; //! x: pt, y: dRjet, z: mll
 
     // Signal histograms
     // 1-dim histograms
@@ -633,21 +656,21 @@ public:
     TH1F *h_signal_ptvarcone30; //!
     TH1F *h_signal_topoetcone20; //!
     TH1F *h_signal_nJets; //!
-    TH1F *h_signal_dRjet; //!
+    //TH1F *h_signal_dRjet; //!
     TH1F *h_signal_Etmiss; //!
-    TH1F *h_signal_meff; //!
+    //TH1F *h_signal_meff; //!
 
     // 2-dim histograms
     TH2F *h_signal_pt_eta; //! x: pt, y: eta
     TH2F *h_signal_pt_nJets; //! x: pt, y: nJets
-    TH2F *h_signal_pt_dRjet; //! x: pt, y: dRjet
+    //TH2F *h_signal_pt_dRjet; //! x: pt, y: dRjet
     TH2F *h_signal_pt_Etmiss; //! x: pt, y: Etmiss
-    TH2F *h_signal_pt_meff; //! x: pt, y: meff
+    //TH2F *h_signal_pt_meff; //! x: pt, y: meff
 
     // 3-dim histograms
     TH3F *h_signal_pt_eta_mll; //! x: pt, y: eta, z: mll
-    TH3F *h_signal_pt_eta_dRjet; //! x: pt, y: eta, z: dRjet
-    TH3F *h_signal_pt_dRjet_mll; //! x: pt, y: dRjet, z: mll
+    //TH3F *h_signal_pt_eta_dRjet; //! x: pt, y: eta, z: dRjet
+    //TH3F *h_signal_pt_dRjet_mll; //! x: pt, y: dRjet, z: mll
 
     // Cut efficiency histograms
     TH1F *h_cut_eff_LooseAndBLayerLLH_to_MediumLLH; //!
@@ -684,16 +707,16 @@ public:
     TH1F *h_eff_pt; //!
     TH1F *h_eff_eta; //!
     TH1F *h_eff_nJets; //!
-    TH1F *h_eff_dRjet; //!
+    //TH1F *h_eff_dRjet; //!
     TH1F *h_eff_Etmiss; //!
-    TH1F *h_eff_meff; //!
+    //TH1F *h_eff_meff; //!
 
     // 2-dim histograms
     TH2F *h_2d_eff_pt_eta; //!
     TH2F *h_2d_eff_pt_nJets; //!
-    TH2F *h_2d_eff_pt_dRjet; //!
+    //TH2F *h_2d_eff_pt_dRjet; //!
     TH2F *h_2d_eff_pt_Etmiss; //!
-    TH2F *h_2d_eff_pt_meff; //!
+    //TH2F *h_2d_eff_pt_meff; //!
 
     TCanvas *baseline_mll_plot; //!
     TCanvas *cut_efficiency_plot; //!

@@ -155,6 +155,7 @@ void yt_skim::initialize(TTree *tree, string process)
     output_tree->Branch("baseline_weight", &baseline_weight);
     output_tree->Branch("signal_weight", &signal_weight);
     output_tree->Branch("run_number", &run_number);
+    output_tree->Branch("new_AvgMu", &new_AvgMu);
     // Physics object variables
 /*
     output_tree->Branch("tag_flavor", &tag_flavor);

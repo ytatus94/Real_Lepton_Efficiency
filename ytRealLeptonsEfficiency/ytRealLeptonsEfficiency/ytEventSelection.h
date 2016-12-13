@@ -49,7 +49,7 @@ public:
     float cross_section; //!
     float k_factor; //!
     float filter_efficiency; //!
-    float cross_section_kfactor_efficiency; //!
+    float cross_section_kfactor_efficiency; //! unit: pb
 
     float tag_pt_threshold; //!
 

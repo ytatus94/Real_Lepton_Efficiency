@@ -29,7 +29,7 @@ c1.SaveAs("baseline_Mee.pdf")
 
 c2 = ROOT.TCanvas("baseline_Mmumu")
 h_data_baseline_OSmumu_mll.SetLineColor(0)
-h_data_baseline_OSmumu_mll.SetMarkerColor(1))
+h_data_baseline_OSmumu_mll.SetMarkerColor(1)
 h_data_baseline_OSmumu_mll.SetMarkerSize(1)
 h_data_baseline_OSmumu_mll.SetMarkerStyle(20)
 h_data_baseline_OSmumu_mll.Draw("E1")

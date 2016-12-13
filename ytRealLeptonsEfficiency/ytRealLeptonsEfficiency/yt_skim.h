@@ -66,6 +66,7 @@ public:
     double baseline_weight;
     double signal_weight;
     int    run_number;
+    float  new_AvgMu;
     float  tag_pt_threshold;
     //double Etmiss;
 
@@ -153,6 +154,7 @@ public:
     void set_baseline_weight(double d) { baseline_weight = d; }
     void set_signal_weight(double d) { signal_weight = d; }
     void set_run_number(int i) { run_number = i; }
+    void set_new_AvgMu(float f) { new_AvgMu = f; }
     void set_tag_pt_threshold(float f) { tag_pt_threshold = f; }
     //void set_Etmiss(double d) { Etmiss = d; }
 
