@@ -16,8 +16,9 @@
 #include <TSystem.h>
 
 
-#include "ytRealLeptonsEfficiency/ytRealLeptonsEfficiency_Data.h"
-#include "ytRealLeptonsEfficiency/ytRealLeptonsEfficiency_MC.h"
+#include "ytRealLeptonsEfficiency/ytRealLeptonsEfficiency.h"
+//#include "ytRealLeptonsEfficiency/ytRealLeptonsEfficiency_MC.h"
+//#include "ytRealLeptonsEfficiency/ytRealLeptonsEfficiency_Data.h"
 
 int main( int argc, char* argv[] ) {
 
@@ -174,7 +175,8 @@ int main( int argc, char* argv[] ) {
 
     // Add our analysis to the job:
     if (isMC) {
-        ytRealLeptonsEfficiency_MC* alg = new ytRealLeptonsEfficiency_MC();
+        ytRealLeptonsEfficiency* alg = new ytRealLeptonsEfficiency();
+        //ytRealLeptonsEfficiency_MC* alg = new ytRealLeptonsEfficiency_MC();
         alg->set_isMC(true);
         alg->set_isData(false);
         alg->set_trigger("single_lepton_trigger");
@@ -196,7 +198,8 @@ int main( int argc, char* argv[] ) {
         job.algsAdd( alg );
     }
     if (isData) {
-        ytRealLeptonsEfficiency_Data* alg = new ytRealLeptonsEfficiency_Data();
+        ytRealLeptonsEfficiency* alg = new ytRealLeptonsEfficiency();
+        //ytRealLeptonsEfficiency_Data* alg = new ytRealLeptonsEfficiency_Data();
         alg->set_isMC(false);
         alg->set_isData(true);
         alg->set_trigger("single_lepton_trigger");

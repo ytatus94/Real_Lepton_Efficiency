@@ -1531,7 +1531,7 @@ void ytRealLeptonsEfficiency :: loop_over_muons()
             h_signal_ptvarcone20->Fill(Mu_ptvarcone20->at(n_mu) / 1000., weight);
             h_signal_ptvarcone30->Fill(Mu_ptvarcone30->at(n_mu) / 1000., weight);
             h_signal_topoetcone20->Fill(Mu_topoetcone20->at(n_mu) / 1000., weight);
-            h_signal_nJets->Fill(NJet, normalization * signal_weight);
+            h_signal_nJets->Fill(NJet, weight);
             //h_signal_dRjet->Fill(Mu_DR_closest_Jet->at(n_mu), weight);
             h_signal_Etmiss->Fill(Etmiss_TST_Et / 1000., weight);
             //h_signal_meff->Fill(meff / 1000., weight);
