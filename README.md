@@ -2,10 +2,15 @@
 This is the new real lepton efficiency framework.
 
 
-### v31-17. (combine branch) Add new skim output
+### v31-18. (combine branch) Modify `ytRealLeptonsEfficiency`
+1. Add new `AvgMu` and `mll` histograms of OS ee and mumu.
+2. Comment the `dRjet` and `meff` related histograms.
+3. Combine data and MC code for `ytRealLeptonsEfficiency`. So add `isMC` and `isData` to switch between data and MC. And correct the weight calculation.
+
+### v31-17. (combine branch) Add new skim output variable
 1. Fix the typo in `python/make_mll.py`
-2. Add new skim output `new_AvgMu`
-3. Comment the dRjet and meff related histograms
+2. Add new skim output variable `new_AvgMu`
+3. Comment the `dRjet` and `meff` related histograms
 
 
 ### v31-16. (combine branch) Update `New_Skimmed_Data` and `New_Skimmed_MC`
@@ -14,19 +19,19 @@ This is the new real lepton efficiency framework.
 ### v31-16. (combine branch) Modify `ytRealLeptonsEfficiency`
 1. Change line color in `make_mll.py`
 2. Remove the extra `normalization` in `yt_skim`
-3. Add leaf and branches `ytRealLeptonsEfficiency`
+3. Add leaf and branches in `ytRealLeptonsEfficiency`
 
 
 ### v31-15. (combine branch) Add new skimmed codes.
 
 
-### v31-14. (combine branch) Add new plotting script.
+### v31-14. (combine branch) Add a new plotting script.
 1. Add `make_mll.py` to make data and MC baseline and signal mll plots.
 2. Include os lib in the `make_AvgMu.py`
 3. Fix `mll` to `mll / 1000.` in `ytEventSelection.cxx`.
 
 
-### v31-13. (combine branch) Add mll histograms and re-calculate variables..
+### v31-13. (combine branch) Add mll histograms and re-calculate variables.
 1. Add the OSee and OSmumu baseline and signal mll histograms.
 2. Use the re-calculated `random_run_number`, `AvgMu`, `pileup_weight`.
 
@@ -36,16 +41,16 @@ This is the new real lepton efficiency framework.
 
 
 ### v31-11. (combine branch) Add new plotting script.
-* Add new script `make_AvgMu.py` which can make data and MC AvgMu plot.
+* Add new script `make_AvgMu.py` which can make data and MC `AvgMu` plot.
 
 
 ### v31-10. (combine branch) Add two methods in `yt_cutflows`.
-* Add `get_AvgMu()` and `get_pileup_weight()` which recalculate AvgMu and PRWWeight.
+* Add `get_AvgMu()` and `get_pileup_weight()` which re-calculate `AvgMu` and `PRWWeight`.
 
 
 ### v31-09. (combine branch) Add OSee and OSmumu AvgMu histograms.
-1. Add OSee and OSmumu AvgMu histograms for data and MC in `ytEventSelection`.
-2. Correct the weight when dump MC AvgMu.
+1. Add OSee and OSmumu `AvgMu` histograms for data and MC in `ytEventSelection`.
+2. Correct the weight when dump MC `AvgMu`.
 3. Change space in `yt_cutflows.cxx`
 
 
@@ -54,7 +59,7 @@ This is the new real lepton efficiency framework.
 2. Let `run_all_RLE.sh` to run in the background.
 
 
-### v31-07. (combine branch) Add script to run all RLE.
+### v31-07. (combine branch) Add a script to run all RLE.
 
 
 ### v31-06. (combine branch) Move `ytRealLeptonsEfficiency` to `misc/`
@@ -71,7 +76,7 @@ This is the new real lepton efficiency framework.
 
 ### v31-04. (combine branch) Remove functions and add histograms in `ytEventSelection`.
 1. Remove the calculate weight functions.
-2. Add histograms for Nvtx, AvgMu, NLepts, and NJets.
+2. Add histograms for `Nvtx`, `AvgMu`, `NLepts`, and `NJets`.
 
 
 ### v31-03. (combine branch) Rewrite `ytEventSelection`.
