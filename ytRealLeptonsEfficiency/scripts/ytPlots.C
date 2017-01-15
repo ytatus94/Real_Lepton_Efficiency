@@ -2693,6 +2693,8 @@ void yt_background_subtraction_illustration()
     h_tail->SetFillStyle(3003);
     h_tail->SetLineColor(kYellow);
     h_tail->Draw("hist,same");
+
+    Mee_plot->SaveAs("background_subtraction_illustration.pdf");
 }
 
 void yt_background_template_mll_plot(int pt_bin_low = 0, int pt_bin_up = -1, int eta_bin_low = 0, int eta_bin_up = -1)
